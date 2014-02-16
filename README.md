@@ -1,4 +1,4 @@
-CookieLib, simple and fast game library
+SFGL, simple and fast game library
 ========================================
 #### Making games is a piece of cake with this small library!
 
