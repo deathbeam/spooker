@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CFA1A620-238E-4917-9831-B19B7F2C23B4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SFGL</RootNamespace>
+    <AssemblyName>SFGL</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" />
+      </CustomCommands>
+    </CustomCommands>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Gwen">
+      <HintPath>lib\Gwen.dll</HintPath>
+    </Reference>
+    <Reference Include="Gwen.Renderer.SFML">
+      <HintPath>lib\Gwen.Renderer.SFML.dll</HintPath>
+    </Reference>
+    <Reference Include="sfmlnet-audio-2">
+      <HintPath>lib\sfmlnet-audio-2.dll</HintPath>
+    </Reference>
+    <Reference Include="sfmlnet-graphics-2">
+      <HintPath>lib\sfmlnet-graphics-2.dll</HintPath>
+    </Reference>
+    <Reference Include="sfmlnet-window-2">
+      <HintPath>lib\sfmlnet-window-2.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.OpenGl">
+      <HintPath>lib\Tao.OpenGl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SFCore.cs" />
+    <Compile Include="Utils\FloatMath.cs" />
+    <Compile Include="Utils\AddonMath.cs" />
+    <Compile Include="Physics\CollisionDetection.cs" />
+    <Compile Include="Resources\ContentManager.cs" />
+    <Compile Include="Resources\ContentProvider.cs" />
+    <Compile Include="Graphics\SpriteEffects.cs" />
+    <Compile Include="Graphics\SpriteBatch.cs" />
+    <Compile Include="IDrawable.cs" />
+    <Compile Include="ILoadable.cs" />
+    <Compile Include="IUpdateable.cs" />
+    <Compile Include="Graphics\ISpriteBatch.cs" />
+    <Compile Include="Input\CookieKeyboard.cs" />
+    <Compile Include="Input\CookieMouse.cs" />
+    <Compile Include="Tile Engine\ImageLayer.cs" />
+    <Compile Include="Tile Engine\Layer.cs" />
+    <Compile Include="Tile Engine\Map.cs" />
+    <Compile Include="Tile Engine\ObjectGroup.cs" />
+    <Compile Include="Tile Engine\TiledCore.cs" />
+    <Compile Include="Tile Engine\Tileset.cs" />
+    <Compile Include="Tile Engine\Renderer\Canvas.cs" />
+    <Compile Include="Tile Engine\Renderer\Mosaic.cs" />
+    <Compile Include="Resources\BinarySerializer.cs" />
+    <Compile Include="Time\Clock.cs" />
+    <Compile Include="Window\GameComponent.cs" />
+    <Compile Include="Window\GameSettings.cs" />
+    <Compile Include="EntityList.cs" />
+    <Compile Include="Window\GameWindow.cs" />
+    <Compile Include="Window\GameTarget.cs" />
+    <Compile Include="Audio\AudioManager.cs" />
+    <Compile Include="GUI\GuiManager.cs" />
+    <Compile Include="Time\GameTime.cs" />
+    <Compile Include="Game States\SceneBase.cs" />
+    <Compile Include="Game States\SceneManager.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="GUI\" />
+  </ItemGroup>
+</Project>
