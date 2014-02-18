@@ -1,5 +1,12 @@
 using SFML.Audio;
 using System;
+/* File Description
+ * Original Works/Author: Thomas Slusny
+ * Other Contributors: None
+ * Author Website: http://indiearmory.com
+ * License: MIT
+*/
+
 using System.IO;
 using System.Collections.Generic;
 using SFGL.Window;
@@ -13,7 +20,7 @@ namespace SFGL.Audio
 		public string SoundDirectory = "Sounds";
 		public string SoundExtension = "ogg";
 
-		public AudioManager(GameTarget game) : base(game) { }
+		public AudioManager(GameWindow game) : base(game) { }
 
 		public void LoadContent()
 		{

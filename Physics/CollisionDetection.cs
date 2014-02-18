@@ -13,7 +13,7 @@ using System.Collections;
 namespace SFGL.Physics
 {
 
-	public class CollisionDetection
+	public static class CollisionDetection
 	{
 
 		public const float RADIANS_PER_DEGREE = (float)Math.PI / 180f;

@@ -20,7 +20,7 @@ namespace SFGL
 		private HashSet<IDrawable> _drawables = new HashSet<IDrawable>();
 		private HashSet<Drawable> _sfmlDrawables = new HashSet<Drawable>();
 
-		public EntityList(GameTarget game) : base (game) { }
+		public EntityList(GameWindow game) : base (game) { }
 
         public void Add<T>(T component)
         {
@@ -53,11 +53,11 @@ namespace SFGL
             }
         }
 
-		public void Draw(GameTime gameTime)
+		public void Draw()
         {
             foreach (IDrawable drawable in _drawables)
             {
-				drawable.Draw(gameTime);
+				drawable.Draw();
             }
 
 			foreach (Drawable sfmlDrawable in _sfmlDrawables)

@@ -27,7 +27,7 @@ namespace SFGL.TileEngine.Renderer
 		public TmxMap map;          // TMX data (try to remove this)
 		public TmxCanvas canvas;       // Viewport details
 		
-		public TmxMosaic(GameTarget game, TmxMap mapName) : base (game)
+		public TmxMosaic(GameWindow game, TmxMap mapName) : base (game)
 		{
 			// Temporary code
 			map = mapName;
@@ -101,7 +101,7 @@ namespace SFGL.TileEngine.Renderer
 			var jEnd = Math.Min(tMapHeight, canvas.tEndY);
 
 			// Initialize the spriteBatch
-			spriteBatch.Begin();
+			SpriteBatch.Begin();
 			// Draw tiles inside canvas
 			foreach (var idMap in layerID)
 			{
@@ -118,12 +118,12 @@ namespace SFGL.TileEngine.Renderer
 						var position = new Vector2f(
 							map.TileWidth * canvas.tileScale * i,
 							map.TileHeight * canvas.tileScale * j);
-						spriteBatch.Draw(spriteSheet[idSheet[id]], position, tileRect[id], Color.White, 0.0f, canvas.origin, new Vector2f(canvas.tileScale ,canvas.tileScale));
+						SpriteBatch.Draw(spriteSheet[idSheet[id]], position, tileRect[id], Color.White, 0.0f, canvas.origin, new Vector2f(canvas.tileScale ,canvas.tileScale));
 
 					}
 				}
 			}
-			spriteBatch.End();
+			SpriteBatch.End();
 		}
 
 		public Texture GetSpriteSheet(string filepath)

@@ -11,6 +11,6 @@ namespace SFGL
 {
     public interface IDrawable
     {
-		void Draw(GameTime gameTime);
+		void Draw();
     }
 }

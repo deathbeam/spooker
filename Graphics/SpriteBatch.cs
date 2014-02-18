@@ -78,7 +78,7 @@ namespace SFGL.Graphics
 
 		#region Constructors
 
-		public SpriteBatch(GameTarget game) : base(game) { }
+		public SpriteBatch(GameWindow game) : base(game) { }
 
 		#endregion
 

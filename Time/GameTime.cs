@@ -1,7 +1,7 @@
 /* File Description
- * Original Works/Author: zsbzsb
+ * Original Works/Author: Zachariah Brown
  * Other Contributors: Thomas Slusny
- * Author Website: 
+ * Author Website: http://www.zbrown.net/projects
  * License: MIT
 */
 

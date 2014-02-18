@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SFGL.Window;
 
-namespace SFGL.Resources
+namespace SFGL.Content
 {
 	public class ContentManager : GameComponent, IDisposable
     {
@@ -23,7 +23,7 @@ namespace SFGL.Resources
 			set { _directory = value; }
 		}
 		
-		public ContentManager(GameTarget game) : base(game) { }
+		public ContentManager(GameWindow game) : base(game) { }
 
 		public T Load<T>(string path) where T : class
         {

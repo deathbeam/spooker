@@ -64,7 +64,7 @@ namespace SFGL.Window
 			get { return _directory; }
 			set { _directory = value; }
 		}
-
+		
 		public string Title
 		{
 			get { return _title; }

@@ -15,15 +15,15 @@ using SFGL.Time;
 
 namespace SFGL.Input
 {
-	public class CookieMouse : GameComponent, IUpdateable
+	public class MouseManager : GameComponent, IUpdateable
 	{
 		private Dictionary<Mouse.Button, bool> _buttonStates = new Dictionary<Mouse.Button, bool>();
 		private Dictionary<Mouse.Button, bool> _previousButtonStates = new Dictionary<Mouse.Button, bool>();
 		private IEnumerable<Mouse.Button> buttonEnum = Enum.GetValues(typeof(Mouse.Button)).Cast<Mouse.Button>();
 
-		public event Action<GameTarget, MouseWheelEventArgs> OnWheelScroll;
-		public event Action<GameTarget, MouseWheelEventArgs> OnWheelScrollUp;
-		public event Action<GameTarget, MouseWheelEventArgs> OnWheelScrollDown;
+		public event Action<MouseWheelEventArgs> OnWheelScroll;
+		public event Action<MouseWheelEventArgs> OnWheelScrollUp;
+		public event Action<MouseWheelEventArgs> OnWheelScrollDown;
 
 		/// <summary>
 		/// Checks if the key is down(pressed)
@@ -47,7 +47,7 @@ namespace SFGL.Input
 			set { Mouse.SetPosition(value); }
 		}
 
-		public CookieMouse(GameTarget game) : base(game)
+		public MouseManager(GameWindow game) : base(game)
 		{
 			foreach(Mouse.Button button in buttonEnum)
 			{
@@ -73,22 +73,22 @@ namespace SFGL.Input
 			}
 		}
 
-		public void window_MouseWheelMoved(GameTarget sender, MouseWheelEventArgs args)
+		public void window_MouseWheelMoved(MouseWheelEventArgs args)
 		{
 			ScrollWheelDelta = args.Delta;
 
-			Action<GameTarget, MouseWheelEventArgs> ws = OnWheelScroll;
-			Action<GameTarget, MouseWheelEventArgs> wsu = OnWheelScrollUp;
-			Action<GameTarget, MouseWheelEventArgs> wsd = OnWheelScrollDown;
+			Action<MouseWheelEventArgs> ws = OnWheelScroll;
+			Action<MouseWheelEventArgs> wsu = OnWheelScrollUp;
+			Action<MouseWheelEventArgs> wsd = OnWheelScrollDown;
 
 			if (ws != null)
-				ws(sender, args);
+				ws(args);
 
 			if (args.Delta > 0 && wsu != null)
-				wsu(sender, args);
+				wsu(args);
 
 			else if (args.Delta < 0 && wsd != null)
-				wsd(sender, args);
+				wsd(args);
 		}
 
 		/// <summary>

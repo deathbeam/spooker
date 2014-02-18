@@ -76,8 +76,8 @@ namespace SFGL.TileEngine.Renderer
 
 		public void UpdateCamera(Vector2f center)
 		{
-			var pXc = (int)center.X +(pWidth) / 2;
-			var pYc = (int)center.Y +(pHeight) / 2;
+			var pXc = (int)center.X;
+			var pYc = (int)center.Y;
 			// Get tile index containing the pixel
 			tX = pXc / pTileWidth;
 			tY = pYc / pTileHeight;

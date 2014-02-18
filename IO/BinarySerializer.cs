@@ -10,7 +10,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace SFGL.Resources
+namespace SFGL.IO
 {
     /// <summary>
     /// Provides simple way of loading and saving binary files

@@ -4,28 +4,64 @@
  * Author Website: http://indiearmory.com
  * License: MIT
 */
+
+using SFGL.Audio;
 using SFGL.Graphics;
-using SFGL.Resources;
+using SFGL.Content;
+using SFGL.Input;
 
 namespace SFGL.Window
 {
 	public abstract class GameComponent
 	{
-		protected GameTarget Game;
+		/// <summary>
+		/// Heart of SFGL. All important operations are done here.
+		/// </summary>
+		protected GameWindow Game;
 
-		protected ISpriteBatch spriteBatch
+		/// <summary>
+		/// Draws multiple renderable objects in optimized way.
+		/// </summary>
+		protected ISpriteBatch SpriteBatch
 		{ 
-			get { return this.Game.spriteBatch; }
+			get { return this.Game.SpriteBatch; }
 		}
 
+		/// <summary>
+		/// Manages various game content (audio, textures, fonts....).
+		/// </summary>
 		protected ContentManager Content
 		{ 
 			get { return this.Game.Content; }
 		}
 
-		public GameComponent(GameTarget game)
+		/// <summary>
+		/// Can play various audio files.
+		/// </summary>
+		protected AudioManager Audio
+		{ 
+			get { return this.Game.Audio; }
+		}
+
+		/// <summary>
+		/// Handles user input from keyboard.
+		/// </summary>
+		protected KeyboardManager KeysInput
+		{ 
+			get { return this.Game.KeysInput; }
+		}
+
+		/// <summary>
+		/// Handles user input from mouse.
+		/// </summary>
+		protected MouseManager MouseInput
+		{ 
+			get { return this.Game.MouseInput; }
+		}
+
+		public GameComponent(GameWindow Game)
 		{
-			this.Game = game;
+			this.Game = Game;
 		}
 	}
 }

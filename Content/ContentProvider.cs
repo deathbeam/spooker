@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SFGL.Resources
+namespace SFGL.Content
 {
     public class ContentProvider : IDisposable
     {

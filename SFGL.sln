@@ -16,5 +16,6 @@ Global
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = SFGL.csproj
+		version = 1.0
 	EndGlobalSection
 EndGlobal
