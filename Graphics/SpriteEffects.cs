@@ -1,5 +1,5 @@
 /* File Description
- * Original Works/Author: Spodii
+ * Original Works/Author: Spodi
  * Other Contributors: None
  * Author Website: http://netgore.com
  * License: 

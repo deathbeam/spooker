@@ -13,9 +13,11 @@ using System;
 
 namespace SFGL.Graphics
 {
+	////////////////////////////////////////////////////////////
 	/// <summary>
 	/// An implementation of SpriteBatch using the RenderWindow.
 	/// </summary>
+	////////////////////////////////////////////////////////////
 	public interface ISpriteBatch : IDisposable
 	{
 		#region Properties

@@ -15,6 +15,9 @@ using SFGL.Time;
 
 namespace SFGL.GameStates
 {
+	/// <summary>
+	/// Abstract class used for handling game input, drawing and updating for one scene with additional GUI component.
+	/// </summary>
 	public abstract class StateUI : State
 	{
 		#region Variables
@@ -23,6 +26,9 @@ namespace SFGL.GameStates
 		#endregion
 
 		#region Properties
+		/// <summary>
+		/// Returns current instance of GUI component intialized for this state
+		/// </summary>
 		protected Canvas GUI
 		{ 
 			get { return _gamegui; }
@@ -30,6 +36,9 @@ namespace SFGL.GameStates
 		#endregion
 
 		#region Constructors and Destructors
+		/// <summary>
+		/// Creates new instance of game state with GUI component.
+		/// </summary>
 		public StateUI(GameWindow game, string GuiImagePath) : base(game)
 		{
 			// create GWEN renderer

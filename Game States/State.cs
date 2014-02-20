@@ -15,22 +15,11 @@ using SFGL.Time;
 
 namespace SFGL.GameStates
 {
+	/// <summary>
+	/// Abstract class used for handling game input, drawing and updating for one scene.
+	/// </summary>
 	public abstract class State : GameComponent, IDrawable, IUpdateable
 	{
-		/// <summary>
-		/// Flags that determine the enabled functionality of a state.
-		/// </summary>
-		[Flags]
-		public enum UpdateMode
-		{
-			None = 0,
-			Input = 1,
-			Update = 2,
-			Draw = 4,
-			Background = Update | Draw,
-			All = Input | Update | Draw
-		}
-
 		#region Properties
 		/// <summary>
 		/// Functions to call for this state when it is not the active state.
@@ -52,6 +41,9 @@ namespace SFGL.GameStates
 		#endregion
 
 		#region Constructors and Destructors
+		/// <summary>
+		/// Creates new instance of game state.
+		/// </summary>
 		public State(GameWindow game) : base(game) 
 		{
 			InactiveMode = UpdateMode.All;

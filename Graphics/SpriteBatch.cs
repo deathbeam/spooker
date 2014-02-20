@@ -1,5 +1,5 @@
 /* File Description
- * Original Works/Author: Spodii
+ * Original Works/Author: Spodi
  * Other Contributors: Thomas Slusny
  * Author Website: http://netgore.com
  * License: 
@@ -13,11 +13,14 @@ using SFGL.Window;
 
 namespace SFGL.Graphics
 {
+	////////////////////////////////////////////////////////////
 	/// <summary>
 	/// An implementation of SpriteBatch using the RenderWindow.
-	/// Warning: this spritebatch do not provides optimized drawing of sprites.
-	/// It just provides most of functionality of XNA spritebatch.
+	/// Warning: this spritebatch do not provides optimized 
+	/// drawing of sprites. It just provides most of functionality
+	///  of XNA spritebatch.
 	/// </summary>
+	////////////////////////////////////////////////////////////
 	public class SpriteBatch : GameComponent, ISpriteBatch
     {
         #region Variables
@@ -34,19 +37,7 @@ namespace SFGL.Graphics
 
         #region Helpers
 
-        protected static bool IsAssetValid(Texture asset)
-		{
-			if (asset == null) return false;
-			return true;
-		}
-		
-		protected static bool IsAssetValid(Font asset)
-		{
-			if (asset == null) return false;
-			return true;
-		}
-
-		protected static Vector2f GetScaleEffectMultiplier(SpriteEffects effects)
+		private static Vector2f GetScaleEffectMultiplier(SpriteEffects effects)
 		{
 			return new Vector2f(
 				((effects & SpriteEffects.FlipHorizontally) != 0) ? -1 : 1,
@@ -130,7 +121,7 @@ namespace SFGL.Graphics
 
 		public void Draw(Sprite sprite, Shader shader = null)
 		{
-			if (sprite == null || !IsAssetValid(sprite.Texture))
+			if (sprite == null || sprite.Texture == null)
 				return;
 
 			_rs.Shader = shader;
@@ -140,7 +131,7 @@ namespace SFGL.Graphics
 		public void Draw(Texture texture, IntRect destinationRectangle, IntRect? sourceRectangle, Color color,
 			float rotation, Vector2f origin, SpriteEffects effects = SpriteEffects.None, Shader shader = null)
 		{
-			if (!IsAssetValid(texture))
+			if (texture == null)
 				return;
 
 			if (sourceRectangle.HasValue)
@@ -182,7 +173,7 @@ namespace SFGL.Graphics
 		public void Draw(Texture texture, Vector2f position, IntRect? sourceRectangle, Color color, float rotation,
 			Vector2f origin, Vector2f scale, SpriteEffects effects = SpriteEffects.None, Shader shader = null)
 		{
-			if (!IsAssetValid(texture))
+			if (texture == null)
 				return;
 
 			if (sourceRectangle.HasValue)
@@ -231,7 +222,7 @@ namespace SFGL.Graphics
 		public void DrawString(Font font, StringBuilder text, Vector2f position, Color color, float rotation,
 			Vector2f origin, Vector2f scale, Text.Styles style = Text.Styles.Regular, Shader shader = null)
 		{
-			if (!IsAssetValid(font))
+			if (font == null)
 				return;
 
 			DrawString(font, text.ToString(), position, color, rotation, origin, scale, style, shader);
@@ -240,7 +231,7 @@ namespace SFGL.Graphics
 		public void DrawString(Font font, string text, Vector2f position, Color color, float rotation, Vector2f origin,
 			Vector2f scale, Text.Styles style = Text.Styles.Regular, Shader shader = null)
 		{
-			if (!IsAssetValid(font) || string.IsNullOrEmpty(text))
+			if (font == null || string.IsNullOrEmpty(text))
 				return;
 
 			_str.Font = font;
@@ -261,7 +252,7 @@ namespace SFGL.Graphics
 		public void DrawString(Font font, StringBuilder text, Vector2f position, Color color, float rotation,
 			Vector2f origin, float scale, Text.Styles style = Text.Styles.Regular, Shader shader = null)
 		{
-			if (!IsAssetValid(font))
+			if (font == null)
 				return;
 
 			DrawString(font, text.ToString(), position, color, rotation, origin, new Vector2f(scale, scale), style, shader);
@@ -270,7 +261,7 @@ namespace SFGL.Graphics
 		public void DrawString(Font font, string text, Vector2f position, Color color, float rotation, Vector2f origin,
 			float scale, Text.Styles style = Text.Styles.Regular, Shader shader = null)
 		{
-			if (!IsAssetValid(font))
+			if (font == null)
 				return;
 
 			DrawString(font, text, position, color, rotation, origin, new Vector2f(scale,scale), style, shader);
@@ -278,7 +269,7 @@ namespace SFGL.Graphics
 		
 		public void DrawString(Font font, StringBuilder text, Vector2f position, Color color)
 		{
-			if (!IsAssetValid(font))
+			if (font == null)
 				return;
 
 			DrawString(font, text.ToString(), position, color, 0.0f, new Vector2f(), 1.0f);
@@ -286,7 +277,7 @@ namespace SFGL.Graphics
 		
 		public void DrawString(Font font, string text, Vector2f position, Color color)
 		{
-			if (!IsAssetValid(font))
+			if (font == null)
 				return;
 
 			DrawString(font, text, position, color, 0.0f, new Vector2f(), 1.0f);

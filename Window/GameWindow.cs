@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using SFML.Graphics;
 using SFML.Window;
-using Tao.OpenGl;
 using SFGL;
 using SFGL.GameStates;
 using SFGL.Graphics;
@@ -44,14 +43,13 @@ namespace SFGL.Window
 			{
 				elapsedtime += frameclock.Restart();
 				this.Clear(ClearColor);
-				Gl.glClear(Gl.GL_DEPTH_BUFFER_BIT | Gl.GL_COLOR_BUFFER_BIT);
 
 				while (elapsedtime >= GameTime)
 				{
 					elapsedtime -= GameTime;
 					foreach (var state in StateStack)
 					{
-						if (state.IsActive || state.InactiveMode.HasFlag(State.UpdateMode.Update))
+						if (state.IsActive || state.InactiveMode.HasFlag(UpdateMode.Update))
 							state.Update (GameTime);
 					}
 					Components.Update (GameTime);
@@ -59,7 +57,7 @@ namespace SFGL.Window
 
 				foreach (var state in StateStack)
 				{
-					if (state.IsActive || state.InactiveMode.HasFlag(State.UpdateMode.Draw))
+					if (state.IsActive || state.InactiveMode.HasFlag(UpdateMode.Draw))
 						state.DrawInternal();
 				}
 				Components.Draw ();
@@ -124,7 +122,7 @@ namespace SFGL.Window
 		public override void Close()
 		{
 			Components.Dispose ();
-			base.Close ();
+			this.Close ();
 		}
 
 		internal bool IsActive(State state)
@@ -149,8 +147,8 @@ namespace SFGL.Window
 			this.MouseInput = new MouseManager (this);
 
 			//Load rest of game settings
-			base.SetVerticalSyncEnabled(gameSettings.VerticalSync);
-			base.SetFramerateLimit(gameSettings.FramerateLimit);
+			this.SetVerticalSyncEnabled(gameSettings.VerticalSync);
+			this.SetFramerateLimit(gameSettings.FramerateLimit);
 			this.Content.Directory = gameSettings.ContentDirectory;
 			this.Audio.SoundDirectory = String.Format("{0}/{1}",
 				gameSettings.ContentDirectory,
@@ -160,59 +158,59 @@ namespace SFGL.Window
 			this.GameTime = gameSettings.GameTime;
 
 			//Bind input events to components
-			base.MouseWheelMoved += (sender, e) => { MouseInput.window_MouseWheelMoved(e); };
+			this.MouseWheelMoved += (sender, e) => { MouseInput.window_MouseWheelMoved(e); };
 
-			base.MouseWheelMoved += (sender, e) =>
+			this.MouseWheelMoved += (sender, e) =>
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(State.UpdateMode.Input)))
+					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						StateStack[i].window_MouseWheelMoved(e);
 			};
 
-			base.TextEntered += (sender, e) =>
+			this.TextEntered += (sender, e) =>
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(State.UpdateMode.Input)))
+					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						StateStack[i].window_TextEntered(e);
 			};
 
-			base.KeyPressed += (sender, e) =>
+			this.KeyPressed += (sender, e) =>
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(State.UpdateMode.Input)))
+					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						StateStack[i].window_KeyPressed(e);
 			};
 
-			base.KeyReleased += (sender, e) => 
+			this.KeyReleased += (sender, e) => 
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(State.UpdateMode.Input)))
+					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						StateStack[i].window_KeyReleased(e);
 			};
 
-			base.MouseMoved += (sender, e) =>
+			this.MouseMoved += (sender, e) =>
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(State.UpdateMode.Input)))
+					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						StateStack[i].window_MouseMoved(e);
 			};
 
-			base.MouseButtonPressed += (sender, e) =>
+			this.MouseButtonPressed += (sender, e) =>
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(State.UpdateMode.Input)))
+					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						StateStack[i].window_MouseButtonPressed(e);
 			};
 
-			base.MouseButtonReleased += (sender, e) =>
+			this.MouseButtonReleased += (sender, e) =>
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(State.UpdateMode.Input)))
+					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						StateStack[i].window_MouseButtonReleased(e);
 			};
 
 			///Workaround for not closing game window correctly
-			base.Closed += (sender, e) => { this.Close(); };
+			this.Closed += (sender, e) => { this.Close(); };
 
 			//Add components to component manager
 			this.Components.Add (KeysInput);

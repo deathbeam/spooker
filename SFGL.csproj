@@ -57,9 +57,6 @@
     <Reference Include="sfmlnet-window-2">
       <HintPath>lib\sfmlnet-window-2.dll</HintPath>
     </Reference>
-    <Reference Include="Tao.OpenGl">
-      <HintPath>lib\Tao.OpenGl.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -95,6 +92,9 @@
     <Compile Include="Game States\StateUI.cs" />
     <Compile Include="Input\KeyboardManager.cs" />
     <Compile Include="Input\MouseManager.cs" />
+    <Compile Include="Game States\UpdateMode.cs" />
+    <Compile Include="Graphics\Vector2.cs" />
+    <Compile Include="Graphics\Rectangle.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
