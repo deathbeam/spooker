@@ -17,7 +17,7 @@ namespace SFGL.TileEngine.Renderer
 	public class TmxMosaic : GameComponent
 	{
 		public Dictionary<TmxTileset, Texture> spriteSheet;
-		public Dictionary<int, IntRect> tileRect;
+		public Dictionary<int, Rectangle> tileRect;
 		public Dictionary<int, TmxTileset> idSheet;
 		public List<int[,]> layerID;     // layerID[x,y]
 
@@ -42,7 +42,7 @@ namespace SFGL.TileEngine.Renderer
 
 			// Load spritesheets
 			spriteSheet = new Dictionary<TmxTileset, Texture>();
-			tileRect = new Dictionary<int, IntRect>();
+			tileRect = new Dictionary<int, Rectangle>();
 			idSheet = new Dictionary<int, TmxTileset>();
 
 			foreach (TmxTileset ts in map.Tilesets)
@@ -65,7 +65,7 @@ namespace SFGL.TileEngine.Renderer
 				{
 					for (var w = wStart; w < wEnd; w += wInc)
 					{
-						var rect = new IntRect(w, h,
+						var rect = new Rectangle(w, h,
 							ts.TileWidth, ts.TileHeight);
 						idSheet.Add(id, ts);
 						tileRect.Add(id, rect);
@@ -115,10 +115,17 @@ namespace SFGL.TileEngine.Renderer
 						if (id == 0) continue;
 
 						// Pre-calculate? (not with tileScale in there...)
-						var position = new Vector2f(
+						var position = new Vector2(
 							map.TileWidth * canvas.tileScale * i,
 							map.TileHeight * canvas.tileScale * j);
-						SpriteBatch.Draw(spriteSheet[idSheet[id]], position, tileRect[id], Color.White, 0.0f, canvas.origin, new Vector2f(canvas.tileScale ,canvas.tileScale));
+						SpriteBatch.Draw(
+							spriteSheet[idSheet[id]],
+							position,
+							tileRect[id],
+							Color.White,
+							0.0f,
+							canvas.origin,
+							new Vector2(canvas.tileScale ,canvas.tileScale));
 
 					}
 				}

@@ -7,6 +7,7 @@
 
 using SFML.Graphics;
 using SFML.Window;
+using SFGL.Graphics;
 using System;
 
 namespace SFGL.TileEngine.Renderer
@@ -49,8 +50,8 @@ namespace SFGL.TileEngine.Renderer
 		public int pTileHeight = 32;     // Tile height in pixels
 
 		// Necessary?
-		public Vector2f camera;
-		public Vector2f origin;
+		public Vector2 camera;
+		public Vector2 origin;
 
 		public TmxCanvas(Vector2i gamesize, Vector2i maxsize, Vector2i tileSize)
 		{
@@ -111,8 +112,8 @@ namespace SFGL.TileEngine.Renderer
 			tStartY = tY - (tHeight - 1) / 2 - tHalo;
 			tEndY = tY + (tHeight - 1) / 2 + 1 + tHalo;
 
-			camera = new Vector2f((float)pX, (float)pY);
-			origin = camera - new Vector2f((float)(pWidth/2), (float)(pHeight/2));
+			camera = new Vector2(pX, pY);
+			origin = camera - new Vector2(pWidth/2, pHeight/2);
 		}
 
 		public void UpdateViewport()

@@ -6,6 +6,7 @@
 */
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using SFML.Graphics;
 
@@ -13,8 +14,8 @@ namespace SFGL.Graphics
 {
 	////////////////////////////////////////////////////////////
 	/// <summary>
-	/// IntRect is an utility class for manipulating 2D rectangles
-	/// with float coordinates
+	/// Rectangle is an utility class for manipulating 2D rectangles
+	/// with int coordinates
 	/// </summary>
 	////////////////////////////////////////////////////////////
 	[StructLayout(LayoutKind.Sequential)]
@@ -44,7 +45,7 @@ namespace SFGL.Graphics
 		/// <param name="width">Width of the rectangle</param>
 		/// <param name="height">Height of the rectangle</param>
 		////////////////////////////////////////////////////////////
-		public Rectangle(float x, float y, float width, float height)
+		public Rectangle(int x, int y, int width, int height)
 		{
 			X   = x;
 			Y    = y;
@@ -61,12 +62,12 @@ namespace SFGL.Graphics
 		/// <param name="width">Width of the rectangle</param>
 		/// <param name="height">Height of the rectangle</param>
 		////////////////////////////////////////////////////////////
-		public Rectangle(int x, int y, int width, int height)
+		public Rectangle(float x, float y, float width, float height)
 		{
-			X   = (float)x;
-			Y    = (float)y;
-			Width  = (float)width;
-			Height = (float)height;
+			X   = (int)x;
+			Y    = (int)y;
+			Width  = (int)width;
+			Height = (int)height;
 		}
 
 		////////////////////////////////////////////////////////////
@@ -80,10 +81,10 @@ namespace SFGL.Graphics
 		////////////////////////////////////////////////////////////
 		public Rectangle(uint x, uint y, uint width, uint height)
 		{
-			X   = (float)x;
-			Y    = (float)y;
-			Width  = (float)width;
-			Height = (float)height;
+			X   = (int)x;
+			Y    = (int)y;
+			Width  = (int)width;
+			Height = (int)height;
 		}
 
 		////////////////////////////////////////////////////////////
@@ -108,7 +109,7 @@ namespace SFGL.Graphics
 		/// <param name="copy">Rectangle from what will this
 		/// rectangle constructs</param>
 		////////////////////////////////////////////////////////////
-		public Rectangle(FloatRect copy)
+		public Rectangle(IntRect copy)
 		{
 			X   = copy.Left;
 			Y    = copy.Top;
@@ -123,12 +124,12 @@ namespace SFGL.Graphics
 		/// <param name="copy">Rectangle from what will this
 		/// rectangle constructs</param>
 		////////////////////////////////////////////////////////////
-		public Rectangle(IntRect copy)
+		public Rectangle(FloatRect copy)
 		{
-			X   = (float)copy.Left;
-			Y    = (float)copy.Top;
-			Width  = (float)copy.Width;
-			Height = (float)copy.Height;
+			X   = (int)copy.Left;
+			Y    = (int)copy.Top;
+			Width  = (int)copy.Width;
+			Height = (int)copy.Height;
 		}
 		#endregion
 
@@ -141,7 +142,7 @@ namespace SFGL.Graphics
 		/// <param name="y">Y coordinate of the point to test</param>
 		/// <returns>True if the point is inside</returns>
 		////////////////////////////////////////////////////////////
-		public bool Contains(float x, float y)
+		public bool Contains(int x, int y)
 		{
 			return (x >= X) && (x < X + Width) && (y >= Y) && (y < Y + Height);
 		}
@@ -169,10 +170,10 @@ namespace SFGL.Graphics
 		public bool Intersects(Rectangle rect)
 		{
 			// Compute the intersection boundaries
-			float x   = Math.Max(X,         rect.X);
-			float y    = Math.Max(Y,          rect.Y);
-			float right  = Math.Min(X + Width, rect.X + rect.Width);
-			float bottom = Math.Min(Y + Height, rect.Y + rect.Height);
+			int x   = Math.Max(X,         rect.X);
+			int y    = Math.Max(Y,          rect.Y);
+			int right  = Math.Min(X + Width, rect.X + rect.Width);
+			int bottom = Math.Min(Y + Height, rect.Y + rect.Height);
 
 			return (x < right) && (y < bottom);
 		}
@@ -188,10 +189,10 @@ namespace SFGL.Graphics
 		public bool Intersects(Rectangle rect, out Rectangle overlap)
 		{
 			// Compute the intersection boundaries
-			float x   = Math.Max(X,         rect.X);
-			float y    = Math.Max(Y,          rect.Y);
-			float right  = Math.Min(X + Width, rect.X + rect.Width);
-			float bottom = Math.Min(Y + Height, rect.Y + rect.Height);
+			int x   = Math.Max(X,         rect.X);
+			int y    = Math.Max(Y,          rect.Y);
+			int right  = Math.Min(X + Width, rect.X + rect.Width);
+			int bottom = Math.Min(Y + Height, rect.Y + rect.Height);
 
 			// If the intersection is valid (positive non zero area), then there is an intersection
 			if ((x < right) && (y < bottom))
@@ -295,16 +296,40 @@ namespace SFGL.Graphics
 
 		#region Properties
 		/// <summary>X coordinate of the rectangle</summary>
-		public float X;
+		public int X;
 
 		/// <summary>Y coordinate of the rectangle</summary>
-		public float Y;
+		public int Y;
 
 		/// <summary>Width of the rectangle</summary>
-		public float Width;
+		public int Width;
 
 		/// <summary>Height of the rectangle</summary>
-		public float Height;
+		public int Height;
+
+		/// <summary>Returns the x-coordinate of the left side of the rectangle.</summary>
+		public int Left
+		{
+			get { return X; }
+		}
+
+		/// <summary>Returns the x-coordinate of the right side of the rectangle.</summary>
+		public int Right
+		{
+			get { return (X + Width); }
+		}
+
+		/// <summary>Returns the y-coordinate of the top of the rectangle.</summary>
+		public int Top
+		{
+			get { return Y; }
+		}
+
+		/// <summary>Returns the y-coordinate of the bottom of the rectangle.</summary>
+		public int Bottom
+		{
+			get { return (Y + Height); }
+		}
 		#endregion
 	}
 }

@@ -47,6 +47,11 @@ namespace SFGL.Input
 			set { Mouse.SetPosition(value); }
 		}
 
+		/// <summary>
+		/// Creates new instance of MouseManager class.
+		/// </summary>
+		/// <param name="game">Core game component</param>
+		/// <returns></returns>
 		public MouseManager(GameWindow game) : base(game)
 		{
 			foreach(Mouse.Button button in buttonEnum)
@@ -73,7 +78,7 @@ namespace SFGL.Input
 			}
 		}
 
-		public void window_MouseWheelMoved(MouseWheelEventArgs args)
+		public void MouseWheelMoved(MouseWheelEventArgs args)
 		{
 			ScrollWheelDelta = args.Delta;
 

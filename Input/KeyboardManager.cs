@@ -31,6 +31,11 @@ namespace SFGL.Input
 			get { return IsKeyDown(key); }
 		}
 
+		/// <summary>
+		/// Creates new instance of KeyboardManager class.
+		/// </summary>
+		/// <param name="game">Core game component</param>
+		/// <returns></returns>
 		public KeyboardManager(GameWindow game) : base(game) 
 		{
 			foreach(Keyboard.Key key in keysEnum)

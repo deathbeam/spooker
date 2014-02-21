@@ -7,6 +7,7 @@
 
 using System;
 using Gwen.Control;
+using Gwen.Input;
 using SFML.Graphics;
 using SFML.Window;
 using SFGL.Window;
@@ -39,7 +40,7 @@ namespace SFGL.GameStates
 		/// <summary>
 		/// Creates new instance of game state with GUI component.
 		/// </summary>
-		public StateUI(GameWindow game, string GuiImagePath) : base(game)
+		public StateUI(GameWindow game, string GuiImagePath, string FontName, int FontSize) : base(game)
 		{
 			// create GWEN renderer
 			Gwen.Renderer.SFML _renderer = new Gwen.Renderer.SFML(game);
@@ -49,9 +50,7 @@ namespace SFGL.GameStates
 				_renderer, GuiImagePath);
 
 			// set default font
-			Gwen.Font _font = new Gwen.Font(_renderer) { Size = 15, FaceName = "Verdana" };
-			_skin.SetDefaultFont("Verdana", 15);
-			_font.Dispose ();
+			_skin.SetDefaultFont(FontName, FontSize);
 
 			// Create a Canvas (it's root, on which all other GWEN controls are created)
 			_gamegui = new Canvas(_skin);
@@ -66,47 +65,46 @@ namespace SFGL.GameStates
 		#endregion
 
 		#region Input bindings
-		internal override void window_TextEntered(TextEventArgs e)
+		public override void TextEntered(TextEventArgs e)
 		{
 			_ginput.ProcessMessage(e);
 		}
 
-		internal override void window_MouseWheelMoved(MouseWheelEventArgs e)
+		public override void MouseWheelMoved(MouseWheelEventArgs e)
 		{
 			_ginput.ProcessMessage(e);
 		}
 
-		internal override void window_MouseMoved(MouseMoveEventArgs e)
+		public override void MouseMoved(MouseMoveEventArgs e)
 		{
 			_ginput.ProcessMessage(e);
 		}
 
-		internal override void window_MouseButtonPressed(MouseButtonEventArgs e)
+		public override void MouseButtonPressed(MouseButtonEventArgs e)
 		{
-			_ginput.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, true));
+			_ginput.ProcessMessage(new SFMLMouseButtonEventArgs(e, true));
 		}
 
-		internal override void window_MouseButtonReleased(MouseButtonEventArgs e)
+		public override void MouseButtonReleased(MouseButtonEventArgs e)
 		{
-			_ginput.ProcessMessage(new Gwen.Input.SFMLMouseButtonEventArgs(e, false));
+			_ginput.ProcessMessage(new SFMLMouseButtonEventArgs(e, false));
 		}
 
-		internal override void window_KeyPressed(KeyEventArgs e)
+		public override void KeyPressed(KeyEventArgs e)
 		{
-			_ginput.ProcessMessage(new Gwen.Input.SFMLKeyEventArgs(e, true));
+			_ginput.ProcessMessage(new SFMLKeyEventArgs(e, true));
 		}
 
-		internal override void window_KeyReleased(KeyEventArgs e)
+		public override void KeyReleased(KeyEventArgs e)
 		{
-			_ginput.ProcessMessage(new Gwen.Input.SFMLKeyEventArgs(e, false));
+			_ginput.ProcessMessage(new SFMLKeyEventArgs(e, false));
 		}
 		#endregion
 
 		#region Functions
 		//General screen functions
-		internal override void DrawInternal()
+		public override void Draw()
 		{
-			Draw ();
 			_gamegui.RenderCanvas ();
 		}
 		#endregion

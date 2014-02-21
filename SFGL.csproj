@@ -87,7 +87,6 @@
     <Compile Include="Time\GameTime.cs" />
     <Compile Include="Content\ContentManager.cs" />
     <Compile Include="Content\ContentProvider.cs" />
-    <Compile Include="IO\BinarySerializer.cs" />
     <Compile Include="Game States\State.cs" />
     <Compile Include="Game States\StateUI.cs" />
     <Compile Include="Input\KeyboardManager.cs" />
@@ -101,4 +100,7 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Graphics\Converters\" />
+  </ItemGroup>
 </Project>

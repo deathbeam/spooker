@@ -52,13 +52,13 @@ namespace SFGL.GameStates
 		#endregion
 
 		#region Input bindings
-		internal virtual void window_TextEntered(TextEventArgs e) { }
-		internal virtual void window_MouseWheelMoved(MouseWheelEventArgs e) { }
-		internal virtual void window_MouseMoved(MouseMoveEventArgs e) { }
-		internal virtual void window_MouseButtonPressed(MouseButtonEventArgs e) { }
-		internal virtual void window_MouseButtonReleased(MouseButtonEventArgs e) { }
-		internal virtual void window_KeyPressed(KeyEventArgs e) { }
-		internal virtual void window_KeyReleased(KeyEventArgs e) { }
+		public virtual void TextEntered(TextEventArgs e) { }
+		public virtual void MouseWheelMoved(MouseWheelEventArgs e) { }
+		public virtual void MouseMoved(MouseMoveEventArgs e) { }
+		public virtual void MouseButtonPressed(MouseButtonEventArgs e) { }
+		public virtual void MouseButtonReleased(MouseButtonEventArgs e) { }
+		public virtual void KeyPressed(KeyEventArgs e) { }
+		public virtual void KeyReleased(KeyEventArgs e) { }
 		#endregion
 
 		#region Functions
@@ -82,11 +82,6 @@ namespace SFGL.GameStates
 		/// Called once per frame. Avoid putting game logic in here.
 		/// </summary>
 		public virtual void Draw() { }
-
-		internal virtual void DrawInternal()
-		{
-			Draw ();
-		}
 		#endregion
 	}
 }

@@ -19,6 +19,12 @@ using SFGL.Audio;
 
 namespace SFGL.Window
 {
+	////////////////////////////////////////////////////////////
+	/// <summary>
+	/// Very extended implementation of RenderWindow with many
+	/// usefull components like Audio, Spritebatch, Input and so.
+	/// </summary>
+	////////////////////////////////////////////////////////////
 	public class GameWindow : RenderWindow
 	{
 		internal SpriteBatch SpriteBatch { get; set; }
@@ -34,9 +40,11 @@ namespace SFGL.Window
 		private Clock frameclock = new Clock();
 		private GameTime elapsedtime = GameTime.Zero;
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Starts main loop of game window
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void Run()
 		{
 			while (IsOpen())
@@ -58,7 +66,7 @@ namespace SFGL.Window
 				foreach (var state in StateStack)
 				{
 					if (state.IsActive || state.InactiveMode.HasFlag(UpdateMode.Draw))
-						state.DrawInternal();
+						state.Draw();
 				}
 				Components.Draw ();
 
@@ -67,25 +75,31 @@ namespace SFGL.Window
 			}
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Adds new component to dynamic component holder
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void AddComponent(object Component)
 		{
 			this.Components.Add (Component);
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Adds new type of content loader to content manager
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void AddLoader(ContentProvider Loader)
 		{
 			this.Content.AddLoader (Loader);
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Pops all states off the stack and pushes one onto it.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void SetState(State state)
 		{
 			foreach (var s in StateStack)
@@ -97,18 +111,22 @@ namespace SFGL.Window
 			PushState(state);
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Pushes a state onto the state stack.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void PushState(State state)
 		{
 			StateStack.Add(state);
 			state.Enter();
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Pops a state off the state stack.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void PopState()
 		{
 			var last = StateStack.Count - 1;
@@ -116,9 +134,11 @@ namespace SFGL.Window
 			StateStack.RemoveAt(last);
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Closes game screen and disposes all components.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public override void Close()
 		{
 			Components.Dispose ();
@@ -132,7 +152,14 @@ namespace SFGL.Window
 
 			return StateStack.FindLast(s => !s.IsOverlay) == state;
 		}
-		
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Creates new instance of GameWindow class.
+		/// </summary>
+		/// <param name="gameSettings">Settings from what will game
+		/// window constructs</param>
+		////////////////////////////////////////////////////////////
 		public GameWindow (GameSettings gameSettings) : base (
 			gameSettings.GetVideoMode,
 			gameSettings.Title,
@@ -158,55 +185,55 @@ namespace SFGL.Window
 			this.GameTime = gameSettings.GameTime;
 
 			//Bind input events to components
-			this.MouseWheelMoved += (sender, e) => { MouseInput.window_MouseWheelMoved(e); };
+			this.MouseWheelMoved += (sender, e) => { MouseInput.MouseWheelMoved(e); };
 
 			this.MouseWheelMoved += (sender, e) =>
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
 					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].window_MouseWheelMoved(e);
+						StateStack[i].MouseWheelMoved(e);
 			};
 
 			this.TextEntered += (sender, e) =>
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
 					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].window_TextEntered(e);
+						StateStack[i].TextEntered(e);
 			};
 
 			this.KeyPressed += (sender, e) =>
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
 					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].window_KeyPressed(e);
+						StateStack[i].KeyPressed(e);
 			};
 
 			this.KeyReleased += (sender, e) => 
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
 					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].window_KeyReleased(e);
+						StateStack[i].KeyReleased(e);
 			};
 
 			this.MouseMoved += (sender, e) =>
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
 					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].window_MouseMoved(e);
+						StateStack[i].MouseMoved(e);
 			};
 
 			this.MouseButtonPressed += (sender, e) =>
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
 					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].window_MouseButtonPressed(e);
+						StateStack[i].MouseButtonPressed(e);
 			};
 
 			this.MouseButtonReleased += (sender, e) =>
 			{ 
 				for (var i = StateStack.Count - 1; i >= 0; i--)
 					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].window_MouseButtonReleased(e);
+						StateStack[i].MouseButtonReleased(e);
 			};
 
 			///Workaround for not closing game window correctly
