@@ -14,8 +14,8 @@ namespace SFGL.Graphics
 {
 	////////////////////////////////////////////////////////////
 	/// <summary>
-	/// Rectangle is an utility class for manipulating 2D rectangles
-	/// with int coordinates
+    /// An implementation of SFML.Graphics.IntRect with extended
+    /// functionality.
 	/// </summary>
 	////////////////////////////////////////////////////////////
 	[StructLayout(LayoutKind.Sequential)]

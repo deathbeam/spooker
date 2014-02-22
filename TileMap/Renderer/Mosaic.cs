@@ -11,8 +11,9 @@ using SFML.Graphics;
 using SFML.Window;
 using SFGL.Window;
 using SFGL.Graphics;
+using TiledSharp;
 
-namespace SFGL.TileEngine.Renderer
+namespace SFGL.TileMap.Renderer
 {
 	public class TmxMosaic : GameComponent
 	{
@@ -36,7 +37,7 @@ namespace SFGL.TileEngine.Renderer
 
 			// Initialize graphics buffers
 			canvas = new TmxCanvas(
-				new Vector2i((int)game.Size.X, (int)game.Size.Y), 
+                new Vector2i((int)game.Window.Size.X, (int)game.Window.Size.Y), 
 				new Vector2i(tMapWidth /mapName.TileWidth, tMapHeight/mapName.TileHeight), 
 				new Vector2i(mapName.TileWidth, mapName.TileHeight));
 

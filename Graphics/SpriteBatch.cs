@@ -79,7 +79,7 @@ namespace SFGL.Graphics
 		{
 			_view.Reset(new FloatRect(position.X, position.Y, size.X, size.Y));
 			_view.Rotate(rotation);
-			Game.SetView(_view);
+			Game.Window.SetView(_view);
 
 			_rs.BlendMode = blendMode;
 
@@ -88,7 +88,7 @@ namespace SFGL.Graphics
 
 		public void Begin(BlendMode blendMode)
 		{
-			Begin (blendMode, new Vector2 (0f, 0f), new Vector2(Game.Size.X, Game.Size.Y), 0f);
+            Begin(blendMode, new Vector2(0f, 0f), new Vector2(Game.Window.Size.X, Game.Window.Size.Y), 0f);
 		}
 
 		public void Begin()
@@ -204,7 +204,7 @@ namespace SFGL.Graphics
 			_sprite.Texture = texture;
 			_sprite.Position = new Vector2f(position.X, position.Y);
 			_sprite.Color = color;
-			_sprite.Rotation = FloatMath.ToDegrees(rotation);
+            _sprite.Rotation = FloatMath.ToDegrees(rotation);
 			_sprite.Origin = new Vector2f(origin.X, origin.Y);
 			_sprite.Scale = new Vector2f (
 				scale.X * GetScaleEffectMultiplier (effects).X,

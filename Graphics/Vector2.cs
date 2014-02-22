@@ -13,8 +13,8 @@ namespace SFGL.Graphics
 {
 	////////////////////////////////////////////////////////////
 	/// <summary>
-	/// Vector2 is an utility class for manipulating 2 dimensional
-	/// vectors with float components
+	/// An implementation of SFML.Window.Vector2f with extended
+    /// functionality.
 	/// </summary>
 	////////////////////////////////////////////////////////////
 	[StructLayout(LayoutKind.Sequential)]

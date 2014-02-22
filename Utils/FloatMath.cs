@@ -11,8 +11,10 @@ namespace SFGL.Utils
 {
     public static class FloatMath
     {
-        private const int LookupSize = 1024*16; //has to be power of 2
+        private const int LookupSize = 1024*16;
 		private static readonly float[] getSin, getCos;
+        private const float Pi = (float)Math.PI;
+        private const float TwoPi = Pi * 2;
 
         static FloatMath()
         {
@@ -24,14 +26,6 @@ namespace SFGL.Utils
                 getSin[i] = (float)Math.Sin(i * Math.PI / LookupSize * 2);
                 getCos[i] = (float)Math.Cos(i * Math.PI / LookupSize * 2);
             }
-
-            var max = 0f;
-            for (int i = 1; i < LookupSize; i++)
-            {
-                var er = Math.Abs(getSin[i] - getSin[i - 1]);
-                if (er > max) max = er;
-            }
-            Console.WriteLine("Max fast sin error is: " + max / 2);
         }
 
         /// <summary>
@@ -52,23 +46,10 @@ namespace SFGL.Utils
             return getCos[rot];
         }
 
-        static int GetIndex(float degrees)
+        private static int GetIndex(float degrees)
         {
             return (int)(degrees * (LookupSize / 360f) + 0.5f) & (LookupSize - 1);
         }
-        public static void SinCos(float degrees, out float sin, out float cos)
-        {
-            var rot = GetIndex(degrees);
-
-            sin = getSin[rot];
-            cos = getCos[rot];
-            
-            //sin = get[rot*2];
-            //cos = get[rot*2+1];
-        }
-
-        public const float Pi = (float) Math.PI;
-        public const float TwoPi = Pi * 2;
 
         public static float Normalize(float radians)
         {

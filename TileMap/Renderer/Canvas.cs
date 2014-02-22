@@ -9,8 +9,9 @@ using SFML.Graphics;
 using SFML.Window;
 using SFGL.Graphics;
 using System;
+using TiledSharp;
 
-namespace SFGL.TileEngine.Renderer
+namespace SFGL.TileMap.Renderer
 {
 	// Canvas tracks three coordinate systems:
 	// 1. pWidth/Height: Canvas pixel count

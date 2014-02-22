@@ -43,7 +43,7 @@ namespace SFGL.GameStates
 		public StateUI(GameWindow game, string GuiImagePath, string FontName, int FontSize) : base(game)
 		{
 			// create GWEN renderer
-			Gwen.Renderer.SFML _renderer = new Gwen.Renderer.SFML(game);
+			Gwen.Renderer.SFML _renderer = new Gwen.Renderer.SFML(game.Window);
 
 			// Create GWEN skin
 			Gwen.Skin.TexturedBase _skin = new Gwen.Skin.TexturedBase(
@@ -54,13 +54,13 @@ namespace SFGL.GameStates
 
 			// Create a Canvas (it's root, on which all other GWEN controls are created)
 			_gamegui = new Canvas(_skin);
-			_gamegui.SetSize((int)game.Size.X, (int)game.Size.Y);
+            _gamegui.SetSize((int)game.Window.Size.X, (int)game.Window.Size.Y);
 			_gamegui.ShouldDrawBackground = false;
 			_gamegui.KeyboardInputEnabled = true;
 
 			// Create GWEN input processor
 			_ginput = new Gwen.Input.SFML();
-			_ginput.Initialize(_gamegui, Game);
+			_ginput.Initialize(_gamegui, game.Window);
 		}
 		#endregion
 
