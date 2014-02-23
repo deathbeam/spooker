@@ -34,12 +34,12 @@ namespace SFGL.Window
 		internal MouseManager MouseInput { get; set; }
         internal RenderWindow Window = null;
 
-		private List<State> StateStack = new List<State> ();
-		private EntityList Components = null;
-		private GameTime GameTime = GameTime.Zero;
-		private Color ClearColor = Color.Black;
-		private Clock frameclock = new Clock();
-		private GameTime elapsedtime = GameTime.Zero;
+		private List<State> _stateStack = new List<State> ();
+		private EntityList _components = null;
+		private GameTime _gameTime = GameTime.Zero;
+		private Color _clearColor = Color.Black;
+		private Clock _frameClock = new Clock();
+		private GameTime _elapsedTime = GameTime.Zero;
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
@@ -50,26 +50,26 @@ namespace SFGL.Window
 		{
 			while (Window.IsOpen())
 			{
-				elapsedtime += frameclock.Restart();
-                Window.Clear(ClearColor);
+				_elapsedTime += _frameClock.Restart();
+                Window.Clear(_clearColor);
 
-				while (elapsedtime >= GameTime)
+				while (_elapsedTime >= _gameTime)
 				{
-					elapsedtime -= GameTime;
-					foreach (var state in StateStack)
+					_elapsedTime -= _gameTime;
+					foreach (var state in _stateStack)
 					{
 						if (state.IsActive || state.InactiveMode.HasFlag(UpdateMode.Update))
-							state.Update (GameTime);
+							state.Update (_gameTime);
 					}
-					Components.Update (GameTime);
+					_components.Update (_gameTime);
 				}
 
-				foreach (var state in StateStack)
+				foreach (var state in _stateStack)
 				{
 					if (state.IsActive || state.InactiveMode.HasFlag(UpdateMode.Draw))
 						state.Draw();
 				}
-				Components.Draw ();
+				_components.Draw ();
 
 				Window.Display();
                 Window.DispatchEvents();
@@ -83,7 +83,7 @@ namespace SFGL.Window
 		////////////////////////////////////////////////////////////
 		public void AddComponent(object Component)
 		{
-			this.Components.Add (Component);
+			this._components.Add (Component);
 		}
 
 		////////////////////////////////////////////////////////////
@@ -103,12 +103,12 @@ namespace SFGL.Window
 		////////////////////////////////////////////////////////////
 		public void SetState(State state)
 		{
-			foreach (var s in StateStack)
+			foreach (var s in _stateStack)
 			{
 				s.Leave();
 			}
 
-			StateStack.Clear();
+			_stateStack.Clear();
 			PushState(state);
 		}
 
@@ -119,7 +119,7 @@ namespace SFGL.Window
 		////////////////////////////////////////////////////////////
 		public void PushState(State state)
 		{
-			StateStack.Add(state);
+			_stateStack.Add(state);
 			state.Enter();
 		}
 
@@ -130,9 +130,9 @@ namespace SFGL.Window
 		////////////////////////////////////////////////////////////
 		public void PopState()
 		{
-			var last = StateStack.Count - 1;
-			StateStack[last].Leave();
-			StateStack.RemoveAt(last);
+			var last = _stateStack.Count - 1;
+			_stateStack[last].Leave();
+			_stateStack.RemoveAt(last);
         }
 
         ////////////////////////////////////////////////////////////
@@ -163,7 +163,7 @@ namespace SFGL.Window
 		////////////////////////////////////////////////////////////
 		public void Close()
 		{
-			Components.Dispose ();
+			_components.Dispose ();
 			Window.Close ();
 		}
 
@@ -186,7 +186,7 @@ namespace SFGL.Window
 
 			//Initialize core parts of game
 			this.SpriteBatch = new SpriteBatch (this);
-			this.Components = new EntityList (this);
+			this._components = new EntityList (this);
 			this.Content = new ContentManager (this);
 			this.Audio = new AudioManager (this);
 			this.KeysInput = new KeyboardManager (this);
@@ -198,78 +198,78 @@ namespace SFGL.Window
 				gameSettings.ContentDirectory,
 				gameSettings.SoundDirectory);
 			this.Audio.SoundExtension = gameSettings.SoundExtension;
-			this.ClearColor = gameSettings.ClearColor;
-			this.GameTime = gameSettings.GameTime;
+			this._clearColor = gameSettings.ClearColor;
+			this._gameTime = gameSettings.GameTime;
 
 			//Bind input events to components
             Window.MouseWheelMoved += (sender, e) => { MouseInput.MouseWheelMoved(e); };
 
             Window.MouseWheelMoved += (sender, e) =>
 			{ 
-				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].MouseWheelMoved(e);
+				for (var i = _stateStack.Count - 1; i >= 0; i--)
+					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
+						_stateStack[i].MouseWheelMoved(e);
 			};
 
 			Window.TextEntered += (sender, e) =>
 			{ 
-				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].TextEntered(e);
+				for (var i = _stateStack.Count - 1; i >= 0; i--)
+					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
+						_stateStack[i].TextEntered(e);
 			};
 
             Window.KeyPressed += (sender, e) =>
 			{ 
-				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].KeyPressed(e);
+				for (var i = _stateStack.Count - 1; i >= 0; i--)
+					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
+						_stateStack[i].KeyPressed(e);
 			};
 
             Window.KeyReleased += (sender, e) => 
 			{ 
-				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].KeyReleased(e);
+				for (var i = _stateStack.Count - 1; i >= 0; i--)
+					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
+						_stateStack[i].KeyReleased(e);
 			};
 
             Window.MouseMoved += (sender, e) =>
 			{ 
-				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].MouseMoved(e);
+				for (var i = _stateStack.Count - 1; i >= 0; i--)
+					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
+						_stateStack[i].MouseMoved(e);
 			};
 
             Window.MouseButtonPressed += (sender, e) =>
 			{ 
-				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].MouseButtonPressed(e);
+				for (var i = _stateStack.Count - 1; i >= 0; i--)
+					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
+						_stateStack[i].MouseButtonPressed(e);
 			};
 
             Window.MouseButtonReleased += (sender, e) =>
 			{ 
-				for (var i = StateStack.Count - 1; i >= 0; i--)
-					if ((StateStack[i].IsActive || StateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						StateStack[i].MouseButtonReleased(e);
+				for (var i = _stateStack.Count - 1; i >= 0; i--)
+					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
+						_stateStack[i].MouseButtonReleased(e);
 			};
 
 			///Workaround for not closing game window correctly
             Window.Closed += (sender, e) => { this.Close(); };
 
 			//Add components to component manager
-			this.Components.Add (KeysInput);
-			this.Components.Add (MouseInput);
-			this.Components.Add (Audio);
-			this.Components.Add (Content);
-			this.Components.Add (SpriteBatch);
+			this._components.Add (KeysInput);
+			this._components.Add (MouseInput);
+			this._components.Add (Audio);
+			this._components.Add (Content);
+			this._components.Add (SpriteBatch);
 		}
 
         internal bool IsActive(State state)
         {
             if (state.IsOverlay)
-                return StateStack.IndexOf(state) == (StateStack.Count - 1);
+                return _stateStack.IndexOf(state) == (_stateStack.Count - 1);
 
-            return StateStack.FindLast(s => !s.IsOverlay) == state;
+            return _stateStack.FindLast(s => !s.IsOverlay) == state;
         }
 	}
 }

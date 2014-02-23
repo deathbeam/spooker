@@ -2,7 +2,7 @@
  * Original Works/Author: Thomas Slusny
  * Other Contributors: None
  * Author Website: http://indiearmory.com
- * License: GPL 3.0
+ * License: MIT
 */
 
 using SFML.Graphics;

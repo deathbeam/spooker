@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SFGL.Graphics;
+using SFML.Graphics;
+using TiledSharp;
 
 namespace SFGL.TileMap
 {
@@ -10,7 +12,18 @@ namespace SFGL.TileMap
     {
         public Vector2 Position { get; set; }
         public Rectangle SourceRect { get; set; }
-        public string Tileset { get; set; }
-        public bool Visible { get; set; }
+        public Texture Tileset { get; set; }
+
+        public void Draw(ISpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Tileset, Position, SourceRect, Color.White);
+        }
+
+        public Tile(TmxLayerTile tile, Vector2 tileSize, Rectangle tileRect, Texture tileSheet)
+        {
+            Position = new Vector2(tile.X * tileSize.X, tile.Y * tileSize.Y);
+            SourceRect = tileRect;
+            Tileset = tileSheet;
+        }
     }
 }

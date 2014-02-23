@@ -21,7 +21,7 @@ namespace SFGL.Window
 	public abstract class GameComponent
 	{
 		/// <summary>Heart of SFGL. All important operations are done here.</summary>
-		protected GameWindow Game;
+        protected GameWindow Game;
 
 		/// <summary>Draws multiple renderable objects in optimized way.</summary>
 		protected ISpriteBatch SpriteBatch
