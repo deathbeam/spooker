@@ -15,7 +15,7 @@ using SFGL.Time;
 
 namespace SFGL.Input
 {
-	public class KeyboardManager : GameComponent, IUpdateable
+	public class KeyboardManager : IUpdateable
     {
 		private Dictionary<Keyboard.Key, bool> _keyStates = new Dictionary<Keyboard.Key, bool>();
 		private Dictionary<Keyboard.Key, bool> _previousKeyStates = new Dictionary<Keyboard.Key, bool>();
@@ -36,7 +36,7 @@ namespace SFGL.Input
 		/// </summary>
 		/// <param name="game">Core game component</param>
 		/// <returns></returns>
-		public KeyboardManager(GameWindow game) : base(game) 
+		public KeyboardManager()
 		{
 			foreach(Keyboard.Key key in keysEnum)
 			{

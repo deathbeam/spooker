@@ -15,7 +15,7 @@ using SFGL.Time;
 
 namespace SFGL.Input
 {
-	public class MouseManager : GameComponent, IUpdateable
+	public class MouseManager : IUpdateable
 	{
 		private Dictionary<Mouse.Button, bool> _buttonStates = new Dictionary<Mouse.Button, bool>();
 		private Dictionary<Mouse.Button, bool> _previousButtonStates = new Dictionary<Mouse.Button, bool>();
@@ -52,7 +52,7 @@ namespace SFGL.Input
 		/// </summary>
 		/// <param name="game">Core game component</param>
 		/// <returns></returns>
-		public MouseManager(GameWindow game) : base(game)
+		public MouseManager()
 		{
 			foreach(Mouse.Button button in buttonEnum)
 			{

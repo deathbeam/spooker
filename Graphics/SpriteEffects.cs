@@ -30,4 +30,15 @@ namespace SFGL.Graphics
 		/// <summary>Flips the both vertically and horizontally before rendering.</summary>
 		FlipVerticalHorizontal = FlipVertically | FlipHorizontally,
 	}
+
+	public static class ScaleEffectMultiplier
+	{
+		public static Vector2 Get(SpriteEffects effects)
+		{
+			return new Vector2(
+				((effects & SpriteEffects.FlipHorizontally) != 0) ? -1 : 1,
+				((effects & SpriteEffects.FlipVertically) != 0) ? -1 : 1
+			);
+		}
+	}
 }

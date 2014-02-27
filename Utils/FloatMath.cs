@@ -46,6 +46,22 @@ namespace SFGL.Utils
             return getCos[rot];
         }
 
+		/// <summary>
+		/// Fast innacurate sinus and cosinus
+		/// </summary>
+		public static void SinCos(float degrees, out float sin, out float cos)
+		{
+			var rot = GetIndex(degrees);
+
+			sin = getSin[rot];
+			cos = getCos[rot];
+		}
+
+		public static float RoundToNearest(float value, float factor)
+		{
+			return (float)Math.Round(value / factor) * factor;
+		}
+
         private static int GetIndex(float degrees)
         {
             return (int)(degrees * (LookupSize / 360f) + 0.5f) & (LookupSize - 1);

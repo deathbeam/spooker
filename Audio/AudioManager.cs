@@ -16,7 +16,7 @@ namespace SFGL.Audio
 	/// <summary>
 	/// Can be used for managing, playing and loading of sound and music.
 	/// </summary>
-	public class AudioManager : GameComponent, ILoadable, IDisposable
+	public class AudioManager : ILoadable, IDisposable
 	{
 		private Dictionary<string, SoundBuffer> _sounds = new Dictionary<string, SoundBuffer>();
 		private Music _currentMusic;
@@ -34,7 +34,7 @@ namespace SFGL.Audio
 		/// <summary>
 		/// Creates new instance of audio manager.
 		/// </summary>
-		public AudioManager(GameWindow game) : base(game) { }
+		public AudioManager() { }
 
 
 		/// <summary>

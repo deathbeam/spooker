@@ -14,22 +14,17 @@ using SFGL.Window;
 
 namespace SFGL
 {
-	public class EntityList : GameComponent, IUpdateable, IDrawable, IDisposable
+	public class EntityList : Drawable, IUpdateable, IDisposable
     {
 		private HashSet<IUpdateable> _updateables = new HashSet<IUpdateable>();
-		private HashSet<IDrawable> _drawables = new HashSet<IDrawable>();
-		private HashSet<Drawable> _sfmlDrawables = new HashSet<Drawable>();
-
-		public EntityList(GameWindow game) : base (game) { }
+		private HashSet<Drawable> _drawables = new HashSet<Drawable>();
 
         public void Add<T>(T component)
         {
             IUpdateable updateable = component as IUpdateable;
-            IDrawable drawable = component as IDrawable;
             ILoadable loadable = component as ILoadable;
-            Drawable sfmlDrawable = component as Drawable;
+			Drawable drawable = component as Drawable;
 
-			if (sfmlDrawable != null) _sfmlDrawables.Add(sfmlDrawable);
 			if (updateable != null) _updateables.Add(updateable);
 			if (drawable != null) _drawables.Add(drawable);
 			if (loadable != null) loadable.LoadContent();
@@ -38,8 +33,7 @@ namespace SFGL
         public void Remove<T>(T component)
         {
             _updateables.Remove(component as IUpdateable);
-            _drawables.Remove(component as IDrawable);
-            _sfmlDrawables.Remove(component as Drawable);
+			_drawables.Remove(component as Drawable);
 
             IDisposable disposable = component as IDisposable;
 			if (disposable != null) disposable.Dispose();
@@ -53,16 +47,11 @@ namespace SFGL
             }
         }
 
-		public void Draw()
+		public void Draw(RenderTarget graphicsDevice, RenderStates states)
         {
-            foreach (IDrawable drawable in _drawables)
+			foreach (Drawable drawable in _drawables)
             {
-				drawable.Draw();
-            }
-
-			foreach (Drawable sfmlDrawable in _sfmlDrawables)
-            {
-				Game.Draw(sfmlDrawable);
+				drawable.Draw(graphicsDevice, states);
             }
         }
 
@@ -75,14 +64,9 @@ namespace SFGL
 				if (updateable is IDisposable) toDispose.Add(updateable as IDisposable);
             }
 
-            foreach (IDrawable drawable in _drawables)
+			foreach (Drawable drawable in _drawables)
             {
 				if (drawable is IDisposable) toDispose.Add(drawable as IDisposable);
-            }
-
-			foreach (Drawable sfmlDrawable in _sfmlDrawables)
-            {
-				if (sfmlDrawable is IDisposable) toDispose.Add(sfmlDrawable as IDisposable);
             }
 
             foreach (IDisposable disposable in toDispose)
@@ -92,9 +76,7 @@ namespace SFGL
 
             _updateables.Clear();
             _drawables.Clear();
-            _sfmlDrawables.Clear();
             toDispose.Clear();
         }
     }
-
 }

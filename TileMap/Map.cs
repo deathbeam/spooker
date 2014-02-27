@@ -1,4 +1,11 @@
-﻿using System;
+﻿/* File Description
+ * Original Works/Author: Thomas Slusny
+ * Other Contributors: None
+ * Author Website: http://indiearmory.com
+ * License: MIT
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,36 +16,35 @@ using SFML.Graphics;
 
 namespace SFGL.TileMap
 {
-    public class Map : GameComponent, IDrawable
+	public class Map : GameComponent, Drawable
     {
-        public string Name { get; set; }
-        public string Version { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-        public int TileWidth { get; set; }
-        public int TileHeight { get; set; }
+		public Vector2 TileSize { get; set; }
         public List<Layer> Layers { get; set; }
+		
+		private Camera camera = null;
 
-        public void Draw()
+		public void Draw(RenderTarget graphicsDevice, RenderStates states)
         {
-            SpriteBatch.Begin();
+			vertexBatch.Begin();
             foreach (Layer layer in Layers)
-                layer.Draw(SpriteBatch);
-            SpriteBatch.End();
+				layer.Draw(vertexBatch, camera);
+			vertexBatch.End();
+			graphicsDevice.Draw (vertexBatch);
         }
 
-        public Map(GameWindow game, string mapPath) : base(game)
+		public Map(GameWindow game, Camera camera, string mapPath) : base(game)
         {
-            TmxMap map = new TmxMap(mapPath);
-            // Name = map.Properties["Name"];
-            // Version = map.Properties["Version"];
+			this.camera = camera;
+
+			var map = new TmxMap(mapPath);
             Width = map.Width;
             Height = map.Height;
-            TileWidth = map.TileWidth;
-            TileHeight = map.TileHeight;
+			TileSize = new Vector2 (map.TileWidth, map.TileHeight);
 
-            Dictionary<int, Rectangle> tileRect = new Dictionary<int, Rectangle>();
-            Dictionary<int, Texture> tileSheet = new Dictionary<int, Texture>();
+			var tileRect = new Dictionary<int, Rectangle>();
+			var tileSheet = new Dictionary<int, Texture>();
 
             foreach (TmxTileset ts in map.Tilesets)
             {
@@ -54,12 +60,13 @@ namespace SFGL.TileMap
                 var hEnd = ts.Image.Height;
 
                 // Pre-compute tileset rectangles
-                var id = ts.FirstGid;
+				var id = ts.FirstGid;
                 for (var h = hStart; h < hEnd; h += hInc)
                 {
                     for (var w = wStart; w < wEnd; w += wInc)
                     {
-                        var rect = new Rectangle(w, h,
+                        var rect = new Rectangle(
+							w, h,
                             ts.TileWidth, ts.TileHeight);
                         tileRect.Add(id, rect);
                         tileSheet.Add(id, sheet);
@@ -72,7 +79,11 @@ namespace SFGL.TileMap
             Layers = new List<Layer>();
             foreach (TmxLayer layer in map.Layers)
             {
-                Layers.Add(new Layer(layer, new Vector2(map.TileWidth, map.TileHeight), tileRect, tileSheet));
+                Layers.Add(new Layer(
+					layer,
+					TileSize,
+					tileRect,
+					tileSheet));
             }
         }
     }

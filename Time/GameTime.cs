@@ -13,14 +13,17 @@ namespace SFGL.Time
 	public class GameTime
     {
         #region Variables
+
+		public static GameTime ElapsedGameTime = GameTime.Zero; 
         private long _elapsedticks = 0;
-		private static GameTime _zero = new GameTime(0);
+
         #endregion
 
         #region Properties
+
 		public static GameTime Zero
         {
-			get { return _zero; }
+			get { return new GameTime(0); }
         }
         public long Ticks
         {
@@ -46,9 +49,11 @@ namespace SFGL.Time
         {
 			get { return Stopwatch.Frequency; }
         }
+
         #endregion
 
         #region Contructors/Destructors
+
         private GameTime(long TotalTicks)
         {
             _elapsedticks = TotalTicks;
@@ -69,9 +74,11 @@ namespace SFGL.Time
         {
             return FromSeconds((double)Minutes * 60d);
         }
+
         #endregion
 
         #region Functions
+
         public override bool Equals(object obj)
         {
             if (!(obj is GameTime))
@@ -83,9 +90,11 @@ namespace SFGL.Time
 		{
 			return 0;
 		}
+
         #endregion
 
         #region Operators
+
         public static bool operator ==(GameTime a, GameTime b)
         {
             return (a._elapsedticks == b._elapsedticks);
@@ -162,6 +171,7 @@ namespace SFGL.Time
         {
             return new GameTime((long)((double)a._elapsedticks / (double)b));
         }
+
         #endregion
     }
 }

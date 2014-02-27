@@ -5,6 +5,7 @@
  * License: 
 */
 
+using System;
 using SFGL.Utils;
 using SFML.Graphics;
 using SFML.Window;
@@ -21,7 +22,7 @@ namespace SFGL.Graphics
 	///  of XNA spritebatch.
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public class SpriteBatch : GameComponent, ISpriteBatch
+	public class SpriteBatch : IDisposable
 	{
 		#region Variables
 
@@ -29,21 +30,10 @@ namespace SFGL.Graphics
 		private Text _str = new Text();
 		private View _view = new View();
 		private RenderStates _rs = RenderStates.Default;
+		private RenderTarget _rt = null;
 
 		private bool _isDisposed;
 		private bool _isStarted;
-
-		#endregion
-
-		#region Helpers
-
-		private static Vector2 GetScaleEffectMultiplier(SpriteEffects effects)
-		{
-			return new Vector2(
-				((effects & SpriteEffects.FlipHorizontally) != 0) ? -1 : 1,
-				((effects & SpriteEffects.FlipVertically) != 0) ? -1 : 1
-			);
-		}
 
 		#endregion
 
@@ -69,17 +59,23 @@ namespace SFGL.Graphics
 
 		#region Constructors
 
-		public SpriteBatch(GameWindow game) : base(game) { }
+		public SpriteBatch(RenderTarget graphicsDevice){ _rt = graphicsDevice; }
 
 		#endregion
 
 		#region General functions
 
+		public void ChangeTarget(RenderTarget graphicsDevice)
+		{
+			_rt.Clear ();
+			_rt = graphicsDevice;
+		}
+
 		public void Begin(BlendMode blendMode, Vector2 position, Vector2 size, float rotation)
 		{
 			_view.Reset(new FloatRect(position.X, position.Y, size.X, size.Y));
 			_view.Rotate(rotation);
-			Game.Window.SetView(_view);
+			_rt.SetView(_view);
 
 			_rs.BlendMode = blendMode;
 
@@ -88,7 +84,7 @@ namespace SFGL.Graphics
 
 		public void Begin(BlendMode blendMode)
 		{
-            Begin(blendMode, new Vector2(0f, 0f), new Vector2(Game.Window.Size.X, Game.Window.Size.Y), 0f);
+			Begin(blendMode, new Vector2(0f, 0f), new Vector2(_rt.Size.X, _rt.Size.Y), 0f);
 		}
 
 		public void Begin()
@@ -112,7 +108,7 @@ namespace SFGL.Graphics
 				return;
 
 			_rs.Shader = shader;
-			Game.Draw(drawable, _rs);
+			_rt.Draw(drawable, _rs);
 		}
 
 		#endregion
@@ -125,7 +121,7 @@ namespace SFGL.Graphics
 				return;
 
 			_rs.Shader = shader;
-			Game.Draw(sprite, _rs);
+			_rt.Draw(sprite, _rs);
 		}
 
 		public void Draw(Texture texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color,
@@ -160,12 +156,12 @@ namespace SFGL.Graphics
 			_sprite.Origin = new Vector2f(origin.X, origin.Y);
 			_sprite.Scale = new Vector2f(
 				(destinationRectangle.Width / spriteTextureRect.Width)
-				* GetScaleEffectMultiplier(effects).X,
+				* ScaleEffectMultiplier.Get(effects).X,
 				(destinationRectangle.Height / spriteTextureRect.Height)
-				* GetScaleEffectMultiplier(effects).Y);
+				* ScaleEffectMultiplier.Get(effects).Y);
 
 			_rs.Shader = shader;
-			Game.Draw(_sprite, _rs);
+			_rt.Draw(_sprite, _rs);
 		}
 
 		public void Draw(Texture texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color, Shader shader = null)
@@ -207,12 +203,12 @@ namespace SFGL.Graphics
             _sprite.Rotation = FloatMath.ToDegrees(rotation);
 			_sprite.Origin = new Vector2f(origin.X, origin.Y);
 			_sprite.Scale = new Vector2f (
-				scale.X * GetScaleEffectMultiplier (effects).X,
-				scale.Y * GetScaleEffectMultiplier (effects).Y);
+				scale.X * ScaleEffectMultiplier.Get (effects).X,
+				scale.Y * ScaleEffectMultiplier.Get (effects).Y);
 
 			_rs.Shader = shader;
 
-			Game.Draw(_sprite, _rs);
+			_rt.Draw(_sprite, _rs);
 		}
 
 		public void Draw(Texture texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation,
@@ -253,7 +249,7 @@ namespace SFGL.Graphics
 
 			_rs.Shader = shader;
 
-			Game.Draw(_str, _rs);
+			_rt.Draw(_str, _rs);
 		}
 
 		public void DrawString(Font font, StringBuilder text, Vector2 position, Color color, float rotation,

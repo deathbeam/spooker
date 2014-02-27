@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>SFGL</RootNamespace>
     <AssemblyName>SFGL</AssemblyName>
-    <ReleaseVersion>1.0</ReleaseVersion>
+    <ReleaseVersion>1.2</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,26 +57,23 @@
     <Reference Include="sfmlnet-window-2">
       <HintPath>lib\sfmlnet-window-2.dll</HintPath>
     </Reference>
-    <Reference Include="TiledSharp, Version=1.0.5118.403, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="TiledSharp">
       <HintPath>..\TestGame\TestGame\bin\Debug\TiledSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Lidgren.Network">
+      <HintPath>lib\Lidgren.Network.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TileMap\Layer.cs" />
-    <Compile Include="TileMap\Map.cs" />
     <Compile Include="TileMap\Tile.cs" />
     <Compile Include="Utils\FloatMath.cs" />
     <Compile Include="Physics\CollisionDetection.cs" />
     <Compile Include="Graphics\SpriteEffects.cs" />
     <Compile Include="Graphics\SpriteBatch.cs" />
-    <Compile Include="IDrawable.cs" />
     <Compile Include="ILoadable.cs" />
     <Compile Include="IUpdateable.cs" />
-    <Compile Include="Graphics\ISpriteBatch.cs" />
-    <Compile Include="TileMap\Renderer\Canvas.cs" />
-    <Compile Include="TileMap\Renderer\Mosaic.cs" />
     <Compile Include="Time\Clock.cs" />
     <Compile Include="Window\GameComponent.cs" />
     <Compile Include="Window\GameSettings.cs" />
@@ -94,6 +91,17 @@
     <Compile Include="GameStates\UpdateMode.cs" />
     <Compile Include="Graphics\Vector2.cs" />
     <Compile Include="Graphics\Rectangle.cs" />
+    <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="TileMap\Map.cs" />
+    <Compile Include="Time\Timer.cs" />
+    <Compile Include="Graphics\VertexBatch.cs" />
+    <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Utils\VectorMath.cs" />
+    <Compile Include="Network\NetworkAgent.cs" />
+    <Compile Include="Network\Packet.cs" />
+    <Compile Include="Network\PacketManager.cs" />
+    <Compile Include="Particles\Particle.cs" />
+    <Compile Include="Particles\Emitter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -101,4 +109,12 @@
   <ItemGroup />
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <None Include="LICENSE" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Network\" />
+    <Folder Include="Particles\" />
+  </ItemGroup>
 </Project>

@@ -27,19 +27,16 @@ namespace SFGL.Window
 	////////////////////////////////////////////////////////////
 	public class GameWindow
 	{
-		internal SpriteBatch SpriteBatch { get; set; }
 		internal ContentManager Content { get; set; }
 		internal AudioManager Audio { get; set; }
 		internal KeyboardManager KeysInput { get; set; }
 		internal MouseManager MouseInput { get; set; }
-        internal RenderWindow Window = null;
+		internal RenderWindow GraphicsDevice = null;
 
 		private List<State> _stateStack = new List<State> ();
 		private EntityList _components = null;
 		private GameTime _gameTime = GameTime.Zero;
 		private Color _clearColor = Color.Black;
-		private Clock _frameClock = new Clock();
-		private GameTime _elapsedTime = GameTime.Zero;
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
@@ -48,10 +45,15 @@ namespace SFGL.Window
 		////////////////////////////////////////////////////////////
 		public void Run()
 		{
-			while (Window.IsOpen())
+			var _elapsedTime = GameTime.Zero;
+			var _frameClock = new Clock();
+
+			while (GraphicsDevice.IsOpen())
 			{
 				_elapsedTime += _frameClock.Restart();
-                Window.Clear(_clearColor);
+				GameTime.ElapsedGameTime = _elapsedTime;
+
+				GraphicsDevice.Clear(_clearColor);
 
 				while (_elapsedTime >= _gameTime)
 				{
@@ -67,12 +69,12 @@ namespace SFGL.Window
 				foreach (var state in _stateStack)
 				{
 					if (state.IsActive || state.InactiveMode.HasFlag(UpdateMode.Draw))
-						state.Draw();
+						GraphicsDevice.Draw(state);
 				}
-				_components.Draw ();
+				GraphicsDevice.Draw (_components);
 
-				Window.Display();
-                Window.DispatchEvents();
+				GraphicsDevice.Display();
+				GraphicsDevice.DispatchEvents();
 			}
 		}
 
@@ -135,6 +137,26 @@ namespace SFGL.Window
 			_stateStack.RemoveAt(last);
         }
 
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Returns current view area of Graphics Device
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public View GetView()
+		{
+			return GraphicsDevice.GetView ();
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Changes current view area of Graphics Device
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void SetView(View view)
+		{
+			GraphicsDevice.SetView (view);
+		}
+
         ////////////////////////////////////////////////////////////
         /// <summary>
         /// Draws drawable to rendering window.
@@ -142,7 +164,7 @@ namespace SFGL.Window
         ////////////////////////////////////////////////////////////
         public void Draw(Drawable drawable)
         {
-            Window.Draw(drawable);
+			GraphicsDevice.Draw(drawable);
         }
 
         ////////////////////////////////////////////////////////////
@@ -153,7 +175,7 @@ namespace SFGL.Window
         ////////////////////////////////////////////////////////////
         public void Draw(Drawable drawable, RenderStates states)
         {
-            Window.Draw(drawable, states);
+			GraphicsDevice.Draw(drawable, states);
         }
 
 		////////////////////////////////////////////////////////////
@@ -164,7 +186,7 @@ namespace SFGL.Window
 		public void Close()
 		{
 			_components.Dispose ();
-			Window.Close ();
+			GraphicsDevice.Close ();
 		}
 
 		////////////////////////////////////////////////////////////
@@ -177,91 +199,89 @@ namespace SFGL.Window
 		public GameWindow (GameSettings gameSettings)
 		{
             //Load game settings for renderwindow
-            Window = new RenderWindow(gameSettings.GetVideoMode,
+			GraphicsDevice = new RenderWindow(gameSettings.GetVideoMode,
                 gameSettings.Title,
                 gameSettings.Style,
                 gameSettings.GetContextSettings);
-            Window.SetVerticalSyncEnabled(gameSettings.VerticalSync);
-            Window.SetFramerateLimit(gameSettings.FramerateLimit);
+			GraphicsDevice.SetVerticalSyncEnabled(gameSettings.VerticalSync);
+			GraphicsDevice.SetFramerateLimit(gameSettings.FramerateLimit);
 
 			//Initialize core parts of game
-			this.SpriteBatch = new SpriteBatch (this);
-			this._components = new EntityList (this);
-			this.Content = new ContentManager (this);
-			this.Audio = new AudioManager (this);
-			this.KeysInput = new KeyboardManager (this);
-			this.MouseInput = new MouseManager (this);
+			_components = new EntityList ();
+			Content = new ContentManager ();
+			Audio = new AudioManager ();
+			KeysInput = new KeyboardManager ();
+			MouseInput = new MouseManager ();
 
             //Load rest of game settings
-			this.Content.Directory = gameSettings.ContentDirectory;
-			this.Audio.SoundDirectory = String.Format("{0}/{1}",
+			Content.Directory = gameSettings.ContentDirectory;
+			Audio.SoundDirectory = String.Format("{0}/{1}",
 				gameSettings.ContentDirectory,
 				gameSettings.SoundDirectory);
-			this.Audio.SoundExtension = gameSettings.SoundExtension;
-			this._clearColor = gameSettings.ClearColor;
-			this._gameTime = gameSettings.GameTime;
+			Audio.SoundExtension = gameSettings.SoundExtension;
+			_clearColor = gameSettings.ClearColor;
+			_gameTime = gameSettings.GameTime;
 
 			//Bind input events to components
-            Window.MouseWheelMoved += (sender, e) => { MouseInput.MouseWheelMoved(e); };
+			GraphicsDevice.MouseWheelMoved += (sender, e) => { MouseInput.MouseWheelMoved(e); };
 
-            Window.MouseWheelMoved += (sender, e) =>
+			GraphicsDevice.MouseWheelMoved += (sender, e) =>
 			{ 
 				for (var i = _stateStack.Count - 1; i >= 0; i--)
 					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						_stateStack[i].MouseWheelMoved(e);
 			};
 
-			Window.TextEntered += (sender, e) =>
+			GraphicsDevice.TextEntered += (sender, e) =>
 			{ 
 				for (var i = _stateStack.Count - 1; i >= 0; i--)
 					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						_stateStack[i].TextEntered(e);
 			};
 
-            Window.KeyPressed += (sender, e) =>
+			GraphicsDevice.KeyPressed += (sender, e) =>
 			{ 
 				for (var i = _stateStack.Count - 1; i >= 0; i--)
 					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						_stateStack[i].KeyPressed(e);
 			};
 
-            Window.KeyReleased += (sender, e) => 
+			GraphicsDevice.KeyReleased += (sender, e) => 
 			{ 
 				for (var i = _stateStack.Count - 1; i >= 0; i--)
 					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						_stateStack[i].KeyReleased(e);
 			};
 
-            Window.MouseMoved += (sender, e) =>
+			GraphicsDevice.MouseMoved += (sender, e) =>
 			{ 
 				for (var i = _stateStack.Count - 1; i >= 0; i--)
 					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						_stateStack[i].MouseMoved(e);
 			};
 
-            Window.MouseButtonPressed += (sender, e) =>
+			GraphicsDevice.MouseButtonPressed += (sender, e) =>
 			{ 
 				for (var i = _stateStack.Count - 1; i >= 0; i--)
 					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						_stateStack[i].MouseButtonPressed(e);
 			};
 
-            Window.MouseButtonReleased += (sender, e) =>
+			GraphicsDevice.MouseButtonReleased += (sender, e) =>
 			{ 
 				for (var i = _stateStack.Count - 1; i >= 0; i--)
 					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
 						_stateStack[i].MouseButtonReleased(e);
 			};
 
-			///Workaround for not closing game window correctly
-            Window.Closed += (sender, e) => { this.Close(); };
+			//Workaround for not closing game window correctly
+			GraphicsDevice.Closed += (sender, e) => { this.Close(); };
 
 			//Add components to component manager
-			this._components.Add (KeysInput);
-			this._components.Add (MouseInput);
-			this._components.Add (Audio);
-			this._components.Add (Content);
-			this._components.Add (SpriteBatch);
+			_components.Add (KeysInput);
+			_components.Add (MouseInput);
+			_components.Add (Audio);
+			_components.Add (Content);
 		}
 
         internal bool IsActive(State state)
@@ -273,4 +293,3 @@ namespace SFGL.Window
         }
 	}
 }
-

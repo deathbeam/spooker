@@ -13,6 +13,8 @@ namespace SFGL.Window
 {
     public class GameSettings
     {
+		#region Variables
+
 		private GameTime _gameTime = GameTime.Zero;
 		private Color _color = Color.Black;
 		private string _directory = "Content";
@@ -24,6 +26,10 @@ namespace SFGL.Window
 		private uint _framerate = 32;
 		private ContextSettings _context = new ContextSettings(32, 0, 4);
 		private VideoMode _videoMode = new VideoMode (800, 600);
+
+		#endregion
+
+		#region Properties
 
 		public VideoMode GetVideoMode
 		{
@@ -136,5 +142,7 @@ namespace SFGL.Window
 			get { return _context.AntialiasingLevel; }
 			set { _context.AntialiasingLevel = value; }
         }
+
+		#endregion
     }
 }

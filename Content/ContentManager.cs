@@ -15,7 +15,7 @@ namespace SFGL.Content
 	/// <summary>
 	/// Provides simple way of loading game content such as textures, fonts, shaders and more.
 	/// </summary>
-	public class ContentManager : GameComponent, IDisposable
+	public class ContentManager : IDisposable
     {
 		private readonly List<ContentProvider> _loaders = new List<ContentProvider> ();
 		private string _directory = "Content";
@@ -32,12 +32,12 @@ namespace SFGL.Content
 		/// <summary>
 		/// Creates new instance of Content Manager.
 		/// </summary>
-		public ContentManager(GameWindow game) : base(game) { }
+		public ContentManager() { }
 
 		/// <summary>
 		/// Loads file to content manager, or if file is already loaded, returns file data.
 		/// </summary>
-		public T Load<T>(string path) where T : class
+		public T Get<T>(string path) where T : class
         {
 			ContentProvider _loader = _loaders.First(x => x.Type == typeof (T));
 

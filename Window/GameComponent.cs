@@ -9,6 +9,7 @@ using SFGL.Audio;
 using SFGL.Graphics;
 using SFGL.Content;
 using SFGL.Input;
+using SFML.Graphics;
 
 namespace SFGL.Window
 {
@@ -23,11 +24,11 @@ namespace SFGL.Window
 		/// <summary>Heart of SFGL. All important operations are done here.</summary>
         protected GameWindow Game;
 
-		/// <summary>Draws multiple renderable objects in optimized way.</summary>
-		protected ISpriteBatch SpriteBatch
-		{ 
-			get { return this.Game.SpriteBatch; }
-		}
+		/// <summary>Provides XNA way of drawing sprites (not optimized)</summary>
+		protected SpriteBatch spriteBatch;
+
+		/// <summary>Provides optimized drawing of sprites</summary>
+		protected VertexBatch vertexBatch;
 
 		/// <summary>Manages various game content (audio, textures, fonts....).</summary>
 		protected ContentManager Content
@@ -53,10 +54,17 @@ namespace SFGL.Window
 			get { return this.Game.MouseInput; }
 		}
 
-		/// <summary>Creates new instance of GameComponent class</summary>
-		public GameComponent(GameWindow Game)
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Creates new instance of GameComponent class.
+		/// </summary>
+		/// <param name="game">Parent game window.</param>
+		////////////////////////////////////////////////////////////
+		public GameComponent(GameWindow game)
 		{
-			this.Game = Game;
+			this.Game = game;
+			this.spriteBatch = new SpriteBatch (Game.GraphicsDevice);
+			this.vertexBatch = new VertexBatch ();
 		}
 	}
 }

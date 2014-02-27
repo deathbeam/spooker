@@ -1,0 +1,16 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Particles\Emitter.cs">
+    <Files>
+      <File FileName="Particles\Particle.cs" Line="86" Column="16" />
+      <File FileName="Particles\Emitter.cs" Line="91" Column="22" />
+      <File FileName="Window\GameWindow.cs" Line="58" Column="5" />
+      <File FileName="Time\GameTime.cs" Line="25" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <AuthorInfo Name="SFGL-Dev" Email="" Copyright="SFGL-Dev 2014" Company="SFGL-Dev" Trademark="SFGL" />
+</Properties>
