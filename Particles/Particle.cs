@@ -12,7 +12,6 @@ namespace SFGL.Particles
 	public struct ParticleConfiguration
 	{
 		public Sprite Sprite;
-		public Vector2 Direction;
 		public float Speed;
 		public bool EnabledRotation;
 		public float RotationIncrement;
@@ -38,7 +37,6 @@ namespace SFGL.Particles
 
 		public Particle(ParticleConfiguration configuration)
 		{
-			_direction = configuration.Direction;
 			_sprite = configuration.Sprite;
 			_speed = configuration.Speed;
 			_enableRotation = configuration.EnabledRotation;
@@ -61,6 +59,11 @@ namespace SFGL.Particles
 			_sprite.Position = new Vector2f (
 				position.X,
 				position.Y);
+		}
+
+		public void SetDirection(Vector2 direction)
+		{
+			_direction = new Vector2(direction);
 		}
 
 		/// <summary>
