@@ -71,7 +71,6 @@
     <Compile Include="Utils\FloatMath.cs" />
     <Compile Include="Physics\CollisionDetection.cs" />
     <Compile Include="Graphics\SpriteEffects.cs" />
-    <Compile Include="Graphics\SpriteBatch.cs" />
     <Compile Include="ILoadable.cs" />
     <Compile Include="IUpdateable.cs" />
     <Compile Include="Time\Clock.cs" />
@@ -93,15 +92,16 @@
     <Compile Include="Graphics\Rectangle.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="TileMap\Map.cs" />
-    <Compile Include="Time\Timer.cs" />
-    <Compile Include="Graphics\VertexBatch.cs" />
     <Compile Include="Utils\Extensions.cs" />
-    <Compile Include="Utils\VectorMath.cs" />
     <Compile Include="Network\NetworkAgent.cs" />
     <Compile Include="Network\Packet.cs" />
     <Compile Include="Network\PacketManager.cs" />
     <Compile Include="Particles\Particle.cs" />
-    <Compile Include="Particles\Emitter.cs" />
+    <Compile Include="Particles\ParticleSystem.cs" />
+    <Compile Include="Particles\ParticleSettings.cs" />
+    <Compile Include="Particles\ParticleEmitter.cs" />
+    <Compile Include="Graphics\AnimatedSprite.cs" />
+    <Compile Include="Graphics\SpriteBatch.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

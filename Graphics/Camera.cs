@@ -58,6 +58,16 @@ namespace SFGL.Graphics
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
+		/// Transforms position based on current camera position
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public Vector2 Transform(Vector2 point)
+		{
+			return point - ActualPosition;
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
 		/// Calculates the area the camera should display
 		/// </summary>
 		////////////////////////////////////////////////////////////
@@ -70,6 +80,16 @@ namespace SFGL.Graphics
 					View.Size.X,
 					View.Size.Y);
 			}
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Checks if object is visible in current camera area
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public bool ObjectIsVisible(Rectangle bounds)
+		{
+			return (Bounds.Intersects(bounds));
 		}
 
 		////////////////////////////////////////////////////////////
@@ -131,9 +151,9 @@ namespace SFGL.Graphics
 		{
 			if (Smooth)
 			{
-				var dir = VectorMath.Direction(ActualPosition, Position);
-				var len = VectorMath.Distance(ActualPosition, Position);
-				ActualPosition += VectorMath.LengthDir(dir, len * Smoothness);
+				var dir = Vector2.Direction(ActualPosition, Position);
+				var len = Vector2.Distance(ActualPosition, Position);
+				ActualPosition += Vector2.LengthDir(dir, len * Smoothness);
 			}
 			else
 				ActualPosition = Position;

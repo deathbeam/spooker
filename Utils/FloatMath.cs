@@ -11,13 +11,15 @@ namespace SFGL.Utils
 {
     public static class FloatMath
     {
+		public const float Pi = (float)Math.PI;
+		public const float TwoPi = Pi * 2;
+		public static Random random;
         private const int LookupSize = 1024*16;
 		private static readonly float[] getSin, getCos;
-        private const float Pi = (float)Math.PI;
-        private const float TwoPi = Pi * 2;
 
         static FloatMath()
         {
+			random = new Random();
             getSin = new float[LookupSize];
             getCos = new float[LookupSize];
 
@@ -80,5 +82,10 @@ namespace SFGL.Utils
         {
             return degrees/180*Pi;
         }
+		
+		public static float RandomBetween(float min, float max)
+		{
+			return min + (float)random.NextDouble() * (max - min);
+		}
     }
 }

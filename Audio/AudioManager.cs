@@ -1,5 +1,3 @@
-using SFML.Audio;
-using System;
 /* File Description
  * Original Works/Author: Thomas Slusny
  * Other Contributors: None
@@ -7,39 +5,56 @@ using System;
  * License: MIT
 */
 
+using System;
 using System.IO;
 using System.Collections.Generic;
 using SFGL.Window;
+using SFML.Audio;
 
 namespace SFGL.Audio
 {
+	////////////////////////////////////////////////////////////
 	/// <summary>
-	/// Can be used for managing, playing and loading of sound and music.
+	/// Can be used for managing, playing and loading of sounds
+	/// and music.
 	/// </summary>
+	////////////////////////////////////////////////////////////
 	public class AudioManager : ILoadable, IDisposable
 	{
 		private Dictionary<string, SoundBuffer> _sounds = new Dictionary<string, SoundBuffer>();
 		private Music _currentMusic;
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Directory from where will audio manager load sounds.
 		/// </summary>
-		public string SoundDirectory = "Sounds";
+		////////////////////////////////////////////////////////////
+		public string SoundDirectory { get; set; }
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Extension of sounds what will audio manager load and play.
 		/// </summary>
-		public string SoundExtension = "ogg";
+		////////////////////////////////////////////////////////////
+		public string SoundExtension { get; set; }
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Creates new instance of audio manager.
 		/// </summary>
-		public AudioManager() { }
+		////////////////////////////////////////////////////////////
+		public AudioManager()
+		{
+			SoundDirectory = "Sounds";
+			SoundExtension = "ogg";
+		}
 
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Loads audio files from specified audio folder to cache.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void LoadContent()
 		{
 			if (!Directory.Exists(SoundDirectory)) return;
@@ -55,9 +70,11 @@ namespace SFGL.Audio
 			}
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Loads and plays music from specified music path.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void PlayMusic(string musicName)
 		{
 			if(_currentMusic != null) _currentMusic.Dispose();
@@ -65,33 +82,41 @@ namespace SFGL.Audio
 			_currentMusic.Play();
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Stops current music.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void StopMusic()
 		{
 			_currentMusic.Stop();
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Pause current music.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void PauseMusic()
 		{
 			_currentMusic.Pause();
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Resumes current paused music.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void ResumeMusic()
 		{
 			_currentMusic.Play();
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Plays sound stored in sound cache once.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void PlaySound(string soundName)
 		{
 			Sound sound = new Sound(_sounds[soundName]);
@@ -99,9 +124,11 @@ namespace SFGL.Audio
 			sound.Play();
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Play sound stored in sound cache once or repeated.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void PlaySound(string soundName, bool repeat)
 		{
 			Sound sound = new Sound(_sounds[soundName]);
@@ -109,17 +136,21 @@ namespace SFGL.Audio
 			sound.Play();
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Returns sound from sound cache.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public Sound GetSound(string soundName)
 		{
 			return new Sound(_sounds[soundName]);
 		}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Disposes this instance of audio manager class.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void Dispose()
 		{
 			StopMusic();

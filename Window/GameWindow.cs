@@ -27,6 +27,7 @@ namespace SFGL.Window
 	////////////////////////////////////////////////////////////
 	public class GameWindow
 	{
+		internal SpriteBatch SpriteBatch { get; set; }
 		internal ContentManager Content { get; set; }
 		internal AudioManager Audio { get; set; }
 		internal KeyboardManager KeysInput { get; set; }
@@ -45,19 +46,19 @@ namespace SFGL.Window
 		////////////////////////////////////////////////////////////
 		public void Run()
 		{
-			var _elapsedTime = GameTime.Zero;
+			var _elapsedTime = TimeSpan.Zero;
 			var _frameClock = new Clock();
 
 			while (GraphicsDevice.IsOpen())
 			{
-				_elapsedTime += _frameClock.Restart();
-				GameTime.ElapsedGameTime = _elapsedTime;
+				_elapsedTime += _frameClock.RestartFromSpan();
+				_gameTime.Update (_elapsedTime);
 
 				GraphicsDevice.Clear(_clearColor);
 
-				while (_elapsedTime >= _gameTime)
+				while (_elapsedTime.Ticks >= _gameTime.Ticks)
 				{
-					_elapsedTime -= _gameTime;
+					_elapsedTime -= new TimeSpan(_gameTime.Ticks);
 					foreach (var state in _stateStack)
 					{
 						if (state.IsActive || state.InactiveMode.HasFlag(UpdateMode.Update))
@@ -208,6 +209,7 @@ namespace SFGL.Window
 
 			//Initialize core parts of game
 			_components = new EntityList ();
+			SpriteBatch = new SpriteBatch ();
 			Content = new ContentManager ();
 			Audio = new AudioManager ();
 			KeysInput = new KeyboardManager ();

@@ -31,18 +31,13 @@ namespace SFGL.TileMap
 			get { return new Vector2 (_sprite.Position); }
 		}
 
-        public Rectangle SourceRect
-		{
-			get { return new Rectangle (_sprite.TextureRect); }
-		}
-
-		public void Draw(VertexBatch vertexBatch, Camera camera)
+		public void Draw(SpriteBatch spriteBatch, Camera camera)
         {
 			var sprite = new Sprite (_sprite) { Position = new Vector2f (
 				_sprite.Position.X - camera.Bounds.X,
 				_sprite.Position.Y - camera.Bounds.Y)
 			};
-			vertexBatch.Draw(sprite);
+			spriteBatch.Draw(sprite);
         }
 
 		public Tile(TmxLayerTile tile, Vector2 tileSize, float opacity, Rectangle tileRect, Texture tileSheet)

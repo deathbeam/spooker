@@ -19,19 +19,66 @@ namespace SFGL.Graphics
 	/// </summary>
 	////////////////////////////////////////////////////////////
 	[StructLayout(LayoutKind.Sequential)]
+	[Serializable]
 	public struct Rectangle : IEquatable<Rectangle>
 	{
 		#region Static members
-		/// <summary>Returns a Rectangle with all of its components set to zero.</summary>
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Returns a Rectangle with all of its components set to zero.
+		/// </summary>
+		////////////////////////////////////////////////////////////
 		public static Rectangle Zero
 		{
 			get { return new Rectangle(0,0,0,0); }
 		}
 
-		/// <summary>Returns a Rectangle with both of its components set to one.</summary>
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Returns a Rectangle with both of its components set to one.
+		/// </summary>
+		////////////////////////////////////////////////////////////
 		public static Rectangle One
 		{
 			get { return new Rectangle(1,1,1,1); }
+		}
+		#endregion
+
+		#region Properties
+		/// <summary>X coordinate of the rectangle</summary>
+		public int X;
+
+		/// <summary>Y coordinate of the rectangle</summary>
+		public int Y;
+
+		/// <summary>Width of the rectangle</summary>
+		public int Width;
+
+		/// <summary>Height of the rectangle</summary>
+		public int Height;
+
+		/// <summary>Returns the x-coordinate of the left side of the rectangle.</summary>
+		public int Left
+		{
+			get { return X; }
+		}
+
+		/// <summary>Returns the x-coordinate of the right side of the rectangle.</summary>
+		public int Right
+		{
+			get { return (X + Width); }
+		}
+
+		/// <summary>Returns the y-coordinate of the top of the rectangle.</summary>
+		public int Top
+		{
+			get { return Y; }
+		}
+
+		/// <summary>Returns the y-coordinate of the bottom of the rectangle.</summary>
+		public int Bottom
+		{
+			get { return (Y + Height); }
 		}
 		#endregion
 
@@ -291,44 +338,6 @@ namespace SFGL.Graphics
 			if (((a.X == b.X) && (a.Y == b.Y)) && (a.Width == b.Width))
 				return (a.Height != b.Height);
 			return true;
-		}
-		#endregion
-
-		#region Properties
-		/// <summary>X coordinate of the rectangle</summary>
-		public int X;
-
-		/// <summary>Y coordinate of the rectangle</summary>
-		public int Y;
-
-		/// <summary>Width of the rectangle</summary>
-		public int Width;
-
-		/// <summary>Height of the rectangle</summary>
-		public int Height;
-
-		/// <summary>Returns the x-coordinate of the left side of the rectangle.</summary>
-		public int Left
-		{
-			get { return X; }
-		}
-
-		/// <summary>Returns the x-coordinate of the right side of the rectangle.</summary>
-		public int Right
-		{
-			get { return (X + Width); }
-		}
-
-		/// <summary>Returns the y-coordinate of the top of the rectangle.</summary>
-		public int Top
-		{
-			get { return Y; }
-		}
-
-		/// <summary>Returns the y-coordinate of the bottom of the rectangle.</summary>
-		public int Bottom
-		{
-			get { return (Y + Height); }
 		}
 		#endregion
 	}

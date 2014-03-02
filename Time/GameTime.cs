@@ -14,7 +14,8 @@ namespace SFGL.Time
     {
         #region Variables
 
-		public static GameTime ElapsedGameTime = GameTime.Zero; 
+		public TimeSpan ElapsedGameTime = TimeSpan.Zero;
+		public TimeSpan TotalElapsedGameTime = TimeSpan.Zero;
         private long _elapsedticks = 0;
 
         #endregion
@@ -78,6 +79,12 @@ namespace SFGL.Time
         #endregion
 
         #region Functions
+
+		public void Update(TimeSpan dt)
+		{
+			ElapsedGameTime = dt;
+			TotalElapsedGameTime += dt;
+		}
 
         public override bool Equals(object obj)
         {

@@ -27,18 +27,23 @@ namespace SFGL.TileMap
 
 		public void Draw(RenderTarget graphicsDevice, RenderStates states)
         {
-			vertexBatch.Begin();
+			SpriteBatch.Begin();
             foreach (Layer layer in Layers)
-				layer.Draw(vertexBatch, camera);
-			vertexBatch.End();
-			graphicsDevice.Draw (vertexBatch);
+				layer.Draw(SpriteBatch, camera);
+			SpriteBatch.End();
+			graphicsDevice.Draw (SpriteBatch);
         }
 
-		public Map(GameWindow game, Camera camera, string mapPath) : base(game)
+		public Map(GameWindow game, string filename)
+			: this(game, new Camera(game.GetView()), filename)
+		{
+		}
+
+		public Map(GameWindow game, Camera camera, string filename) : base(game)
         {
 			this.camera = camera;
 
-			var map = new TmxMap(mapPath);
+			var map = new TmxMap(filename);
             Width = map.Width;
             Height = map.Height;
 			TileSize = new Vector2 (map.TileWidth, map.TileHeight);

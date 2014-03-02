@@ -1,298 +1,248 @@
-/* File Description
- * Original Works/Author: Spodi
- * Other Contributors: Thomas Slusny
- * Author Website: http://netgore.com
- * License: 
-*/
-
 using System;
-using SFGL.Utils;
+using System.Collections.Generic;
+using System.Diagnostics;
 using SFML.Graphics;
 using SFML.Window;
-using System.Text;
-using SFGL.Window;
+using SFGL.Utils;
 
 namespace SFGL.Graphics
 {
 	////////////////////////////////////////////////////////////
 	/// <summary>
-	/// An implementation of SpriteBatch using the RenderWindow.
-	/// Warning: this spritebatch do not provides optimized 
-	/// drawing of sprites. It just provides most of functionality
-	///  of XNA spritebatch.
+	/// Provides optimized drawing of sprites
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public class SpriteBatch : IDisposable
+	public class SpriteBatch : Drawable
 	{
 		#region Variables
 
-		private Sprite _sprite = new Sprite();
-		private Text _str = new Text();
-		private View _view = new View();
-		private RenderStates _rs = RenderStates.Default;
-		private RenderTarget _rt = null;
-
-		private bool _isDisposed;
-		private bool _isStarted;
+		private struct BatchedTexture
+		{
+			public uint Count;
+			public Texture Texture;
+		}
+		
+		private List<BatchedTexture> textures = new List<BatchedTexture>();
+		private Vertex[] vertices = new Vertex[100 * 4];
+		private Texture activeTexture;
+		private bool active;
+		private uint queueCount;
 
 		#endregion
 
 		#region Properties
 
-		public BlendMode BlendMode
-		{
-			get { return _rs.BlendMode; }
-			set { _rs.BlendMode = value; }
-		}
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Returns count of all vertices in this vertex batch.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public int Count { get; private set; }
 
-		public bool IsDisposed
-		{
-			get { return _isDisposed; }
-		}
-
-		public bool IsStarted
-		{
-			get { return _isStarted; }
-		}
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Returns or sets maximal possible number of verticles at
+		/// once in this vertex batch. Max capacity is always divided
+		/// by 4 (becouse of 4 verticle corners).
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public int Max { get; set; }
 
 		#endregion
 
-		#region Constructors
+		#region Constructors/Destructors
 
-		public SpriteBatch(RenderTarget graphicsDevice){ _rt = graphicsDevice; }
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Creates new instance of SpriteBatch class.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public SpriteBatch()
+		{
+			Max = 40000;
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Creates new instance of SpriteBatch class.
+		/// </summary>
+		/// <param name="capacity">Maximal number of vertices in
+		/// this vertex batch.</param>
+		////////////////////////////////////////////////////////////
+		public SpriteBatch(int capacity)
+		{
+			Max = capacity;
+		}
 
 		#endregion
 
 		#region General functions
 
-		public void ChangeTarget(RenderTarget graphicsDevice)
-		{
-			_rt.Clear ();
-			_rt = graphicsDevice;
-		}
-
-		public void Begin(BlendMode blendMode, Vector2 position, Vector2 size, float rotation)
-		{
-			_view.Reset(new FloatRect(position.X, position.Y, size.X, size.Y));
-			_view.Rotate(rotation);
-			_rt.SetView(_view);
-
-			_rs.BlendMode = blendMode;
-
-			_isStarted = true;
-		}
-
-		public void Begin(BlendMode blendMode)
-		{
-			Begin(blendMode, new Vector2(0f, 0f), new Vector2(_rt.Size.X, _rt.Size.Y), 0f);
-		}
-
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Begins this vertex batch, so we can draw sprites after.
+		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void Begin()
 		{
-			Begin(BlendMode.Alpha);
+			if (active) throw new Exception("Already active");
+			Count = 0;
+			textures.Clear();
+			active = true;
+
+			activeTexture = null;
 		}
 
-		public void Dispose()
-		{
-			_isDisposed = true;
-		}
-
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Ends this vertex batch, so we can not draw any more
+		/// sprites.
+		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void End()
 		{
-			_isStarted = false;
+			if (!active) throw new Exception("Call Begin first.");
+			Enqueue();
+			active = false;
 		}
 
-		public void Draw(Drawable drawable, Shader shader = null)
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Draws all queued sprites for this vertex batch. Call
+		/// this only after calling End().
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void Draw(RenderTarget target, RenderStates states)
 		{
-			if (drawable == null)
-				return;
+			if (active) throw new Exception("Call End first.");
 
-			_rs.Shader = shader;
-			_rt.Draw(drawable, _rs);
+			uint index = 0;
+			foreach (var item in textures)
+			{
+				Debug.Assert(item.Count > 0);
+				states.Texture = item.Texture;
+
+				target.Draw(vertices, index, item.Count, PrimitiveType.Quads, states);
+				index += item.Count;
+			}
 		}
 
 		#endregion
 
-		#region Sprites
+		#region Drawing
 
-		public void Draw(Sprite sprite, Shader shader = null)
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Enqueue collection of sprites to this vertex batch.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void Draw(IEnumerable<Sprite> sprites, SpriteEffects effects = SpriteEffects.None)
 		{
-			if (sprite == null || sprite.Texture == null)
-				return;
-
-			_rs.Shader = shader;
-			_rt.Draw(sprite, _rs);
+			if (!active) throw new Exception("Call Begin first.");
+			foreach (var s in sprites)
+				Draw(s, effects);
 		}
 
-		public void Draw(Texture texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color,
-			float rotation, Vector2 origin, SpriteEffects effects = SpriteEffects.None, Shader shader = null)
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Enqueue sprite to this vertex batch.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void Draw(Sprite sprite, SpriteEffects effects = SpriteEffects.None)
 		{
-			if (texture == null)
-				return;
-
-			if (sourceRectangle.HasValue)
-			{
-				_sprite.TextureRect = new IntRect (
-					sourceRectangle.Value.X,
-					sourceRectangle.Value.Y,
-					sourceRectangle.Value.Width,
-					sourceRectangle.Value.Height); 
-			}
-			else
-			{
-				_sprite.TextureRect = new IntRect(
-					0,
-					0,
-					(int)texture.Size.X,
-					(int)texture.Size.Y);
-			}
-
-			var spriteTextureRect = _sprite.TextureRect;
-
-			_sprite.Texture = texture;
-			_sprite.Position = new Vector2f(destinationRectangle.Left, destinationRectangle.Top);
-			_sprite.Color = color;
-			_sprite.Rotation = FloatMath.ToDegrees(rotation);
-			_sprite.Origin = new Vector2f(origin.X, origin.Y);
-			_sprite.Scale = new Vector2f(
-				(destinationRectangle.Width / spriteTextureRect.Width)
-				* ScaleEffectMultiplier.Get(effects).X,
-				(destinationRectangle.Height / spriteTextureRect.Height)
-				* ScaleEffectMultiplier.Get(effects).Y);
-
-			_rs.Shader = shader;
-			_rt.Draw(_sprite, _rs);
-		}
-
-		public void Draw(Texture texture, Rectangle destinationRectangle, Rectangle? sourceRectangle, Color color, Shader shader = null)
-		{
-			Draw(texture, destinationRectangle, sourceRectangle, color, 0f, new Vector2(), SpriteEffects.None, shader);
-		}
-
-		public void Draw(Texture texture, Rectangle destinationRectangle, Color color, Shader shader = null)
-		{
-			Draw(texture, destinationRectangle, null, color, 0f, new Vector2(), SpriteEffects.None, shader);
-		}
-
-		public void Draw(Texture texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation,
-			Vector2 origin, Vector2 scale, SpriteEffects effects = SpriteEffects.None, Shader shader = null)
-		{
-			if (texture == null)
-				return;
-
-			if (sourceRectangle.HasValue)
-			{
-				_sprite.TextureRect = new IntRect(
-					sourceRectangle.Value.X,
-					sourceRectangle.Value.Y,
-					sourceRectangle.Value.Width,
-					sourceRectangle.Value.Height);
-			}
-			else
-			{
-				_sprite.TextureRect = new IntRect(
-					0,
-					0,
-					(int)texture.Size.X,
-					(int)texture.Size.Y);
-			}
-
-			_sprite.Texture = texture;
-			_sprite.Position = new Vector2f(position.X, position.Y);
-			_sprite.Color = color;
-            _sprite.Rotation = FloatMath.ToDegrees(rotation);
-			_sprite.Origin = new Vector2f(origin.X, origin.Y);
-			_sprite.Scale = new Vector2f (
-				scale.X * ScaleEffectMultiplier.Get (effects).X,
-				scale.Y * ScaleEffectMultiplier.Get (effects).Y);
-
-			_rs.Shader = shader;
-
-			_rt.Draw(_sprite, _rs);
-		}
-
-		public void Draw(Texture texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation,
-			Vector2 origin, float scale, SpriteEffects effects = SpriteEffects.None, Shader shader = null)
-		{
-			Draw(texture, position, sourceRectangle, color, rotation, origin, new Vector2(scale), effects, shader);
-		}
-
-		public void Draw(Texture texture, Vector2 position, Rectangle? sourceRectangle, Color color, Shader shader = null)
-		{
-			Draw(texture, position, sourceRectangle, color, 0, Vector2.Zero, 1.0f, SpriteEffects.None, shader);
-		}
-
-		public void Draw(Texture texture, Vector2 position, Color color, Shader shader = null)
-		{
-			Draw(texture, position, null, color, 0, Vector2.Zero, 1.0f, SpriteEffects.None, shader);
+			if (!active) throw new Exception("Call Begin first.");
+			sprite.Scale = new Vector2f (
+				sprite.Scale.X * ScaleEffectMultiplier.Get (effects).X,
+				sprite.Scale.Y * ScaleEffectMultiplier.Get (effects).Y);
+			WriteQuad(sprite.Texture, sprite.Position, sprite.TextureRect, sprite.Color, sprite.Scale, sprite.Origin,
+				sprite.Rotation);
 		}
 
 		#endregion
 
-		#region Text
-		
-		public void DrawString(Font font, string text, Vector2 position, Color color, float rotation, Vector2 origin,
-			Vector2 scale, Text.Styles style = Text.Styles.Regular, Shader shader = null)
+		#region Helpers
+
+		private void Enqueue()
 		{
-			if (font == null || string.IsNullOrEmpty(text))
-				return;
-
-			_str.Font = font;
-			_str.DisplayedString = text;
-			_str.Position = new Vector2f(position.X, position.Y);
-			_str.Color = color;
-			_str.Rotation = rotation;
-			_str.Origin = new Vector2f(origin.X, origin.Y);
-			_str.Scale = new Vector2f(scale.X, scale.Y);
-			_str.Style = style;
-			_str.CharacterSize = 12;
-
-			_rs.Shader = shader;
-
-			_rt.Draw(_str, _rs);
+			if (queueCount > 0)
+				textures.Add(new BatchedTexture
+					{
+						Texture = activeTexture,
+						Count = queueCount
+					});
+			queueCount = 0;
 		}
 
-		public void DrawString(Font font, StringBuilder text, Vector2 position, Color color, float rotation,
-			Vector2 origin, Vector2 scale, Text.Styles style = Text.Styles.Regular, Shader shader = null)
+		private int Create(Texture texture)
 		{
-			if (font == null)
-				return;
+			if (!active) throw new Exception("Call Begin first.");
 
-			DrawString(font, text.ToString(), position, color, rotation, origin, scale, style, shader);
+			if (texture != activeTexture)
+			{
+				Enqueue();
+				activeTexture = texture;
+			}
+
+			if (Count >= (vertices.Length / 4))
+			{
+				if (vertices.Length < Max)
+					Array.Resize(ref vertices, Math.Min(vertices.Length * 2, Max));
+				else throw new Exception("Too many items");
+			}
+
+			queueCount += 4;
+			return 4 * Count++;
 		}
 
-		public void DrawString(Font font, StringBuilder text, Vector2 position, Color color, float rotation,
-			Vector2 origin, float scale, Text.Styles style = Text.Styles.Regular, Shader shader = null)
+		private unsafe void WriteQuad(Texture texture, Vector2f position, IntRect rec, Color color, Vector2f scale,
+			Vector2f origin, float rotation = 0)
 		{
-			if (font == null)
-				return;
 
-			DrawString(font, text.ToString(), position, color, rotation, origin, new Vector2(scale), style, shader);
-		}
+			var index = Create(texture);
+			var sin = 0.0f;
+			var cos= 1.0f;
+			var pX = -origin.X * scale.X;
+			var pY = -origin.Y * scale.Y;
 
-		public void DrawString(Font font, string text, Vector2 position, Color color, float rotation, Vector2 origin,
-			float scale, Text.Styles style = Text.Styles.Regular, Shader shader = null)
-		{
-			if (font == null)
-				return;
+			rotation = FloatMath.ToRadians(rotation);
+			FloatMath.SinCos(rotation, out sin, out cos);
+			scale.X *= rec.Width;
+			scale.Y *= rec.Height;
 
-			DrawString(font, text, position, color, rotation, origin, new Vector2(scale,scale), style, shader);
-		}
+			fixed (Vertex* fptr = vertices)
+			{
+				var ptr = fptr + index;
 
-		public void DrawString(Font font, StringBuilder text, Vector2 position, Color color)
-		{
-			if (font == null)
-				return;
+				ptr->Position.X = pX * cos - pY * sin + position.X;
+				ptr->Position.Y = pX * sin + pY * cos + position.Y;
+				ptr->TexCoords.X = rec.Left;
+				ptr->TexCoords.Y = rec.Top;
+				ptr->Color = color;
+				ptr++;
 
-			DrawString(font, text.ToString(), position, color, 0.0f, Vector2.Zero, 1.0f);
-		}
+				pX += scale.X;
+				ptr->Position.X = pX * cos - pY * sin + position.X;
+				ptr->Position.Y = pX * sin + pY * cos + position.Y;
+				ptr->TexCoords.X = rec.Left + rec.Width;
+				ptr->TexCoords.Y = rec.Top;
+				ptr->Color = color;
+				ptr++;
 
-		public void DrawString(Font font, string text, Vector2 position, Color color)
-		{
-			if (font == null)
-				return;
+				pY += scale.Y;
+				ptr->Position.X = pX * cos - pY * sin + position.X;
+				ptr->Position.Y = pX * sin + pY * cos + position.Y;
+				ptr->TexCoords.X = rec.Left + rec.Width;
+				ptr->TexCoords.Y = rec.Top + rec.Height;
+				ptr->Color = color;
+				ptr++;
 
-			DrawString(font, text, position, color, 0.0f, Vector2.Zero, 1.0f);
+				pX -= scale.X;
+				ptr->Position.X = pX * cos - pY * sin + position.X;
+				ptr->Position.Y = pX * sin + pY * cos + position.Y;
+				ptr->TexCoords.X = rec.Left;
+				ptr->TexCoords.Y = rec.Top + rec.Height;
+				ptr->Color = color;
+			}
 		}
 
 		#endregion

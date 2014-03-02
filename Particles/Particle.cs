@@ -1,114 +1,117 @@
-using SFGL.Graphics;
+//-----------------------------------------------------------------------------
+// Particle.cs
+//
+// Microsoft XNA Community Game Platform
+// Copyright (C) Microsoft Corporation. All rights reserved.
+// Website: http://xbox.create.msdn.com/en-US/education/catalog/sample/particle
+// Other Contributors: Thomas Slusny @ http://indiearmory.com
+// License: Microsoft Permissive License (Ms-PL)
+//-----------------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Text;
 using SFML.Graphics;
 using SFML.Window;
+using SFGL.Graphics;
 using SFGL.Time;
-using SFGL.Window;
+using SFGL.Utils;
 
 namespace SFGL.Particles
 {
 	/// <summary>
-	/// Define a configuration for a particle.
+	/// particles are the little bits that will make up an effect. each effect will
+	/// be comprised of many of these particles. They have basic physical properties,
+	/// such as position, velocity, acceleration, and rotation. They'll be drawn as
+	/// sprites, all layered on top of one another, and will be very pretty.
 	/// </summary>
-	public struct ParticleConfiguration
+	public class Particle
 	{
-		public Sprite Sprite;
-		public float Speed;
-		public bool EnabledRotation;
-		public float RotationIncrement;
-		public int LifeTime;
-	}
+		// Position, Velocity, and Acceleration represent exactly what their names
+		// indicate. They are public fields rather than properties so that users
+		// can directly access their .X and .Y properties.
+		public Vector2 Position;
+		public Vector2 Velocity;
+		public Vector2 Acceleration;
 
-	public class Particle : IUpdateable
-	{
-		private Sprite _sprite;
-		private Vector2 _direction;
-		private float _rotationIncrement;
-		private bool _enableRotation;
-		private float _speed;
-		private float _lifeTime;
-		private long _elapsedTime;
-		private bool _active;
+		// how long this particle will "live"
+		private float lifetime;
+		public float Lifetime
+		{
+			get { return lifetime; }
+			set { lifetime = value; }
+		}
 
+		// how long it has been since initialize was called
+		private float timeSinceStart;
+		public float TimeSinceStart
+		{
+			get { return timeSinceStart; }
+			set { timeSinceStart = value; }
+		}
+
+		// the scale of this particle
+		private float scale;
+		public float Scale
+		{
+			get { return scale; }
+			set { scale = value; }
+		}
+
+		// its rotation, in radians
+		private float rotation;
+		public float Rotation
+		{
+			get { return rotation; }
+			set { rotation = value; }
+		}
+
+		// how fast does it rotate?
+		private float rotationSpeed;
+		public float RotationSpeed
+		{
+			get { return rotationSpeed; }
+			set { rotationSpeed = value; }
+		}
+
+		// is this particle still alive? once TimeSinceStart becomes greater than
+		// Lifetime, the particle should no longer be drawn or updated.
 		public bool Active
 		{
-			get { return _active; }
-			set { _active = value; }
+			get { return TimeSinceStart < Lifetime; }
 		}
 
-		public Particle(ParticleConfiguration configuration)
-		{
-			_sprite = configuration.Sprite;
-			_speed = configuration.Speed;
-			_enableRotation = configuration.EnabledRotation;
-			_rotationIncrement = configuration.RotationIncrement;
-			_lifeTime = configuration.LifeTime;
-			_elapsedTime = 0;
-			_active = false;
-		}
-		
-		public void AddPosition(Vector2 position)
-		{
-			var pos = _sprite.Position;
-			_sprite.Position = new Vector2f (
-				pos.X + position.X,
-				pos.Y + position.Y);
-		}
 
-		public void SetPosition(Vector2 position)
+		// initialize is called by ParticleSystem to set up the particle, and prepares
+		// the particle for use.
+		public void Initialize(Vector2 position, Vector2 velocity, Vector2 acceleration,
+			float lifetime, float scale, float rotationSpeed)
 		{
-			_sprite.Position = new Vector2f (
-				position.X,
-				position.Y);
+			// set the values to the requested values
+			this.Position = position;
+			this.Velocity = velocity;
+			this.Acceleration = acceleration;
+			this.Lifetime = lifetime;
+			this.Scale = scale;
+			this.RotationSpeed = rotationSpeed;
+
+			// reset TimeSinceStart - we have to do this because particles will be
+			// reused.
+			this.TimeSinceStart = 0.0f;
+
+			// set rotation to some random value between 0 and 360 degrees.
+			this.Rotation = FloatMath.RandomBetween(0, FloatMath.TwoPi);
 		}
 
-		public void SetDirection(Vector2 direction)
+		// update is called by the ParticleSystem on every frame. This is where the
+		// particle's position and that kind of thing get updated.
+		public void Update(float dt)
 		{
-			_direction = new Vector2(direction);
-		}
+			Velocity += Acceleration * dt;
+			Position += Velocity * dt;
+			Rotation += RotationSpeed * dt;
 
-		/// <summary>
-		/// Revive the particle.
-		/// </summary>
-		public void Revive()
-		{
-			_active = true;
-			_elapsedTime = 0;
-		}
-
-		/// <summary>
-		/// Update particle position if active.
-		/// </summary>
-		/// <param name="gameTime"></param>
-		public void Update(GameTime gameTime)
-		{
-			if (!_active)
-				return;
-				
-			_elapsedTime += GameTime.ElapsedGameTime.Milliseconds;
-
-			if (_elapsedTime >= _lifeTime)
-				_active = false;
-			else
-			{
-				var pos = _sprite.Position;
-				_sprite.Position = new Vector2f (
-					pos.X + _direction.X * _speed,
-					pos.Y + _direction.Y * _speed);
-
-				if (_enableRotation)
-					_sprite.Rotation += _rotationIncrement;
-			}
-		}
-
-		/// <summary>
-		/// Draw particle on screen if active.
-		/// </summary>
-		/// <param name="vertexBatch"></param>
-		public void Draw(VertexBatch vertexBatch)
-		{
-			if (!_active)
-				return;
-			vertexBatch.Draw (_sprite);
+			TimeSinceStart += dt;
 		}
 	}
 }

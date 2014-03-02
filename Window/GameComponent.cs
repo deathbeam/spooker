@@ -23,12 +23,12 @@ namespace SFGL.Window
 	{
 		/// <summary>Heart of SFGL. All important operations are done here.</summary>
         protected GameWindow Game;
-
-		/// <summary>Provides XNA way of drawing sprites (not optimized)</summary>
-		protected SpriteBatch spriteBatch;
-
+		
 		/// <summary>Provides optimized drawing of sprites</summary>
-		protected VertexBatch vertexBatch;
+		protected SpriteBatch SpriteBatch
+		{ 
+			get { return this.Game.SpriteBatch; }
+		}
 
 		/// <summary>Manages various game content (audio, textures, fonts....).</summary>
 		protected ContentManager Content
@@ -63,8 +63,6 @@ namespace SFGL.Window
 		public GameComponent(GameWindow game)
 		{
 			this.Game = game;
-			this.spriteBatch = new SpriteBatch (Game.GraphicsDevice);
-			this.vertexBatch = new VertexBatch ();
 		}
 	}
 }

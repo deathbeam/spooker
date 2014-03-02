@@ -21,6 +21,11 @@ namespace SFGL.Time
         {
 			get { return GameTime.FromTicks(_timer.ElapsedTicks); }
         }
+
+		public TimeSpan ElapsedTimeFromSpan
+		{
+			get { return TimeSpan.FromTicks(_timer.ElapsedTicks); }
+		}
         #endregion
 
         #region Functions
@@ -31,6 +36,14 @@ namespace SFGL.Time
             _timer.Start();
             return tm;
         }
+
+		public TimeSpan RestartFromSpan()
+		{
+			TimeSpan tm = TimeSpan.FromTicks(_timer.ElapsedTicks);
+			_timer.Reset();
+			_timer.Start();
+			return tm;
+		}
         #endregion
     }
 }

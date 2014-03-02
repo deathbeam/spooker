@@ -18,16 +18,25 @@ namespace SFGL.Graphics
 	/// </summary>
 	////////////////////////////////////////////////////////////
 	[StructLayout(LayoutKind.Sequential)]
+	[Serializable]
 	public struct Vector2 : IEquatable<Vector2>
 	{
 		#region Static members
-		/// <summary>Returns a Vector2 with all of its components set to zero.</summary>
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Returns a Vector2 with all of its components set to zero.
+		/// </summary>
+		////////////////////////////////////////////////////////////
 		public static Vector2 Zero
 		{
 			get { return new Vector2(0,0); }
 		}
 
-		/// <summary>Returns a Vector2 with both of its components set to one.</summary>
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Returns a Vector2 with both of its components set to one.
+		/// </summary>
+		////////////////////////////////////////////////////////////
 		public static Vector2 One
 		{
 			get { return new Vector2(1,1); }
@@ -47,6 +56,62 @@ namespace SFGL.Graphics
 			var num3 = (num2 * num2) + (num * num);
 			return (float)Math.Sqrt(num3);
 		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Calculates the direction between two vectors.
+		/// </summary>
+		/// <param name="value1">Source vector.</param>
+		/// <param name="value2">Source vector.</param>
+		////////////////////////////////////////////////////////////
+		public static float Direction(Vector2 value1, Vector2 value2)
+		{
+			var num2 = value2.X - value1.X;
+			var num = value1.Y - value2.Y;
+			var num3 = (float)Math.Atan2(num, num2);
+			return num3 < 0 ? num3 + (2 * (float)Math.PI) : num3;
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Creates vector in specified direction with specified length.
+		/// </summary>
+		/// <param name="dir">Direction.</param>
+		/// <param name="len">Length.</param>
+		////////////////////////////////////////////////////////////
+		public static Vector2 LengthDir(float dir, float len)
+		{
+			var num2 = (float)-Math.Sin (dir);
+			var num1 = (float)Math.Cos (dir);
+			var num3 = num1 * len;
+			var num4 = num2 * len;
+			return new Vector2(num3, num4);
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Performs a linear interpolation between two vectors.
+		/// </summary>
+		/// <param name="value1">Source vector.</param>
+		/// <param name="value2">Source vector.</param>
+		/// <param name="amount">Value between 0 and 1 indicating
+		/// the weight of value2.</param>
+		////////////////////////////////////////////////////////////
+		public static Vector2 Lerp(Vector2 value1, Vector2 value2, float amount)
+		{
+			Vector2 vector;
+			vector.X = value1.X + ((value2.X - value1.X) * amount);
+			vector.Y = value1.Y + ((value2.Y - value1.Y) * amount);
+			return vector;
+		}
+		#endregion
+
+		#region Properties
+		/// <summary>X (horizontal) component of the vector</summary>
+		public float X;
+
+		/// <summary>Y (vertical) component of the vector</summary>
+		public float Y;
 		#endregion
 
 		#region Constructors
@@ -361,14 +426,6 @@ namespace SFGL.Graphics
 		{
 			return new Vector2(v.X / x, v.Y / x);
 		}
-		#endregion
-
-		#region Properties
-		/// <summary>X (horizontal) component of the vector</summary>
-		public float X;
-
-		/// <summary>Y (vertical) component of the vector</summary>
-		public float Y;
 		#endregion
 	}
 }

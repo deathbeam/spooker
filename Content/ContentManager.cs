@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SFGL.Window;
+using SFML.Graphics;
+using SFGL.Particles;
 
 namespace SFGL.Content
 {
@@ -32,7 +34,23 @@ namespace SFGL.Content
 		/// <summary>
 		/// Creates new instance of Content Manager.
 		/// </summary>
-		public ContentManager() { }
+		public ContentManager()
+		{
+			/// Initialize content loaders
+			ContentProvider loader;
+
+			loader = new ContentProvider(typeof(Texture), "textures", "png");
+			loader.Load = (str) => new Texture(str);
+			AddLoader(loader);
+
+			loader = new ContentProvider(typeof(Font), "fonts", "ttf");
+			loader.Load = (str) => new Font(str);
+			AddLoader(loader);
+
+			loader = new ContentProvider(typeof(ParticleSettings), "particles", "sfp");
+			loader.Load = (str) => new ParticleSettings(str);
+			AddLoader(loader);
+		}
 
 		/// <summary>
 		/// Loads file to content manager, or if file is already loaded, returns file data.
