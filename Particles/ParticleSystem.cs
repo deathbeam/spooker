@@ -41,9 +41,6 @@ namespace SFGL.Particles
 		// The settings used for this particle system
 		private ParticleSettings settings;
 
-		// The asset name used to load our settings from a file.
-		private string filepath;
-
 		// the BlendState used when rendering the particles.
 		private RenderStates blendState;
 
@@ -56,13 +53,21 @@ namespace SFGL.Particles
 		}
 
 		/// <summary>
+		/// The settings used for this particle system
+		/// </summary>
+		public ParticleSettings Settings
+		{
+			set { settings = value; }
+		}
+
+		/// <summary>
 		/// Constructs a new ParticleSystem.
 		/// </summary>
 		/// <param name="game">The host for this particle system.</param>
 		/// <param name="filepath">The name of the settings file to load 
 		/// used when creating and updating particles in the system.</param>
-		public ParticleSystem(GameWindow game, string filepath)
-			: this(game, filepath, 10)
+		public ParticleSystem(GameWindow game)
+			: this(game, 10)
 		{ }
 
 
@@ -75,11 +80,9 @@ namespace SFGL.Particles
 		/// <param name="initialParticleCount">The initial number of particles this
 		/// system expects to use. The system will grow as needed, however setting
 		/// this value to be as close as possible will reduce allocations.</param>
-		public ParticleSystem(GameWindow game, string filepath, int initialParticleCount)
+		public ParticleSystem(GameWindow game, int initialParticleCount)
 			: base(game)
 		{
-			this.filepath = filepath;
-
 			// we create the particle list and queue with our initial count and create that
 			// many particles. If we picked a reasonable value, our system will not allocate
 			// any more objects after this point, however the AddParticles method will allocate
@@ -99,9 +102,6 @@ namespace SFGL.Particles
 		/// </summary>
 		public void LoadContent()
 		{
-			// Load our settings
-			settings = new ParticleSettings(filepath);
-
 			// load the texture....
 			texture = new Texture(settings.TextureFilename);
 

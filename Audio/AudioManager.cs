@@ -76,6 +76,8 @@ namespace SFGL.Audio
 		////////////////////////////////////////////////////////////
 		public void StopMusic()
 		{
+			if (_currentMusic == null)
+				return;
 			_currentMusic.Stop();
 		}
 
@@ -86,6 +88,8 @@ namespace SFGL.Audio
 		////////////////////////////////////////////////////////////
 		public void PauseMusic()
 		{
+			if (_currentMusic == null)
+				return;
 			_currentMusic.Pause();
 		}
 
@@ -96,6 +100,8 @@ namespace SFGL.Audio
 		////////////////////////////////////////////////////////////
 		public void ResumeMusic()
 		{
+			if (_currentMusic == null)
+				return;
 			_currentMusic.Play();
 		}
 

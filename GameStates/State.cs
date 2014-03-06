@@ -68,6 +68,7 @@ namespace SFGL.GameStates
 		{
 			InactiveMode = UpdateMode.All;
 			IsOverlay = false;
+			Components = new EntityList ();
 		}
 		#endregion
 
