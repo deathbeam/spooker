@@ -23,19 +23,11 @@ namespace SFGL.Audio
 	{
 		private Dictionary<string, SoundBuffer> _sounds = new Dictionary<string, SoundBuffer>();
 		private Music _currentMusic;
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Directory from where will audio manager load sounds.
-		/// </summary>
-		////////////////////////////////////////////////////////////
+		
+		/// <summary>Directory from where will audio manager load sounds.</summary>
 		public string SoundDirectory { get; set; }
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Extension of sounds what will audio manager load and play.
-		/// </summary>
-		////////////////////////////////////////////////////////////
+		
+		/// <summary>Extension of sounds what will audio manager load and play.</summary>
 		public string SoundExtension { get; set; }
 
 		////////////////////////////////////////////////////////////
@@ -43,13 +35,8 @@ namespace SFGL.Audio
 		/// Creates new instance of audio manager.
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public AudioManager()
-		{
-			SoundDirectory = "Sounds";
-			SoundExtension = "ogg";
-		}
-
-
+		public AudioManager() { }
+		
 		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Loads audio files from specified audio folder to cache.

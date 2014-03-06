@@ -15,7 +15,7 @@ using SFGL.Time;
 
 namespace SFGL.Input
 {
-	public class MouseManager : IUpdateable
+	public class MouseManager : IUpdateable, IDisposable
 	{
 		private Dictionary<Mouse.Button, bool> _buttonStates = new Dictionary<Mouse.Button, bool>();
 		private Dictionary<Mouse.Button, bool> _previousButtonStates = new Dictionary<Mouse.Button, bool>();
@@ -154,6 +154,13 @@ namespace SFGL.Input
 		public bool IsKeyDown(Mouse.Button button)
 		{
 			return _buttonStates[button];
+		}
+
+		/// <summary>
+		/// Disposes this instance of MouseManager class.
+		/// </summary>
+		public void Dispose()
+		{
 		}
 	}
 }

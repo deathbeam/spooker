@@ -28,7 +28,7 @@ namespace SFGL.TileMap
 		public void Draw(RenderTarget graphicsDevice, RenderStates states)
         {
 			SpriteBatch.Begin();
-            foreach (Layer layer in Layers)
+			foreach (var layer in Layers)
 				layer.Draw(SpriteBatch, camera);
 			SpriteBatch.End();
 			graphicsDevice.Draw (SpriteBatch);
@@ -51,7 +51,7 @@ namespace SFGL.TileMap
 			var tileRect = new Dictionary<int, Rectangle>();
 			var tileSheet = new Dictionary<int, Texture>();
 
-            foreach (TmxTileset ts in map.Tilesets)
+			foreach (var ts in map.Tilesets)
             {
                 var sheet = new Texture(ts.Image.Source);
 
@@ -82,7 +82,7 @@ namespace SFGL.TileMap
 
             // Load layers
             Layers = new List<Layer>();
-            foreach (TmxLayer layer in map.Layers)
+			foreach (var layer in map.Layers)
             {
                 Layers.Add(new Layer(
 					layer,

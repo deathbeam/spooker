@@ -8,6 +8,7 @@
 using System;
 using System.Runtime.InteropServices;
 using SFML.Window;
+using SFGL.Utils;
 
 namespace SFGL.Graphics
 {
@@ -244,6 +245,28 @@ namespace SFGL.Graphics
 		#endregion
 
 		#region Functions
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Rotates this vector by specified angle
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public Vector2 Rotate(float angle)
+		{
+			angle = FloatMath.ToDegrees(angle);
+			return new Vector2(X * (float)Math.Cos(angle) - Y * (float)Math.Sin(angle),
+				X * (float)Math.Sin(angle) + Y * (float)Math.Cos(angle));
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Scales this vector by specified scale
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public Vector2 Scale(float scale)
+		{
+			return new Vector2(X * scale, Y * scale);
+		}
+
 		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Determines whether the specified Object is equal to

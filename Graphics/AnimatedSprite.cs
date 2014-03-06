@@ -10,7 +10,6 @@ namespace SFGL.Graphics
 		private int activeFrame;
 		private List<Rectangle> frames;
 		private Rectangle currentFrame;
-		private GameTime elapsedTime;
 		private float frameDelay;
 
 		// how long it has been since initialize was called
@@ -82,4 +81,3 @@ namespace SFGL.Graphics
 		}
 	}
 }
-

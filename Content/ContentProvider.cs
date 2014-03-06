@@ -7,50 +7,80 @@
 
 using System;
 using System.Collections.Generic;
+using SFGL.Window;
+using SFML.Graphics;
+using SFGL.Particles;
 
 namespace SFGL.Content
 {
+	////////////////////////////////////////////////////////////
 	/// <summary>
-	/// Used for storing game data such as textures, fonts and shaders. 
-	/// Stores only one type of data, depends on settings.
+	/// Used for storing game data such as textures, fonts and
+	/// shaders. Stores only one type of data, depends on settings.
 	/// </summary>
+	////////////////////////////////////////////////////////////
     public class ContentProvider : IDisposable
     {
         private readonly Dictionary<string, object> assets = new Dictionary<string, object>();
         
-		/// <summary>
-		/// File extension of loaded game data.
-		/// </summary>
-		public string Extension;
+		/// <summary>File extension of loaded game data.</summary>
+		public string Extension { get; set; }
 
-		/// <summary>
-		/// Folder containing loaded game data.
-		/// </summary>
-        public string Folder;
+		/// <summary>Folder containing loaded game data.</summary>
+		public string Folder { get; set; }
 
-		/// <summary>
-		/// Function used to load data for this content provider.
-		/// </summary>
-        public Func<string, object> Load;
+		/// <summary>Function used to load data for this content provider.</summary>
+		public Func<string, object> Load { get; set; }
 
-		/// <summary>
-		/// Value that determines if content provider will store data to cache.
-		/// </summary>
-        public bool Reuse;
+		/// <summary>Value that determines if content provider will store data to cache.</summary>
+		public bool Reuse { get; set; }
 
-		/// <summary>
-		/// Type of game data what content provider manages.
-		/// </summary>
-        public Type Type;
+		/// <summary>Type of game data what content provider manages.</summary>
+		public Type Type { get; set; }
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of Content Provider class without passing any arguments.
+		/// Returns list of default loaders (texture, font and particle).
 		/// </summary>
+		////////////////////////////////////////////////////////////
+		public static List<ContentProvider> Default
+		{ 
+			get 
+			{
+				// Initialize content loaders
+				var temploaders = new List<ContentProvider>();
+				ContentProvider loader;
+
+				loader = new ContentProvider(typeof(Texture), "textures", "png");
+				loader.Load = (str) => new Texture(str);
+				temploaders.Add(loader);
+
+				loader = new ContentProvider(typeof(Font), "fonts", "ttf");
+				loader.Load = (str) => new Font(str);
+				temploaders.Add(loader);
+
+				loader = new ContentProvider(typeof(ParticleSettings), "particles", "sfp");
+				loader.Load = (str) => new ParticleSettings(str);
+				temploaders.Add(loader);
+
+				return temploaders;
+			}
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Creates new instance of Content Provider class without
+		/// passing any arguments.
+		/// </summary>
+		////////////////////////////////////////////////////////////
         public ContentProvider() {}
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of Content Provider class with passing multiple arguments.
+		/// Creates new instance of Content Provider class with
+		/// passing multiple arguments.
 		/// </summary>
+		////////////////////////////////////////////////////////////
         public ContentProvider(Type Type, string Folder, string Extension, bool Reuse = true)
         {
             this.Type = Type;
@@ -59,9 +89,11 @@ namespace SFGL.Content
             this.Reuse = Reuse;
         }
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Disposes this instance of Content Provider class.
 		/// </summary>
+		////////////////////////////////////////////////////////////
         public void Dispose()
         {
             if (!Type.IsAssignableFrom(typeof (IDisposable))) return;
@@ -72,9 +104,12 @@ namespace SFGL.Content
             }
         }
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Loads game data to cache or if already loaded, returns data from loader cache.
+		/// Loads game data to cache or if already loaded, returns
+		/// data from loader cache.
 		/// </summary>
+		////////////////////////////////////////////////////////////
         public virtual object Get(string name)
         {
             object result;

@@ -34,6 +34,13 @@ namespace SFGL.GameStates
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
+		/// Manages components of this game state.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public EntityList Components { get; set; }
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
 		/// Returns true if this State is at the top of the State stack.
 		/// </summary>
 		////////////////////////////////////////////////////////////
@@ -128,7 +135,10 @@ namespace SFGL.GameStates
 		/// Called when a state is removed from game (popped from stack).
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public virtual void Leave() { }
+		public virtual void Leave()
+		{
+			Components.Dispose ();
+		}
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
@@ -136,14 +146,20 @@ namespace SFGL.GameStates
 		/// be handled here (input, movement...)
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public virtual void Update(GameTime gameTime) { }
+		public virtual void Update(GameTime gameTime)
+		{
+			Components.Update(gameTime);
+		}
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Called once per frame. Avoid putting game logic in here.
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public virtual void Draw(RenderTarget graphicsDevice, RenderStates states) { }
+		public virtual void Draw(RenderTarget graphicsDevice, RenderStates states)
+		{
+			Components.Draw (graphicsDevice, states);
+		}
 		#endregion
 	}
 }

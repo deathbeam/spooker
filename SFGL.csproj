@@ -69,7 +69,6 @@
     <Compile Include="TileMap\Layer.cs" />
     <Compile Include="TileMap\Tile.cs" />
     <Compile Include="Utils\FloatMath.cs" />
-    <Compile Include="Physics\CollisionDetection.cs" />
     <Compile Include="Graphics\SpriteEffects.cs" />
     <Compile Include="ILoadable.cs" />
     <Compile Include="IUpdateable.cs" />
@@ -102,6 +101,7 @@
     <Compile Include="Particles\ParticleEmitter.cs" />
     <Compile Include="Graphics\AnimatedSprite.cs" />
     <Compile Include="Graphics\SpriteBatch.cs" />
+    <Compile Include="Extensions\SpriteExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -116,5 +116,6 @@
   <ItemGroup>
     <Folder Include="Network\" />
     <Folder Include="Particles\" />
+    <Folder Include="Extensions\" />
   </ItemGroup>
 </Project>

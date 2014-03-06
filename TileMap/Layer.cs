@@ -25,7 +25,7 @@ namespace SFGL.TileMap
 
 		public void Draw(SpriteBatch spriteBatch, Camera camera)
 		{
-			foreach (Tile tile in Tiles)
+			foreach (var tile in Tiles)
 				if ((tile.Position.X >= camera.Bounds.X - TileSize.X) &&
 					(tile.Position.X <= camera.Bounds.Width + TileSize.X) &&
 					(tile.Position.Y >= camera.Bounds.Y - TileSize.Y) &&
@@ -41,7 +41,7 @@ namespace SFGL.TileMap
 			TileSize = tileSize;
 
             Tiles = new List<Tile>();
-			for (int i = 0; i < layer.Tiles.Count; i++)
+			for (var i = 0; i < layer.Tiles.Count; i++)
             {
 				try 
 				{

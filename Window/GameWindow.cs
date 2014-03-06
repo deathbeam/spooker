@@ -32,10 +32,9 @@ namespace SFGL.Window
 		internal AudioManager Audio { get; set; }
 		internal KeyboardManager KeysInput { get; set; }
 		internal MouseManager MouseInput { get; set; }
-		internal RenderWindow GraphicsDevice = null;
+		internal RenderWindow GraphicsDevice { get; set; }
 
 		private List<State> _stateStack = new List<State> ();
-		private EntityList _components = null;
 		private GameTime _gameTime = GameTime.Zero;
 		private Color _clearColor = Color.Black;
 
@@ -64,7 +63,8 @@ namespace SFGL.Window
 						if (state.IsActive || state.InactiveMode.HasFlag(UpdateMode.Update))
 							state.Update (_gameTime);
 					}
-					_components.Update (_gameTime);
+					KeysInput.Update (_gameTime);
+					MouseInput.Update (_gameTime);
 				}
 
 				foreach (var state in _stateStack)
@@ -72,21 +72,10 @@ namespace SFGL.Window
 					if (state.IsActive || state.InactiveMode.HasFlag(UpdateMode.Draw))
 						GraphicsDevice.Draw(state);
 				}
-				GraphicsDevice.Draw (_components);
 
 				GraphicsDevice.Display();
 				GraphicsDevice.DispatchEvents();
 			}
-		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Adds new component to dynamic component holder
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void AddComponent(object Component)
-		{
-			this._components.Add (Component);
 		}
 
 		////////////////////////////////////////////////////////////
@@ -158,27 +147,6 @@ namespace SFGL.Window
 			GraphicsDevice.SetView (view);
 		}
 
-        ////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Draws drawable to rendering window.
-        /// </summary>
-        ////////////////////////////////////////////////////////////
-        public void Draw(Drawable drawable)
-        {
-			GraphicsDevice.Draw(drawable);
-        }
-
-        ////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Draws drawable with custom render states to rendering
-        /// window.
-        /// </summary>
-        ////////////////////////////////////////////////////////////
-        public void Draw(Drawable drawable, RenderStates states)
-        {
-			GraphicsDevice.Draw(drawable, states);
-        }
-
 		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Closes game screen and disposes all components.
@@ -186,7 +154,10 @@ namespace SFGL.Window
 		////////////////////////////////////////////////////////////
 		public void Close()
 		{
-			_components.Dispose ();
+			KeysInput.Dispose ();
+			MouseInput.Dispose ();
+			Audio.Dispose ();
+			Content.Dispose ();
 			GraphicsDevice.Close ();
 		}
 
@@ -200,15 +171,14 @@ namespace SFGL.Window
 		public GameWindow (GameSettings gameSettings)
 		{
             //Load game settings for renderwindow
-			GraphicsDevice = new RenderWindow(gameSettings.GetVideoMode,
+			GraphicsDevice = new RenderWindow(gameSettings.VideoMode,
                 gameSettings.Title,
                 gameSettings.Style,
-                gameSettings.GetContextSettings);
+                gameSettings.ContextSettings);
 			GraphicsDevice.SetVerticalSyncEnabled(gameSettings.VerticalSync);
 			GraphicsDevice.SetFramerateLimit(gameSettings.FramerateLimit);
 
 			//Initialize core parts of game
-			_components = new EntityList ();
 			SpriteBatch = new SpriteBatch ();
 			Content = new ContentManager ();
 			Audio = new AudioManager ();
@@ -223,67 +193,55 @@ namespace SFGL.Window
 			Audio.SoundExtension = gameSettings.SoundExtension;
 			_clearColor = gameSettings.ClearColor;
 			_gameTime = gameSettings.GameTime;
+			Audio.LoadContent ();
 
 			//Bind input events to components
 			GraphicsDevice.MouseWheelMoved += (sender, e) => { MouseInput.MouseWheelMoved(e); };
 
 			GraphicsDevice.MouseWheelMoved += (sender, e) =>
 			{ 
-				for (var i = _stateStack.Count - 1; i >= 0; i--)
-					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						_stateStack[i].MouseWheelMoved(e);
+				var states = _stateStack.FindAll(s => s.IsActive || s.InactiveMode.HasFlag(UpdateMode.Input));
+				foreach (var state in states) state.MouseWheelMoved(e);
 			};
 
 			GraphicsDevice.TextEntered += (sender, e) =>
 			{ 
-				for (var i = _stateStack.Count - 1; i >= 0; i--)
-					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						_stateStack[i].TextEntered(e);
+				var states = _stateStack.FindAll(s => s.IsActive || s.InactiveMode.HasFlag(UpdateMode.Input));
+				foreach (var state in states) state.TextEntered(e);
 			};
 
 			GraphicsDevice.KeyPressed += (sender, e) =>
 			{ 
-				for (var i = _stateStack.Count - 1; i >= 0; i--)
-					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						_stateStack[i].KeyPressed(e);
+				var states = _stateStack.FindAll(s => s.IsActive || s.InactiveMode.HasFlag(UpdateMode.Input));
+				foreach (var state in states) state.KeyPressed(e);
 			};
 
 			GraphicsDevice.KeyReleased += (sender, e) => 
 			{ 
-				for (var i = _stateStack.Count - 1; i >= 0; i--)
-					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						_stateStack[i].KeyReleased(e);
+				var states = _stateStack.FindAll(s => s.IsActive || s.InactiveMode.HasFlag(UpdateMode.Input));
+				foreach (var state in states) state.KeyReleased(e);
 			};
 
 			GraphicsDevice.MouseMoved += (sender, e) =>
 			{ 
-				for (var i = _stateStack.Count - 1; i >= 0; i--)
-					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						_stateStack[i].MouseMoved(e);
+				var states = _stateStack.FindAll(s => s.IsActive || s.InactiveMode.HasFlag(UpdateMode.Input));
+				foreach (var state in states) state.MouseMoved(e);
 			};
 
 			GraphicsDevice.MouseButtonPressed += (sender, e) =>
 			{ 
-				for (var i = _stateStack.Count - 1; i >= 0; i--)
-					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						_stateStack[i].MouseButtonPressed(e);
+				var states = _stateStack.FindAll(s => s.IsActive || s.InactiveMode.HasFlag(UpdateMode.Input));
+				foreach (var state in states) state.MouseButtonPressed(e);
 			};
 
 			GraphicsDevice.MouseButtonReleased += (sender, e) =>
 			{ 
-				for (var i = _stateStack.Count - 1; i >= 0; i--)
-					if ((_stateStack[i].IsActive || _stateStack[i].InactiveMode.HasFlag(UpdateMode.Input)))
-						_stateStack[i].MouseButtonReleased(e);
+				var states = _stateStack.FindAll(s => s.IsActive || s.InactiveMode.HasFlag(UpdateMode.Input));
+				foreach (var state in states) state.MouseButtonReleased(e);
 			};
 
 			//Workaround for not closing game window correctly
 			GraphicsDevice.Closed += (sender, e) => { this.Close(); };
-
-			//Add components to component manager
-			_components.Add (KeysInput);
-			_components.Add (MouseInput);
-			_components.Add (Audio);
-			_components.Add (Content);
 		}
 
         internal bool IsActive(State state)
@@ -291,7 +249,7 @@ namespace SFGL.Window
             if (state.IsOverlay)
                 return _stateStack.IndexOf(state) == (_stateStack.Count - 1);
 
-            return _stateStack.FindLast(s => !s.IsOverlay) == state;
+			return _stateStack.FindLast(s => !s.IsOverlay) == state;
         }
 	}
 }

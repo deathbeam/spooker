@@ -1,109 +1,74 @@
 /* File Description
- * Original Works/Author: eXpl0it3r
- * Other Contributors: Thomas Slusny
- * Author Website: http://sfml-dev.org
- * License: Zlib
+ * Original Works/Author: Thomas Slusny
+ * Other Contributors: eXpl0it3r
+ * Author Website: http://indiearmory.com
+ * License: MIT
 */
 
+using System;
+using SFGL.Graphics;
 using SFML.Graphics;
 using SFML.Window;
-using System;
-using System.Collections;
+using SFGL.Utils;
 
-namespace SFGL.Physics
+namespace SFGL.Extensions
 {
-
-	public static class CollisionDetection
+	public static class SpriteExtensions
 	{
-
-		public const float RADIANS_PER_DEGREE = (float)Math.PI / 180f;
-
-		private static Hashtable images = new Hashtable();
-
-		public static IntRect GetAABB(Sprite sp)
+		public static Rectangle GetAABB(this Sprite sp)
 		{
-			Vector2f pos = sp.Transform.TransformPoint(new Vector2f(0, 0));
+			//Store the sprite position
+			var pos = new Vector2(sp.Transform.TransformPoint(new Vector2f(0,0)));
 
 			//Store the size so we can calculate the other corners
-			Vector2f size = new Vector2f(sp.TextureRect.Width, sp.TextureRect.Height);
+			var size = new Vector2(sp.TextureRect.Width, sp.TextureRect.Height);
 
-			float Angle = sp.Rotation;
+			//Store the sprite current rotation
+			var angle = sp.Rotation;
 
 			//Bail out early if the sprite isn't rotated
-			if (Angle == 0.0f)
+			if (angle == 0.0f)
 			{
-				return new IntRect((int)pos.X, (int)pos.Y, (int)(sp.TextureRect.Width),
-					(int)(sp.TextureRect.Height));
+				return new Rectangle(
+					pos.X,
+					pos.Y,
+					size.X,
+					size.Y);
 			}
 
 			//Calculate the other points as vectors from (0,0)
 			//Imagine sf::Vector2f A(0,0); but its not necessary
 			//as rotation is around this point.
-			Vector2f B = new Vector2f(sp.TextureRect.Width, 0);
-			Vector2f C = new Vector2f(sp.TextureRect.Width, sp.TextureRect.Height);
-			Vector2f D = new Vector2f(0, sp.TextureRect.Height);
+			var B = new Vector2(sp.TextureRect.Width, 0);
+			var C = new Vector2(sp.TextureRect.Width, sp.TextureRect.Height);
+			var D = new Vector2(0, sp.TextureRect.Height);
 
 			//Rotate the points to match the sprite rotation
-			B = RotatePoint(B, Angle);
-			C = RotatePoint(C, Angle);
-			D = RotatePoint(D, Angle);
+			B.Rotate (angle);
+			C.Rotate (angle);
+			D.Rotate (angle);
 
 			//Round off to int and set the four corners of our Rect
-			int Left = (int)(MinValue(0.0f, B.X, C.X, D.X));
-			int Top = (int)(MinValue(0.0f, B.Y, C.Y, D.Y));
-			int Right = (int)(MaxValue(0.0f, B.X, C.X, D.X));
-			int Bottom = (int)(MaxValue(0.0f, B.Y, C.Y, D.Y));
+			var left = MinValue (0.0f, B.X, C.X, D.X);
+			var top = MinValue(0.0f, B.Y, C.Y, D.Y);
+			var right = MaxValue(0.0f, B.X, C.X, D.X);
+			var bottom = MaxValue(0.0f, B.Y, C.Y, D.Y);
 
 			//Create a Rect from out points and move it back to the correct position on the screen
-			IntRect AABB = new IntRect(Left, Top, Right - Left, Bottom - Top);
-			AABB.Left += (int)pos.X;
-			AABB.Top += (int)pos.Y;
+			var AABB = new Rectangle(left, top, right - left, bottom - top);
+			AABB.X += (int)pos.X;
+			AABB.Y += (int)pos.Y;
 
 			//AABB.Offset((int)(pos.X), (int)(pos.Y));
 			return AABB;
 		}
 
-		public static float MinValue(float a, float b, float c, float d)
-		{
-			float min = a;
-
-			min = (b < min ? b : min);
-			min = (c < min ? c : min);
-			min = (d < min ? d : min);
-
-			return min;
-		}
-
-		public static float MaxValue(float a, float b, float c, float d)
-		{
-			float max = a;
-
-			max = (b > max ? b : max);
-			max = (c > max ? c : max);
-			max = (d > max ? d : max);
-
-			return max;
-		}
-
-		public static Vector2f RotatePoint(Vector2f p, float Angle)
-		{
-			Angle *= RADIANS_PER_DEGREE;
-			return new Vector2f(p.X * (float)Math.Cos(Angle) - p.Y * (float)Math.Sin(Angle),
-				p.X * (float)Math.Sin(Angle) + p.Y * (float)Math.Cos(Angle));
-		}
-
-		public static Vector2f ScalePoint(Vector2f p, float scale)
-		{
-			return new Vector2f(p.X * scale, p.Y * scale);
-		}
-
-		public static bool PixelPerfectTest(Sprite sp1, Sprite sp2, byte AlphaLimit)
+		public static bool PixelIntersects(this Sprite sp1, Sprite sp2, byte AlphaLimit)
 		{
 			//Get AABBs of the two sprites
-			IntRect Object1AABB = GetAABB(sp1);
-			IntRect Object2AABB = GetAABB(sp2);
-
-			IntRect Intersection;
+			var Object1AABB = GetAABB(sp1);
+			var Object2AABB = GetAABB(sp2);
+			var Intersection = Rectangle.Zero;
 
 			if (Object1AABB.Intersects(Object2AABB, out Intersection))
 			{
@@ -117,31 +82,28 @@ namespace SFGL.Physics
 				//Or Points outside the image.  We need to check for these as they print to the error console
 				//which is slow, and then return black which registers as a hit.
 
-				IntRect O1SubRect = sp1.TextureRect;
-				IntRect O2SubRect = sp2.TextureRect;
+				var O1SubRect = sp1.TextureRect;
+				var O2SubRect = sp2.TextureRect;
 
 				//Vector2f O1SubRectSize = new Vector2f(sp1.Texture.Width, sp1.Texture.Height);
 				//Vector2f O2SubRectSize = new Vector2f(sp2.Texture.Width, sp2.Texture.Height);
-				Vector2i O1SubRectSize = new Vector2i(O1SubRect.Width, O1SubRect.Height);
-				Vector2i O2SubRectSize = new Vector2i(O2SubRect.Width, O2SubRect.Height);
+				var O1SubRectSize = new Vector2(O1SubRect.Width, O1SubRect.Height);
+				var O2SubRectSize = new Vector2(O2SubRect.Width, O2SubRect.Height);
 
-				Vector2f o1v;
-				Vector2f o2v;
+				var o1v = Vector2.Zero;
+				var o2v = Vector2.Zero;
 
-				if(!images.ContainsKey(sp1.Texture)) images.Add(sp1.Texture, sp1.Texture.CopyToImage());
-				if(!images.ContainsKey(sp2.Texture)) images.Add(sp2.Texture, sp2.Texture.CopyToImage());
-
-				Image im1 = (Image)images[sp1.Texture];
-				Image im2 = (Image)images[sp2.Texture];
+				var im1 = sp1.Texture.CopyToImage();
+				var im2 = sp2.Texture.CopyToImage();
 
 				//Loop through our pixels
-				for (int i = Intersection.Left; i < Intersection.Left + Intersection.Width; i++)
+				for (var i = Intersection.Left; i < Intersection.Left + Intersection.Width; i++)
 				{
-					for (int j = Intersection.Top; j < Intersection.Top + Intersection.Height; j++)
+					for (var j = Intersection.Top; j < Intersection.Top + Intersection.Height; j++)
 					{
 
-						o1v = sp1.Transform.TransformPoint(new Vector2f(i, j)); //Creating Objects each loop :(
-						o2v = sp2.Transform.TransformPoint(new Vector2f(i, j));
+						o1v = new Vector2(sp1.Transform.TransformPoint(new Vector2f(i, j))); //Creating Objects each loop :(
+						o2v = new Vector2(sp2.Transform.TransformPoint(new Vector2f(i, j)));
 
 						//Hack to make sure pixels fall within the Sprite's Image
 						if (o1v.X > 0 && o1v.Y > 0 && o2v.X > 0 && o2v.Y > 0 &&
@@ -165,31 +127,16 @@ namespace SFGL.Physics
 			return false;
 		}
 
-		public static bool CircleTest(Sprite sp1, Sprite sp2, float? scale)
-		{
-			//Simplest circle test possible
-			//Distance between points <= sum of radius
-
-			if(scale == null) scale = 1f;
-
-			float Radius1 = (sp1.TextureRect.Width + sp1.TextureRect.Height) / 4;
-			float Radius2 = ((sp2.TextureRect.Width + sp2.TextureRect.Height) / 4) * scale.Value;
-			float xd = sp1.Position.X - sp2.Position.X;
-			float yd = sp1.Position.Y - sp2.Position.Y;
-
-			return (Math.Sqrt(xd * xd + yd * yd) <= (Radius1 + Radius2));
-		}
-
-		public static bool BoundingBoxTest(Sprite sp1, Sprite sp2)
+		public static bool BoundingBoxTest(this Sprite sp1, Sprite sp2)
 		{
 
-			Vector2f A = new Vector2f();
-			Vector2f B = new Vector2f();
-			Vector2f C = new Vector2f();
-			Vector2f BL= new Vector2f();
-			Vector2f TR = new Vector2f();
-			Vector2f HalfSize1 = new Vector2f(sp1.TextureRect.Width, sp1.TextureRect.Height);
-			Vector2f HalfSize2 = new Vector2f(sp2.TextureRect.Width, sp2.TextureRect.Height);
+			var A = Vector2.Zero;
+			var B = Vector2.Zero;
+			var C = Vector2.Zero;
+			var BL= Vector2.Zero;
+			var TR = Vector2.Zero;
+			var HalfSize1 = new Vector2(sp1.TextureRect.Width, sp1.TextureRect.Height);
+			var HalfSize2 = new Vector2(sp2.TextureRect.Width, sp2.TextureRect.Height);
 
 			//For somereason the Vector2d divide by operator
 			//was misbehaving
@@ -200,20 +147,20 @@ namespace SFGL.Physics
 			HalfSize2.Y /= 2;
 
 			//Get the Angle we're working on
-			float Angle = sp1.Rotation - sp2.Rotation;
-			float CosA = (float)Math.Cos(Angle * RADIANS_PER_DEGREE);
-			float SinA = (float)Math.Sin(Angle * RADIANS_PER_DEGREE);
+			var Angle = sp1.Rotation - sp2.Rotation;
+			var CosA = (float)Math.Cos(FloatMath.ToRadians(Angle));
+			var SinA = (float)Math.Sin(FloatMath.ToRadians(Angle));
 
 			float t, x, a, dx, ext1, ext2;
 
 			//Normalise the Center of Object2 so its axis aligned an represented in
 			//relation to Object 1
-			C = sp2.Position;
+			C = new Vector2(sp2.Position);
 
 			C.X -= sp1.Position.X;
 			C.Y -= sp1.Position.Y;
 
-			C = RotatePoint(C, sp2.Rotation);
+			C.Rotate (sp2.Rotation);
 
 			//Get the Corners
 			BL = TR = C;
@@ -324,6 +271,27 @@ namespace SFGL.Physics
 
 		}
 
-	}
+		private static float MinValue(float a, float b, float c, float d)
+		{
+			float min = a;
 
+			min = (b < min ? b : min);
+			min = (c < min ? c : min);
+			min = (d < min ? d : min);
+
+			return min;
+		}
+
+		private static float MaxValue(float a, float b, float c, float d)
+		{
+			float max = a;
+
+			max = (b > max ? b : max);
+			max = (c > max ? c : max);
+			max = (d > max ? d : max);
+
+			return max;
+		}
+	}
 }
+

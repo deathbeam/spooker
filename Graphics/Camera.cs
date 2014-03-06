@@ -94,6 +94,23 @@ namespace SFGL.Graphics
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
+		/// Returns new instance of Camera class with default settings
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public static Camera Default
+		{
+			get
+			{
+				var tempCamera = new Camera (new Rectangle (0, 0, 800, 600));
+				tempCamera.Smoothness = 0.33f;
+				tempCamera.Smooth = false;
+				tempCamera.RoundPosition = true;
+				return new Camera (new Rectangle (0, 0, 800, 600));
+			}
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
 		/// Creates new instance of Camera class using Rectangle
 		/// </summary>
 		////////////////////////////////////////////////////////////
@@ -103,9 +120,6 @@ namespace SFGL.Graphics
 			View.Center = View.Size / 2;
 			Position = new Vector2 (View.Center);
 			ActualPosition = Position;
-			Smoothness = 0.33f;
-			Smooth = false;
-			RoundPosition = true;
 		}
 
 		////////////////////////////////////////////////////////////
@@ -119,9 +133,6 @@ namespace SFGL.Graphics
 			View.Center = View.Size / 2;
 			Position = new Vector2 (View.Center);
 			ActualPosition = Position;
-			Smoothness = 0.33f;
-			Smooth = false;
-			RoundPosition = true;
 		}
 
 		////////////////////////////////////////////////////////////

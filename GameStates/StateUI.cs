@@ -154,6 +154,7 @@ namespace SFGL.GameStates
 		////////////////////////////////////////////////////////////
 		public override void Draw(RenderTarget graphicsDevice, RenderStates states)
 		{
+			base.Draw (graphicsDevice, states);
 			_gamegui.RenderCanvas ();
 		}
 		#endregion

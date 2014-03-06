@@ -8,53 +8,35 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SFGL.Window;
-using SFML.Graphics;
-using SFGL.Particles;
 
 namespace SFGL.Content
 {
+	////////////////////////////////////////////////////////////
 	/// <summary>
-	/// Provides simple way of loading game content such as textures, fonts, shaders and more.
+	/// Provides simple way of loading game content such as
+	/// textures, fonts, shaders and more.
 	/// </summary>
+	////////////////////////////////////////////////////////////
 	public class ContentManager : IDisposable
     {
 		private readonly List<ContentProvider> _loaders = new List<ContentProvider> ();
-		private string _directory = "Content";
+		
+		/// <summary>Directory, from what will content providers load data.</summary>
+		public string Directory { get; set; }
 
-		/// <summary>
-		/// Location of root directory from what will content providers load data.
-		/// </summary>
-		public string Directory
-		{ 
-			get { return _directory; }
-			set { _directory = value; }
-		}
-
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Creates new instance of Content Manager.
 		/// </summary>
-		public ContentManager()
-		{
-			/// Initialize content loaders
-			ContentProvider loader;
+		////////////////////////////////////////////////////////////
+		public ContentManager() { }
 
-			loader = new ContentProvider(typeof(Texture), "textures", "png");
-			loader.Load = (str) => new Texture(str);
-			AddLoader(loader);
-
-			loader = new ContentProvider(typeof(Font), "fonts", "ttf");
-			loader.Load = (str) => new Font(str);
-			AddLoader(loader);
-
-			loader = new ContentProvider(typeof(ParticleSettings), "particles", "sfp");
-			loader.Load = (str) => new ParticleSettings(str);
-			AddLoader(loader);
-		}
-
+		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Loads file to content manager, or if file is already loaded, returns file data.
+		/// Loads file to content manager, or if file is already
+		/// loaded, returns file data.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public T Get<T>(string path) where T : class
         {
 			ContentProvider _loader = _loaders.First(x => x.Type == typeof (T));
@@ -70,17 +52,32 @@ namespace SFGL.Content
 			return _loader.Get(path) as T;
         }
 
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Adds new loader type to content manager loaders stack.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void AddLoader(ContentProvider loader)
         {
 			_loaders.Add(loader);
         }
 
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Adds new loaders to content manager loaders stack.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void AddLoaders(List<ContentProvider> loaders)
+		{
+			foreach (ContentProvider loader in loaders)
+				_loaders.Add(loader);
+		}
+
+		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Disposes this intance of Content Manager.
 		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void Dispose()
 		{
 			foreach (var loader in _loaders)

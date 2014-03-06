@@ -15,7 +15,6 @@ namespace SFGL.Graphics
 	public class SpriteBatch : Drawable
 	{
 		#region Variables
-
 		private struct BatchedTexture
 		{
 			public uint Count;
@@ -27,11 +26,9 @@ namespace SFGL.Graphics
 		private Texture activeTexture;
 		private bool active;
 		private uint queueCount;
-
 		#endregion
 
 		#region Properties
-
 		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Returns count of all vertices in this vertex batch.
@@ -47,11 +44,9 @@ namespace SFGL.Graphics
 		/// </summary>
 		////////////////////////////////////////////////////////////
 		public int Max { get; set; }
-
 		#endregion
 
 		#region Constructors/Destructors
-
 		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Creates new instance of SpriteBatch class.
@@ -73,11 +68,9 @@ namespace SFGL.Graphics
 		{
 			Max = capacity;
 		}
-
 		#endregion
 
 		#region General functions
-
 		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Begins this vertex batch, so we can draw sprites after.
@@ -126,11 +119,9 @@ namespace SFGL.Graphics
 				index += item.Count;
 			}
 		}
-
 		#endregion
 
 		#region Drawing
-
 		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Enqueue collection of sprites to this vertex batch.
@@ -157,11 +148,9 @@ namespace SFGL.Graphics
 			WriteQuad(sprite.Texture, sprite.Position, sprite.TextureRect, sprite.Color, sprite.Scale, sprite.Origin,
 				sprite.Rotation);
 		}
-
 		#endregion
 
 		#region Helpers
-
 		private void Enqueue()
 		{
 			if (queueCount > 0)
@@ -244,7 +233,6 @@ namespace SFGL.Graphics
 				ptr->Color = color;
 			}
 		}
-
 		#endregion
 	}
 }

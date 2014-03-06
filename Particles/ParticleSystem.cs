@@ -22,23 +22,11 @@ namespace SFGL.Particles
 {
 	public class ParticleSystem : GameComponent, Drawable, IUpdateable, ILoadable
 	{
-		// these two values control the order that particle systems are drawn in.
-		// typically, particles that use additive blending should be drawn on top of
-		// particles that use regular alpha blending. ParticleSystems should therefore
-		// set their DrawOrder to the appropriate value in InitializeConstants, though
-		// it is possible to use other values for more advanced effects.
-		public const int AlphaBlendDrawOrder = 100;
-		public const int AdditiveDrawOrder = 200;
-
 		// the sprite this particle system will use.
 		private Sprite sprite;
 
 		// the texture this particle system will use.
 		private Texture texture;
-
-		// the origin when we're drawing textures. this will be the middle of the
-		// texture.
-		private Vector2 origin;
 
 		// the array of particles used by this system. these are reused, so that calling
 		// AddParticles will only cause allocations if we're trying to create more particles
@@ -54,7 +42,7 @@ namespace SFGL.Particles
 		private ParticleSettings settings;
 
 		// The asset name used to load our settings from a file.
-		private string settingsAssetName;
+		private string filepath;
 
 		// the BlendState used when rendering the particles.
 		private RenderStates blendState;
@@ -71,10 +59,10 @@ namespace SFGL.Particles
 		/// Constructs a new ParticleSystem.
 		/// </summary>
 		/// <param name="game">The host for this particle system.</param>
-		/// <param name="settingsAssetName">The name of the settings file to load 
+		/// <param name="filepath">The name of the settings file to load 
 		/// used when creating and updating particles in the system.</param>
-		public ParticleSystem(GameWindow game, string settingsAssetName)
-			: this(game, settingsAssetName, 10)
+		public ParticleSystem(GameWindow game, string filepath)
+			: this(game, filepath, 10)
 		{ }
 
 
@@ -82,15 +70,15 @@ namespace SFGL.Particles
 		/// Constructs a new ParticleSystem.
 		/// </summary>
 		/// <param name="game">The host for this particle system.</param>
-		/// <param name="settingsAssetName">The name of the settings file to load 
+		/// <param name="filepath">The name of the settings file to load 
 		/// used when creating and updating particles in the system.</param>
 		/// <param name="initialParticleCount">The initial number of particles this
 		/// system expects to use. The system will grow as needed, however setting
 		/// this value to be as close as possible will reduce allocations.</param>
-		public ParticleSystem(GameWindow game, string settingsAssetName, int initialParticleCount)
+		public ParticleSystem(GameWindow game, string filepath, int initialParticleCount)
 			: base(game)
 		{
-			this.settingsAssetName = settingsAssetName;
+			this.filepath = filepath;
 
 			// we create the particle list and queue with our initial count and create that
 			// many particles. If we picked a reasonable value, our system will not allocate
@@ -112,21 +100,16 @@ namespace SFGL.Particles
 		public void LoadContent()
 		{
 			// Load our settings
-			settings = Content.Get<ParticleSettings>(settingsAssetName);
+			settings = new ParticleSettings(filepath);
 
 			// load the texture....
-			texture = Content.Get<Texture>(settings.TextureFilename);
+			texture = new Texture(settings.TextureFilename);
 
 			// create the blend state using the values from our settings
 			blendState = new RenderStates (settings.BlendMode);
 
-			// ... and calculate the center. this'll be used in the draw call, we
-			// always want to rotate and scale around this point.
-			origin.X = texture.Size.X / 2;
-			origin.Y = texture.Size.Y / 2;
-
+			// create rendering sprite from texture
 			sprite = new Sprite (texture);
-			sprite.Origin = new Vector2f (origin.X, origin.Y);
 		}
 
 		/// <summary>
@@ -327,7 +310,6 @@ namespace SFGL.Particles
 				sprite.Color = color;
 				sprite.Scale = new Vector2f (scale, scale);
 				sprite.Rotation = p.Rotation;
-				sprite.Origin = new Vector2f (origin.X, origin.Y);
 
 				SpriteBatch.Draw(sprite);
 			}

@@ -15,7 +15,7 @@ using SFGL.Time;
 
 namespace SFGL.Input
 {
-	public class KeyboardManager : IUpdateable
+	public class KeyboardManager : IUpdateable, IDisposable
     {
 		private Dictionary<Keyboard.Key, bool> _keyStates = new Dictionary<Keyboard.Key, bool>();
 		private Dictionary<Keyboard.Key, bool> _previousKeyStates = new Dictionary<Keyboard.Key, bool>();
@@ -136,6 +136,13 @@ namespace SFGL.Input
 		public bool IsKeyDown(Keyboard.Key key)
 		{
 			return _keyStates[key];
+		}
+
+		/// <summary>
+		/// Disposes this instance of KeyboardManager class.
+		/// </summary>
+		public void Dispose()
+		{
 		}
     }
 }
