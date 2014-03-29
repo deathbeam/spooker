@@ -1,0 +1,25 @@
+﻿Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spooker", "Spooker/Spooker.csproj", "{CFA1A620-238E-4917-9831-B19B7F2C23B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFA1A620-238E-4917-9831-B19B7F2C23B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFA1A620-238E-4917-9831-B19B7F2C23B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFA1A620-238E-4917-9831-B19B7F2C23B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFA1A620-238E-4917-9831-B19B7F2C23B4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Spooker.csproj
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
+		description = Open Source Game Framework
+		version = 1.2
+	EndGlobalSection
+EndGlobal

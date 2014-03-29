@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CFA1A620-238E-4917-9831-B19B7F2C23B4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Spooker</RootNamespace>
+    <AssemblyName>Spooker</AssemblyName>
+    <ReleaseVersion>1.4</ReleaseVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" />
+      </CustomCommands>
+    </CustomCommands>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Gwen">
+      <HintPath>..\Lib\Gwen.dll</HintPath>
+    </Reference>
+    <Reference Include="sfmlnet-audio-2">
+      <HintPath>..\Lib\sfmlnet-audio-2.dll</HintPath>
+    </Reference>
+    <Reference Include="sfmlnet-graphics-2">
+      <HintPath>..\Lib\sfmlnet-graphics-2.dll</HintPath>
+    </Reference>
+    <Reference Include="sfmlnet-window-2">
+      <HintPath>..\Lib\sfmlnet-window-2.dll</HintPath>
+    </Reference>
+    <Reference Include="TiledSharp">
+      <HintPath>..\Lib\TiledSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Lidgren.Network">
+      <HintPath>..\Lib\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="Gwen.SFML">
+      <HintPath>..\Lib\Gwen.SFML.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TileMap\Layer.cs" />
+    <Compile Include="TileMap\Tile.cs" />
+    <Compile Include="Graphics\SpriteEffects.cs" />
+    <Compile Include="ILoadable.cs" />
+    <Compile Include="IUpdateable.cs" />
+    <Compile Include="Time\Clock.cs" />
+    <Compile Include="EntityList.cs" />
+    <Compile Include="Audio\AudioManager.cs" />
+    <Compile Include="Time\GameTime.cs" />
+    <Compile Include="Content\ContentManager.cs" />
+    <Compile Include="Content\ContentProvider.cs" />
+    <Compile Include="GameStates\State.cs" />
+    <Compile Include="GameStates\StateUI.cs" />
+    <Compile Include="Input\KeyboardManager.cs" />
+    <Compile Include="Input\MouseManager.cs" />
+    <Compile Include="GameStates\UpdateMode.cs" />
+    <Compile Include="Graphics\Camera.cs" />
+    <Compile Include="TileMap\Map.cs" />
+    <Compile Include="Network\NetworkAgent.cs" />
+    <Compile Include="Network\Packet.cs" />
+    <Compile Include="Network\PacketManager.cs" />
+    <Compile Include="Graphics\SpriteBatch.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="MathHelper.cs" />
+    <Compile Include="Point.cs" />
+    <Compile Include="Rectangle.cs" />
+    <Compile Include="Vector2.cs" />
+    <Compile Include="Graphics\Lights\Light.cs" />
+    <Compile Include="Graphics\IDrawable.cs" />
+    <Compile Include="Graphics\Sprite.cs" />
+    <Compile Include="Graphics\Color.cs" />
+    <Compile Include="Graphics\Texture.cs" />
+    <Compile Include="Circle.cs" />
+    <Compile Include="Line.cs" />
+    <Compile Include="Polygon.cs" />
+    <Compile Include="Physics\LineCollider.cs" />
+    <Compile Include="Physics\PolygonCollider.cs" />
+    <Compile Include="Physics\RectCollider.cs" />
+    <Compile Include="Physics\CircleCollider.cs" />
+    <Compile Include="Core\GameComponent.cs" />
+    <Compile Include="Core\GameSettings.cs" />
+    <Compile Include="Core\GameWindow.cs" />
+    <Compile Include="Graphics\Transform.cs" />
+    <Compile Include="Graphics\Animations\Animation.cs" />
+    <Compile Include="Graphics\Animations\AnimatedSprite.cs" />
+    <Compile Include="Graphics\Particles\Particle.cs" />
+    <Compile Include="Graphics\Particles\ParticleEmitter.cs" />
+    <Compile Include="Graphics\Particles\ParticleSettings.cs" />
+    <Compile Include="Graphics\Particles\ParticleSystem.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Network\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Graphics\Lights\" />
+    <Folder Include="Physics\" />
+    <Folder Include="Graphics\Animations\" />
+  </ItemGroup>
+</Project>
