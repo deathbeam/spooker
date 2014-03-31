@@ -29,25 +29,22 @@ namespace Spooker.Core
 	public abstract class GameWindow : IDrawable, IUpdateable, IDisposable
 	{
 		/// <summary>Manages various game content (audio, textures, fonts....).</summary>
-		public ContentManager Content { get; set; }
+		public ContentManager Content;
 
 		/// <summary>Can play various audio files.</summary>
-		public AudioManager Audio { get; set; }
+		public AudioManager Audio;
 
-		/// <summary>Handles user input from keyboard.</summary>
-		public KeyboardManager KeysInput { get; set; }
-
-		/// <summary>Handles user input from mouse.</summary>
-		public MouseManager MouseInput { get; set; }
+		/// <summary>Handles user input from keyboard and mouse.</summary>
+		public GameInput GameInput;
 
 		/// <summary>Core rendering device what controls everything drawn to screen.</summary>
-		public SFML.Graphics.RenderWindow GraphicsDevice { get; set; }
+		public SFML.Graphics.RenderWindow GraphicsDevice;
 
 		/// <summary>Manages components of this game window instance.</summary>
-		protected EntityList Components { get; set; }
+		protected EntityList Components;
 
 		/// <summary>Provides optimized drawing of sprites</summary>
-		protected SpriteBatch SpriteBatch { get; set; }
+		protected SpriteBatch SpriteBatch;
 
 		private readonly List<State> _stateStack = new List<State> ();
 		private readonly GameTime _gameTime = GameTime.Zero;
@@ -139,8 +136,6 @@ namespace Spooker.Core
 		////////////////////////////////////////////////////////////
 		public void Close()
 		{
-			KeysInput.Dispose ();
-			MouseInput.Dispose ();
 			Audio.Dispose ();
 			Content.Dispose ();
 			Components.Dispose ();
@@ -177,10 +172,9 @@ namespace Spooker.Core
 
 			//Initialize core parts of game
 			SpriteBatch = new SpriteBatch (GraphicsDevice);
+			GameInput = new GameInput (GraphicsDevice);
 			Content = new ContentManager ();
 			Audio = new AudioManager ();
-			KeysInput = new KeyboardManager ();
-			MouseInput = new MouseManager ();
 			Components = new EntityList ();
 
 			//Load rest of game settings
@@ -195,7 +189,6 @@ namespace Spooker.Core
 			_gameTime = gameSettings.UpdaterateLimit;
 
 			//Bind input events to components
-			GraphicsDevice.MouseWheelMoved += (sender, e) => MouseInput.MouseWheelMoved(e);
 
 			GraphicsDevice.MouseWheelMoved += (sender, e) =>
 			{ 
@@ -278,8 +271,7 @@ namespace Spooker.Core
 		////////////////////////////////////////////////////////////
 		public virtual void Update(GameTime gameTime)
 		{
-			KeysInput.Update (_gameTime);
-			MouseInput.Update (_gameTime);
+			GameInput.Update (_gameTime);
 			Components.Update (_gameTime);
 
 			foreach (var state in _stateStack)

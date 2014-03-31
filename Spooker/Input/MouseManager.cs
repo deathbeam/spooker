@@ -19,7 +19,7 @@ namespace Spooker.Input
 	/// <summary>
 	/// 
 	/// </summary>
-	public class MouseManager : IUpdateable, IDisposable
+	public class MouseManager : IUpdateable
 	{
 		private readonly Dictionary<Mouse.Button, bool> _buttonStates = new Dictionary<Mouse.Button, bool>();
 		private readonly Dictionary<Mouse.Button, bool> _previousButtonStates = new Dictionary<Mouse.Button, bool>();
@@ -66,10 +66,10 @@ namespace Spooker.Input
 		/// <summary>
 		/// 
 		/// </summary>
-		public Vector2i MousePosition
+		public Vector2 GlobalPosition
 		{
-			get { return Mouse.GetPosition(); }
-			set { Mouse.SetPosition(value); }
+			get { return new Vector2((float)Mouse.GetPosition().X, (float)Mouse.GetPosition().Y); }
+			set { Mouse.SetPosition(new Vector2i((int)value.X, (int)value.Y)); }
 		}
 
 	    /// <summary>
@@ -104,6 +104,16 @@ namespace Spooker.Input
 			{
 				_buttonStates.Add(button, Mouse.IsButtonPressed(button));
 			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public Vector2 LocalPosition(SFML.Graphics.RenderWindow graphicsDevice)
+		{
+			return new Vector2 (
+				(float)Mouse.GetPosition (graphicsDevice).X,
+				(float)Mouse.GetPosition (graphicsDevice).Y);
 		}
 
 		/// <summary>
@@ -186,13 +196,6 @@ namespace Spooker.Input
 		public bool IsKeyDown(Mouse.Button button)
 		{
 			return _buttonStates[button];
-		}
-
-		/// <summary>
-		/// Disposes this instance of MouseManager class.
-		/// </summary>
-		public void Dispose()
-		{
 		}
 	}
 }

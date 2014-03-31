@@ -19,7 +19,7 @@ namespace Spooker.Input
 	/// <summary>
 	/// 
 	/// </summary>
-	public class KeyboardManager : IUpdateable, IDisposable
+	public class KeyboardManager : IUpdateable
     {
 		private readonly Dictionary<Keyboard.Key, bool> _keyStates = new Dictionary<Keyboard.Key, bool>();
 		private readonly Dictionary<Keyboard.Key, bool> _previousKeyStates = new Dictionary<Keyboard.Key, bool>();
@@ -143,13 +143,6 @@ namespace Spooker.Input
 		public bool IsKeyDown(Keyboard.Key key)
 		{
 			return _keyStates[key];
-		}
-
-		/// <summary>
-		/// Disposes this instance of KeyboardManager class.
-		/// </summary>
-		public void Dispose()
-		{
 		}
     }
 }

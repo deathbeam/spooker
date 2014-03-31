@@ -20,6 +20,6 @@ Global
 		$1.DirectoryNamespaceAssociation = None
 		$1.ResourceNamePolicy = FileFormatDefault
 		description = Open Source Game Framework
-		version = 1.2
+		version = 1.4
 	EndGlobalSection
 EndGlobal

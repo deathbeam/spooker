@@ -27,7 +27,7 @@ namespace Spooker.Core
         protected GameWindow Game;
 
 		/// <summary>Core rendering device what controls everything drawn to screen.</summary>
-        protected RenderTarget GraphicsDevice
+		protected RenderWindow GraphicsDevice
 		{
 			get { return Game.GraphicsDevice; }
 		}
@@ -44,16 +44,10 @@ namespace Spooker.Core
 			get { return Game.Audio; }
 		}
 
-		/// <summary>Handles user input from keyboard.</summary>
-		protected KeyboardManager KeysInput
+		/// <summary>Handles user input from keyboard and mouse.</summary>
+		protected GameInput GameInput
 		{ 
-			get { return Game.KeysInput; }
-		}
-
-		/// <summary>Handles user input from mouse.</summary>
-		protected MouseManager MouseInput
-		{ 
-			get { return Game.MouseInput; }
+			get { return Game.GameInput; }
 		}
 
 		////////////////////////////////////////////////////////////
