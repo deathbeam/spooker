@@ -9,6 +9,7 @@
 //-----------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System;
 
 namespace Spooker.Graphics.Animations
 {
@@ -20,7 +21,7 @@ namespace Spooker.Graphics.Animations
 		public List<Rectangle> Frames;
 
 		/// <summary>Defines for how long will be one frame drawn</summary>
-		public float Duration;
+		public TimeSpan Duration;
 
 		public Animation (string name, AnimatedSprite animator)
 		{

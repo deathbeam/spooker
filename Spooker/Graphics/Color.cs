@@ -18,6 +18,7 @@ namespace Spooker.Graphics
 	/// alpha channels.
 	/// </summary>
 	////////////////////////////////////////////////////////////
+	[Serializable]
 	public class Color
 	{
 		#region Private fields
@@ -107,6 +108,13 @@ namespace Spooker.Graphics
 		#endregion
 
 		#region Constructors
+
+		/// <summary>
+		/// Create a empty color.
+		/// </summary>
+		public Color()
+		{
+		}
 
 		/// <summary>
 		/// Create a new color.

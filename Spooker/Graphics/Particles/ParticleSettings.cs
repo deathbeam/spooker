@@ -201,8 +201,17 @@ namespace Spooker.Graphics.Particles
 		/// </summary>
 		/// <param name="filename"></param>
 		public ParticleSettings(string filename)
+			: this(new FileStream(filename, FileMode.Open))
 		{
-			var reader = new StreamReader (filename);
+		}
+
+		/// <summary>
+		/// Creates new instance of ParticleSettings class from file
+		/// </summary>
+		/// <param name="filename"></param>
+		public ParticleSettings(Stream stream)
+		{
+			var reader = new StreamReader (stream);
 			var ser = new XmlSerializer (GetType ());
 			var temp = (ParticleSettings)ser.Deserialize (reader);
 			reader.Close ();

@@ -11,7 +11,7 @@
 using Spooker.Graphics;
 using TiledSharp;
 
-namespace Spooker.TileMap
+namespace Spooker.TiledMap
 {
 	////////////////////////////////////////////////////////////
 	/// <summary>

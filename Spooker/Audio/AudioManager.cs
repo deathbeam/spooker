@@ -27,10 +27,10 @@ namespace Spooker.Audio
 		private Music _currentMusic;
 		
 		/// <summary>Directory from where will audio manager load sounds.</summary>
-		public string SoundDirectory { get; set; }
+		public string SoundDirectory;
 		
 		/// <summary>Extension of sounds what will audio manager load and play.</summary>
-		public string SoundExtension { get; set; }
+		public string SoundExtension;
 		
 		////////////////////////////////////////////////////////////
 		/// <summary>

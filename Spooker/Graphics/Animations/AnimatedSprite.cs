@@ -74,9 +74,9 @@ namespace Spooker.Graphics.Animations
 			_timeSinceStart += dt;
 
 			// it's time to a next frame?
-			if (_currentAnim != null &&_timeSinceStart > _animations[_currentAnim].Duration)
+			if (_currentAnim != null &&_timeSinceStart > _animations[_currentAnim].Duration.TotalMilliseconds)
 			{
-				_timeSinceStart -= _animations[_currentAnim].Duration;
+				_timeSinceStart -= (float)_animations[_currentAnim].Duration.TotalMilliseconds;
 
 				SourceRect = _animations [_currentAnim].GetNextFrame ();
 			}

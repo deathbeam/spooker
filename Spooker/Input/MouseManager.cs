@@ -24,60 +24,39 @@ namespace Spooker.Input
 		private readonly Dictionary<Mouse.Button, bool> _buttonStates = new Dictionary<Mouse.Button, bool>();
 		private readonly Dictionary<Mouse.Button, bool> _previousButtonStates = new Dictionary<Mouse.Button, bool>();
 		private readonly IEnumerable<Mouse.Button> _buttonEnum = Enum.GetValues(typeof(Mouse.Button)).Cast<Mouse.Button>();
-
-		/// <summary>
-		/// 
-		/// </summary>
+		private SFML.Graphics.RenderWindow _graphicsDevice;
+		
 		public event Action<MouseWheelEventArgs> OnWheelScroll;
-
-		/// <summary>
-		/// 
-		/// </summary>
 		public event Action<MouseWheelEventArgs> OnWheelScrollUp;
-
-		/// <summary>
-		/// 
-		/// </summary>
 		public event Action<MouseWheelEventArgs> OnWheelScrollDown;
+		public int ScrollWheelDelta;
 
-		/// <summary>
-		/// Checks if the key is down(pressed)
-		/// </summary>
-		/// <param name="button">The desired mouse button</param>
-		/// <returns></returns>
-		public bool this[Mouse.Button button]
-		{
-			get { return IsKeyDown(button); }
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public int ScrollWheelDelta { get; set; }
-
-		/// <summary>
-		/// 
-		/// </summary>
 		public bool ScrollWheelMoved
 		{
 			get { return (ScrollWheelDelta != 0); }
 		}
-
-		/// <summary>
-		/// 
-		/// </summary>
+		
 		public Vector2 GlobalPosition
 		{
 			get { return new Vector2((float)Mouse.GetPosition().X, (float)Mouse.GetPosition().Y); }
 			set { Mouse.SetPosition(new Vector2i((int)value.X, (int)value.Y)); }
+		}
+		
+		public Vector2 LocalPosition
+		{
+			get { return new Vector2 ((float)Mouse.GetPosition (_graphicsDevice).X,(float)Mouse.GetPosition (_graphicsDevice).Y); }
+			set { Mouse.SetPosition(new Vector2i((int)value.X, (int)value.Y), _graphicsDevice); }
 		}
 
 	    /// <summary>
 	    /// Creates new instance of MouseManager class.
 	    /// </summary>
 	    /// <returns></returns>
-	    public MouseManager()
+		public MouseManager(SFML.Graphics.RenderWindow graphicsDevice)
 		{
+
+			_graphicsDevice = graphicsDevice;
+			_graphicsDevice.MouseWheelMoved += (sender, e) => MouseWheelMoved(e);
 			foreach(Mouse.Button button in _buttonEnum)
 			{
 				_buttonStates.Add(button, false);
@@ -109,18 +88,8 @@ namespace Spooker.Input
 		/// <summary>
 		/// 
 		/// </summary>
-		public Vector2 LocalPosition(SFML.Graphics.RenderWindow graphicsDevice)
-		{
-			return new Vector2 (
-				(float)Mouse.GetPosition (graphicsDevice).X,
-				(float)Mouse.GetPosition (graphicsDevice).Y);
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
 		/// <param name="args"></param>
-		public void MouseWheelMoved(MouseWheelEventArgs args)
+		private void MouseWheelMoved(MouseWheelEventArgs args)
 		{
 			ScrollWheelDelta = args.Delta;
 

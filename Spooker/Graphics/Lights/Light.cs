@@ -12,16 +12,19 @@ namespace Spooker.Graphics.Lights
 {
 	public class Light
 	{
-		//TODO: Finish light sytem
-
 		public Vector2 Position;
-		public Color Color = Color.White;
+		public Color Color;
 		public float Ratio;
 
-		public Light ( Vector2 pos, float ratio)
+		public Light ( Vector2 pos, float ratio) : this(pos, ratio, Color.White)
+		{
+		}
+
+		public Light ( Vector2 pos, float ratio, Color color)
 		{
 			Position = pos;
 			Ratio = ratio;
+			Color = color;
 		}
 	}
 }

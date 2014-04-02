@@ -15,9 +15,7 @@ namespace Spooker.Input
 		{
 			_actions = new Dictionary<string, InputAction> ();
 			Keyboard = new KeyboardManager ();
-			Mouse = new MouseManager ();
-
-			graphicsDevice.MouseWheelMoved += (sender, e) => Mouse.MouseWheelMoved(e);
+			Mouse = new MouseManager (graphicsDevice);
 		}
 
 		internal void AddAction(string name, InputAction action)
@@ -43,7 +41,7 @@ namespace Spooker.Input
 						(action.Type == ActionType.Up && Keyboard.IsKeyUp (action.Key)) ||
 						(action.Type == ActionType.Pressed && Keyboard.IsKeyPressed (action.Key)) ||
 						(action.Type == ActionType.Released && Keyboard.IsKeyReleased (action.Key)))
-						action.OnTrigger ();
+						action.OnTrigger.Invoke ();
 				}
 				else
 				{
@@ -51,7 +49,7 @@ namespace Spooker.Input
 						(action.Type == ActionType.Up && Mouse.IsKeyUp (action.Button)) ||
 						(action.Type == ActionType.Pressed && Mouse.IsKeyPressed (action.Button)) ||
 						(action.Type == ActionType.Released && Mouse.IsKeyReleased (action.Button)))
-						action.OnTrigger ();
+						action.OnTrigger.Invoke ();
 				}
 			}
 		}

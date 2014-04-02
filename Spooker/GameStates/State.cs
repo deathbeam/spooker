@@ -46,7 +46,7 @@ namespace Spooker.GameStates
 		////////////////////////////////////////////////////////////
 		public bool IsActive
 		{
-			get { return Game.IsActive(this); }
+			get { return Game.StateFactory.IsActive(this); }
 		}
 
 		////////////////////////////////////////////////////////////

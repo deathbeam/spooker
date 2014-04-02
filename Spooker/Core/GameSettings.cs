@@ -74,7 +74,7 @@ namespace Spooker.Core
 		}
 
         /// <summary>Relative path to icon file what will be used as icon for game window.</summary>
-        public string Icon = "none";
+        public string Icon;
 
 		/// <summary>Root directory of contet manager</summary>
 		public string ContentDirectory = "Content";
@@ -85,8 +85,8 @@ namespace Spooker.Core
 		/// <summary>Extension of sounds to cache</summary>
 		public string SoundExtension = "ogg";
 
-		/// <summary>Determines how fast will be update rate of game.</summary>
-		public GameTime UpdaterateLimit = GameTime.FromMilliseconds (1);
+		/// <summary>Determines how fast will be update rate of game (in miliseconds).</summary>
+		public long UpdaterateLimit = 1;
 
 		/// <summary>Sets default background color of empty rendering window</summary>
 		public Graphics.Color ClearColor = Graphics.Color.Black;
@@ -127,8 +127,19 @@ namespace Spooker.Core
 		/// </summary>
 		////////////////////////////////////////////////////////////
 		public GameSettings(string filename)
+			: this(new FileStream(filename, FileMode.Open))
 		{
-			var reader = new StreamReader (filename);
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Creates new instance of GameSettings using parameters
+		/// loaded from settings file.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public GameSettings(Stream stream)
+		{
+			var reader = new StreamReader (stream);
 			var ser = new XmlSerializer (GetType ());
 			var temp = (GameSettings)ser.Deserialize (reader);
 			reader.Close ();
@@ -150,7 +161,7 @@ namespace Spooker.Core
 			ContentDirectory = temp.ContentDirectory;
 			SoundDirectory = temp.SoundDirectory;
 			SoundExtension = temp.SoundExtension;
-		    Icon = temp.Icon;
+			Icon = temp.Icon;
 		}
     }
 }

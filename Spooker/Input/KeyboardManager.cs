@@ -25,16 +25,6 @@ namespace Spooker.Input
 		private readonly Dictionary<Keyboard.Key, bool> _previousKeyStates = new Dictionary<Keyboard.Key, bool>();
 		private readonly IEnumerable<Keyboard.Key> _keysEnum = Enum.GetValues(typeof(Keyboard.Key)).Cast<Keyboard.Key>();
 
-		/// <summary>
-		/// Checks if the key is down(pressed)
-		/// </summary>
-		/// <param name="key">The desired key</param>
-		/// <returns></returns>
-		public bool this[Keyboard.Key key]
-		{
-			get { return IsKeyDown(key); }
-		}
-
 	    /// <summary>
 	    /// Creates new instance of KeyboardManager class.
 	    /// </summary>

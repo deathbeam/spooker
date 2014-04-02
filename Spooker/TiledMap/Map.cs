@@ -14,7 +14,7 @@ using TiledSharp;
 using Spooker.Graphics;
 using Spooker.Core;
 
-namespace Spooker.TileMap
+namespace Spooker.TiledMap
 {
 	////////////////////////////////////////////////////////////
 	/// <summary>
@@ -22,7 +22,7 @@ namespace Spooker.TileMap
 	/// TiledSharp.
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public class Map : GameComponent, IDrawable
+	public class Map : IDrawable
     {
 		// TODO: Make map class more dynamic (not only for loading Tiled tmx maps)
 
@@ -63,21 +63,9 @@ namespace Spooker.TileMap
 		/// SpriteBatch externally!).
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public void Draw(SpriteBatch spriteBatch, int layer, SpriteEffects effects = SpriteEffects.None)
+		public void Draw(int layer, SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
 			_layers[layer].Draw (spriteBatch, _camera, effects);
-		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Creates new instance of Map class.
-		/// </summary>
-		/// <param name="game">Base instance of GameWindow</param>
-		/// <param name="filename">Path to map file</param>
-		////////////////////////////////////////////////////////////
-		public Map(GameWindow game, string filename)
-			: this(game, filename, Camera.Default)
-		{
 		}
 
 		////////////////////////////////////////////////////////////
@@ -89,7 +77,7 @@ namespace Spooker.TileMap
 		/// <param name="camera">Camera used for rendering map tiles
 		/// </param>
 		////////////////////////////////////////////////////////////
-		public Map(GameWindow game, string filename, Camera camera) : base(game)
+		public Map(string filename, Camera camera)
         {
 		    _camera = camera;
 

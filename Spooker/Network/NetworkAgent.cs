@@ -32,17 +32,13 @@ namespace Spooker.Network
 	/// </summary>
 	public class NetworkAgent : IUpdateable
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public delegate void PlayerConnectEvent ();
-
-		private readonly PlayerConnectEvent _onPlayerConnect;
-
 		private readonly NetPeer _peer;
 	    private readonly AgentRole _role;
 		private NetOutgoingMessage _outgoingMessage;
 	    private readonly int _port;
+
+		public delegate void ConnectEvent ();
+		public ConnectEvent OnConnect;
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
@@ -70,7 +66,7 @@ namespace Spooker.Network
 		/// appIdentifier must be the same.
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public NetworkAgent(AgentRole role, string tag, PlayerConnectEvent connectCallback, int port = 14242)
+		public NetworkAgent(AgentRole role, string tag, int port = 14242)
 		{
 		    _role = role;
 			var config = new NetPeerConfiguration(tag);
@@ -91,7 +87,6 @@ namespace Spooker.Network
 			}
 
 			Packets = new PacketManager ();
-			_onPlayerConnect = connectCallback;
 
 			_peer.Start();
 			_outgoingMessage = _peer.CreateMessage();
@@ -190,7 +185,7 @@ namespace Spooker.Network
 
 					if (status == NetConnectionStatus.Connected)
 					{
-						_onPlayerConnect();
+						OnConnect.Invoke();
 					}
 					break;
 				case NetIncomingMessageType.Data:

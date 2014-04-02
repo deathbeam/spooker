@@ -12,6 +12,7 @@ using SFML.Graphics;
 using Spooker.Audio;
 using Spooker.Content;
 using Spooker.Input;
+using Spooker.GameStates;
 
 namespace Spooker.Core
 {
@@ -27,7 +28,7 @@ namespace Spooker.Core
         protected GameWindow Game;
 
 		/// <summary>Core rendering device what controls everything drawn to screen.</summary>
-		protected RenderWindow GraphicsDevice
+		protected RenderTarget GraphicsDevice
 		{
 			get { return Game.GraphicsDevice; }
 		}
@@ -48,6 +49,12 @@ namespace Spooker.Core
 		protected GameInput GameInput
 		{ 
 			get { return Game.GameInput; }
+		}
+
+		/// <summary>Manages all present game states.</summary>
+		protected StateFactory StateFactory
+		{ 
+			get { return Game.StateFactory; }
 		}
 
 		////////////////////////////////////////////////////////////

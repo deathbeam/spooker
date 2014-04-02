@@ -8,6 +8,8 @@
 // License: MIT
 //-----------------------------------------------------------------------------
 
+using System.IO;
+
 namespace Spooker.Graphics
 {
 	public class Texture
@@ -59,8 +61,13 @@ namespace Spooker.Graphics
 		}
 
 		public Texture (string filename)
+			: this(new FileStream(filename, FileMode.Open))
 		{
-			_texture = new SFML.Graphics.Texture (filename);
+		}
+
+		public Texture (Stream stream)
+		{
+			_texture = new SFML.Graphics.Texture (stream);
 		}
 
 		public Texture (Color[,] pixels)

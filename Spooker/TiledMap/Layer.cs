@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using TiledSharp;
 using Spooker.Graphics;
 
-namespace Spooker.TileMap
+namespace Spooker.TiledMap
 {
 	////////////////////////////////////////////////////////////
 	/// <summary>
