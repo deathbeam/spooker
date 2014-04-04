@@ -111,7 +111,6 @@
     <Compile Include="Graphics\Particles\ParticleEmitter.cs" />
     <Compile Include="Graphics\Particles\ParticleSettings.cs" />
     <Compile Include="Graphics\Particles\ParticleSystem.cs" />
-    <Compile Include="Input\ActionType.cs" />
     <Compile Include="Input\InputAction.cs" />
     <Compile Include="Input\GameInput.cs" />
     <Compile Include="Graphics\Lights\LightEngine.cs" />
@@ -119,6 +118,7 @@
     <Compile Include="TiledMap\Tile.cs" />
     <Compile Include="TiledMap\Map.cs" />
     <Compile Include="GameStates\StateFactory.cs" />
+    <Compile Include="Input\ActionNodes.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

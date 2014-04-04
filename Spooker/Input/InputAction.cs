@@ -1,32 +1,82 @@
 using SFML.Window;
+using System.Collections.Generic;
 
 namespace Spooker.Input
 {
 	public class InputAction
 	{
-		internal bool IsKeyboard;
-		internal Keyboard.Key Key;
-		internal Mouse.Button Button;
+		private GameInput _parent;
+		private List<ActionNode> _triggers;
+
+		public string Name;
 
 		public delegate void TriggerEvent();
-		public TriggerEvent OnTrigger;
-		public ActionType Type;
-
-		public InputAction (string name, GameInput input)
+		public TriggerEvent OnPress;
+		public TriggerEvent OnRelease;
+		public TriggerEvent OnHold;
+		public TriggerEvent OnIdle;
+		
+		public InputAction (GameInput parent, string name)
 		{
-			input.AddAction (name, this);
+			Name = name;
+			_triggers = new List<ActionNode> ();
+			_parent = parent;
 		}
 
-		public void SetKey(Keyboard.Key key)
+		public void Add(Keyboard.Key key)
 		{
-			IsKeyboard = true;
-			Key = key;
+			_triggers.Add (
+				new KeyNode (key));
 		}
 
-		public void SetKey(Mouse.Button key)
+		public void Add(Mouse.Button button)
 		{
-			IsKeyboard = false;
-			Button = key;
+			_triggers.Add (
+				new MouseNode (button));
+		}
+
+		public bool IsPressed()
+		{
+			foreach(var trigger in _triggers)
+			{
+				if (trigger.IsPressed (_parent))
+					return true;
+			}
+
+			return false;
+		}
+
+		public bool IsReleased()
+		{
+			foreach(var trigger in _triggers)
+			{
+				if (trigger.IsReleased (_parent))
+					return true;
+			}
+
+			return false;
+		}
+
+		public bool IsDown()
+		{
+			foreach(var trigger in _triggers)
+			{
+				if (trigger.IsDown (_parent))
+					return true;
+			}
+
+			return false;
+		}
+
+		public bool IsUp()
+		{
+			foreach(var trigger in _triggers)
+			{
+				if (trigger.IsUp (_parent))
+					return true;
+			}
+
+			return false;
 		}
 	}
 }

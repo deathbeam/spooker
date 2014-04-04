@@ -15,16 +15,14 @@ namespace Spooker.Graphics.Lights
 		public Vector2 Position;
 		public Color Color;
 		public float Ratio;
-
-		public Light ( Vector2 pos, float ratio) : this(pos, ratio, Color.White)
-		{
-		}
-
-		public Light ( Vector2 pos, float ratio, Color color)
+		public bool UseCamera;
+		
+		public Light ( Vector2 pos, float ratio, Color color, bool useCamera = true)
 		{
 			Position = pos;
 			Ratio = ratio;
 			Color = color;
+			UseCamera = useCamera;
 		}
 	}
 }

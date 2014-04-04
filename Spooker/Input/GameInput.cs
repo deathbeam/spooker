@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Spooker.Time;
 using SFML.Graphics;
 
@@ -6,26 +7,34 @@ namespace Spooker.Input
 {
 	public class GameInput : IUpdateable
 	{
-		private readonly Dictionary<string, InputAction> _actions;
+		private readonly List<InputAction> _actions;
 
 		public KeyboardManager Keyboard;
 		public MouseManager Mouse;
 
+		public InputAction this[string name]
+		{
+			get
+			{
+				return _actions.Find((InputAction a)=>{return a.Name == name;}); 
+			}
+		}
+
 		public GameInput (RenderWindow graphicsDevice)
 		{
-			_actions = new Dictionary<string, InputAction> ();
+			_actions = new List<InputAction> ();
 			Keyboard = new KeyboardManager ();
 			Mouse = new MouseManager (graphicsDevice);
 		}
 
-		internal void AddAction(string name, InputAction action)
+		public void AddAction(string name)
 		{
-			_actions.Add (name, action);
+			_actions.Add (new InputAction(this, name));
 		}
 
 		public void RemoveAction(string name)
 		{
-			_actions.Remove (name);
+			_actions.Remove (this[name]);
 		}
 
 		public void Update(GameTime gameTime)
@@ -33,24 +42,16 @@ namespace Spooker.Input
 			Keyboard.Update (gameTime);
 			Mouse.Update (gameTime);
 
-			foreach (var action in _actions.Values)
+			foreach (var action in _actions)
 			{
-				if (action.IsKeyboard)
-				{
-					if ((action.Type == ActionType.Down && Keyboard.IsKeyDown (action.Key)) ||
-						(action.Type == ActionType.Up && Keyboard.IsKeyUp (action.Key)) ||
-						(action.Type == ActionType.Pressed && Keyboard.IsKeyPressed (action.Key)) ||
-						(action.Type == ActionType.Released && Keyboard.IsKeyReleased (action.Key)))
-						action.OnTrigger.Invoke ();
-				}
-				else
-				{
-					if ((action.Type == ActionType.Down && Mouse.IsKeyDown (action.Button)) ||
-						(action.Type == ActionType.Up && Mouse.IsKeyUp (action.Button)) ||
-						(action.Type == ActionType.Pressed && Mouse.IsKeyPressed (action.Button)) ||
-						(action.Type == ActionType.Released && Mouse.IsKeyReleased (action.Button)))
-						action.OnTrigger.Invoke ();
-				}
+				if (action.IsDown() && action.OnHold != null)
+					action.OnHold ();
+				else if (action.IsUp() && action.OnIdle != null)
+					action.OnIdle ();
+				else if (action.IsPressed() && action.OnPress != null)
+					action.OnPress ();
+				else if (action.IsReleased() && action.OnRelease != null)
+					action.OnRelease ();
 			}
 		}
 	}

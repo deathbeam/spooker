@@ -9,6 +9,7 @@
 //-----------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
 using Spooker.Time;
 
 namespace Spooker.Graphics.Animations
@@ -23,40 +24,61 @@ namespace Spooker.Graphics.Animations
 	{
 		#region Variables
 
-		private readonly Dictionary<string, Animation> _animations;
+		private readonly List<Animation> _animations;
 		private string _currentAnim;
 		private float _timeSinceStart;
-		private readonly Rectangle _resetRect;
+		private bool _pause;
+
+		#endregion
+
+		#region Properties
+
+		public Animation this[string name]
+		{
+			get
+			{
+				return _animations.Find((Animation a)=>{return a.Name == name;}); 
+			}
+		}
 
 		#endregion
 
 		#region Constructors/Destructors
 
-		public AnimatedSprite (Texture texture, Rectangle rectangle) : base(texture)
+		public AnimatedSprite (Texture texture) : base(texture)
 		{
-			_resetRect = rectangle;
-			_animations = new Dictionary<string, Animation> ();
+			_animations = new List<Animation> ();
 		}
 
 		#endregion
 
 		#region Functions
 
-		internal void AddAnim(string name, Animation anim)
+		public void AddAnim(string name)
 		{
-			_animations.Add (name, anim);
+			_animations.Add (new Animation(name));
 		}
 
 		public void PlayAnim(string name)
 		{
+			_pause = false;
 			_currentAnim = name;
 			_timeSinceStart = 0;
 		}
 
-		public void Reset()
+		public void PauseAnim()
+		{
+			_pause = true;
+		}
+
+		public void ResumeAnim()
+		{
+			_pause = false;
+		}
+
+		public void StopAnim()
 		{
 			_currentAnim = null;
-			SourceRect = _resetRect;
 		}
 
 		////////////////////////////////////////////////////////////
@@ -71,14 +93,18 @@ namespace Spooker.Graphics.Animations
 			// calculate dt, the change in the since the last frame.
 			var dt = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
+			// increment time since starting playing this animation
 			_timeSinceStart += dt;
 
-			// it's time to a next frame?
-			if (_currentAnim != null &&_timeSinceStart > _animations[_currentAnim].Duration.TotalMilliseconds)
-			{
-				_timeSinceStart -= (float)_animations[_currentAnim].Duration.TotalMilliseconds;
+			// get duration of current animation
+			var duration = (float)this [_currentAnim].Duration.TotalMilliseconds;
 
-				SourceRect = _animations [_currentAnim].GetNextFrame ();
+			// it's time to a next frame?
+			if (!_pause && _currentAnim != null &&_timeSinceStart > duration)
+			{
+				_timeSinceStart -= duration;
+
+				SourceRect = this[_currentAnim].GetNextFrame ();
 			}
 		}
 

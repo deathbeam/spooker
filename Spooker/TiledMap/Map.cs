@@ -72,12 +72,11 @@ namespace Spooker.TiledMap
 		/// <summary>
 		/// Creates new instance of Map class.
 		/// </summary>
-		/// <param name="game">Base instance of GameWindow</param>
 		/// <param name="filename">Path to map file</param>
 		/// <param name="camera">Camera used for rendering map tiles
 		/// </param>
 		////////////////////////////////////////////////////////////
-		public Map(string filename, Camera camera)
+		public Map(Camera camera, string filename)
         {
 		    _camera = camera;
 

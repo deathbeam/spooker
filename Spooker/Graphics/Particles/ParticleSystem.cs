@@ -47,33 +47,29 @@ namespace Spooker.Graphics.Particles
 			get { return _freeParticles.Count; }
 		}
 
-		/// <summary>
-		/// The settings used for this particle system
-		/// </summary>
-		public ParticleSettings Settings
-		{
-			set { _settings = value; }
-		}
-
 	    /// <summary>
 	    /// Constructs a new ParticleSystem.
 	    /// </summary>
+		/// <param name="settings">Settings used for this particle system.</param>
 	    /// <param name="game">The host for this particle system.</param>
-	    public ParticleSystem(GameWindow game)
-			: this(game, 10)
+		public ParticleSystem(GameWindow game, ParticleSettings settings)
+			: this(game, settings, 10)
 		{ }
 
 
 	    /// <summary>
 	    /// Constructs a new ParticleSystem.
 	    /// </summary>
+		/// <param name="settings">Settings used for this particle system.</param>
 	    /// <param name="game">The host for this particle system.</param>
 	    /// <param name="initialParticleCount">The initial number of particles this
 	    /// system expects to use. The system will grow as needed, however setting
 	    /// this value to be as close as possible will reduce allocations.</param>
-	    public ParticleSystem(GameWindow game, int initialParticleCount)
+		public ParticleSystem(GameWindow game, ParticleSettings settings, int initialParticleCount)
 			: base(game)
 		{
+			_settings = settings;
+
 			// we create the particle list and queue with our initial count and create that
 			// many particles. If we picked a reasonable value, our system will not allocate
 			// any more objects after this point, however the AddParticles method will allocate

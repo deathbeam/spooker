@@ -17,16 +17,19 @@ namespace Spooker.Graphics.Animations
 	{
 		private int _currentFrame;
 
+		/// <summary>String used to identify this animation</summary>
+		public string Name;
+
 		/// <summary>List with the frames of the animation</summary>
 		public List<Rectangle> Frames;
 
 		/// <summary>Defines for how long will be one frame drawn</summary>
 		public TimeSpan Duration;
 
-		public Animation (string name, AnimatedSprite animator)
+		public Animation (string name)
 		{
+			Name = name;
 			Frames = new List<Rectangle> ();
-			animator.AddAnim (name, this);
 		}
 
 		public Rectangle GetNextFrame()
