@@ -16,12 +16,10 @@ namespace Spooker.Graphics.Animations
 	public class Animation
 	{
 		private int _currentFrame;
+		private List<Rectangle> _frames;
 
 		/// <summary>String used to identify this animation</summary>
 		public string Name;
-
-		/// <summary>List with the frames of the animation</summary>
-		public List<Rectangle> Frames;
 
 		/// <summary>Defines for how long will be one frame drawn</summary>
 		public TimeSpan Duration;
@@ -29,18 +27,28 @@ namespace Spooker.Graphics.Animations
 		public Animation (string name)
 		{
 			Name = name;
-			Frames = new List<Rectangle> ();
+			_frames = new List<Rectangle> ();
+		}
+
+		public void Add(Rectangle frame)
+		{
+			_frames.Add (frame);
+		}
+
+		public void Remove(Rectangle frame)
+		{
+			_frames.Remove (frame);
 		}
 
 		public Rectangle GetNextFrame()
 		{
 			_currentFrame++;
 
-			if (_currentFrame == Frames.Count)
+			if (_currentFrame == _frames.Count)
 				_currentFrame = 0;
 
 			// Get the current frame
-			return Frames [_currentFrame];
+			return _frames [_currentFrame];
 		}
 	}
 }

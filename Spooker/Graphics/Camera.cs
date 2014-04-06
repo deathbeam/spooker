@@ -22,8 +22,7 @@ namespace Spooker.Graphics
 	////////////////////////////////////////////////////////////
 	public class Camera : IUpdateable
 	{
-		internal View View;
-		internal Vector2 ActualPosition;
+		private Vector2 ActualPosition;
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
@@ -43,18 +42,17 @@ namespace Spooker.Graphics
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Toggle for automatic position rounding. Useful if pixel
-		/// sizes become inconsistent or font blurring occurs.
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public bool RoundPosition;
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
 		/// Center point of the camera
 		/// </summary>
 		////////////////////////////////////////////////////////////
 		public Vector2 Position;
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Size of camera visible area
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public Vector2 Size;
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
@@ -63,7 +61,9 @@ namespace Spooker.Graphics
 		////////////////////////////////////////////////////////////
 		public Vector2 Transform(Vector2 point)
 		{
-			return point - new Vector2(Bounds.X, Bounds.Y);
+			return new Vector2 (
+				point.X - (ActualPosition.X - (Size.X / 2)),
+				point.Y - (ActualPosition.Y - (Size.Y / 2)));
 		}
 
 		////////////////////////////////////////////////////////////
@@ -75,10 +75,10 @@ namespace Spooker.Graphics
 		{
 			get {
 				return new Rectangle(
-					(int)(View.Center.X - (View.Size.X / 2)),
-					(int)(View.Center.Y - (View.Size.Y / 2)),
-					(int)View.Size.X,
-					(int)View.Size.Y);
+					(int)(ActualPosition.X - (Size.X / 2)),
+					(int)(ActualPosition.Y - (Size.Y / 2)),
+					(int)Size.X,
+					(int)Size.Y);
 			}
 		}
 
@@ -87,9 +87,13 @@ namespace Spooker.Graphics
 		/// Checks if object is visible in current camera area
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public bool ObjectIsVisible(Rectangle bounds)
+		public bool ObjectIsVisible(Vector2 position, Vector2 size)
 		{
-			return (Bounds.Intersects(bounds));
+			return (Bounds.Intersects(new Rectangle(
+				(int)position.X,
+				(int)position.Y,
+				(int)size.X,
+				(int)size.Y)));
 		}
 
 		////////////////////////////////////////////////////////////
@@ -101,54 +105,24 @@ namespace Spooker.Graphics
 		{
 			get
 			{
-                return new Camera(new Rectangle(0, 0, 800, 600))
+				return new Camera(new Rectangle(400, 300, 800, 600))
                 {
                     Smoothness = 0.33f,
                     Smooth = false,
-                    RoundPosition = true
                 };
 			}
 		}
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of Camera class using Rectangle
+		/// Creates new instance of Camera class.
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public Camera(Rectangle rect)
-			: this(new View (new FloatRect(rect.X, rect.Y, rect.Width, rect.Height)))
+		public Camera(Rectangle rectangle)
 		{
-		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Creates new instance of Camera class using View
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public Camera(View view)
-		{
-			View = new View(view);
-			View.Center = View.Size / 2;
-			Position = new Vector2 (View.Center);
+			Size = new Vector2 ((float)rectangle.Width, (float)rectangle.Height);
+			Position = new Vector2 ((float)rectangle.X, (float)rectangle.Y);
 			ActualPosition = Position;
-		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Applies camera position to view.
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void Apply()
-		{
-			var center = ActualPosition;
-
-            if (RoundPosition)
-            {
-				center.X = (float)Math.Round(ActualPosition.X, 1);
-				center.Y = (float)Math.Round(ActualPosition.Y, 1);
-            }
-
-			View.Center = center.ToSfml();
 		}
 
 		////////////////////////////////////////////////////////////
@@ -158,6 +132,9 @@ namespace Spooker.Graphics
 		////////////////////////////////////////////////////////////
 		public void Update(GameTime gameTime)
 		{
+			if (ActualPosition == Position)
+				return;
+
 			if (Smooth)
 			{
 				var dir = Vector2.Direction(ActualPosition, Position);
@@ -165,7 +142,9 @@ namespace Spooker.Graphics
 				ActualPosition += Vector2.LengthDir(dir, len * Smoothness);
 			}
 			else
+			{
 				ActualPosition = Position;
+			}
 		}
 	}
 }

@@ -119,6 +119,7 @@
     <Compile Include="TiledMap\Map.cs" />
     <Compile Include="GameStates\StateFactory.cs" />
     <Compile Include="Input\ActionNodes.cs" />
+    <Compile Include="Physics\SpriteCollider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

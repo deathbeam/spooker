@@ -61,6 +61,9 @@ namespace Spooker.Graphics.Animations
 
 		public void PlayAnim(string name)
 		{
+			if (_currentAnim == name)
+				return;
+
 			_pause = false;
 			_currentAnim = name;
 			_timeSinceStart = 0;
@@ -102,7 +105,7 @@ namespace Spooker.Graphics.Animations
 			// it's time to a next frame?
 			if (!_pause && _currentAnim != null &&_timeSinceStart > duration)
 			{
-				_timeSinceStart -= duration;
+				_timeSinceStart = 0;
 
 				SourceRect = this[_currentAnim].GetNextFrame ();
 			}
