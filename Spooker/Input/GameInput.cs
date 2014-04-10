@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Spooker.Time;
 using SFML.Graphics;
 
@@ -17,7 +16,7 @@ namespace Spooker.Input
 		{
 			get
 			{
-				return _actions.Find((InputAction a)=>{return a.Name == name;}); 
+				return _actions.Find(a=> a.Name == name); 
 			}
 		}
 

@@ -84,7 +84,6 @@
     <Compile Include="Network\Packet.cs" />
     <Compile Include="Network\PacketManager.cs" />
     <Compile Include="Graphics\SpriteBatch.cs" />
-    <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Rectangle.cs" />
@@ -114,19 +113,18 @@
     <Compile Include="Input\InputAction.cs" />
     <Compile Include="Input\GameInput.cs" />
     <Compile Include="Graphics\Lights\LightEngine.cs" />
-    <Compile Include="TiledMap\Layer.cs" />
-    <Compile Include="TiledMap\Tile.cs" />
-    <Compile Include="TiledMap\Map.cs" />
     <Compile Include="GameStates\StateFactory.cs" />
     <Compile Include="Input\ActionNodes.cs" />
     <Compile Include="Physics\SpriteCollider.cs" />
+    <Compile Include="Graphics\TiledMap\Layer.cs" />
+    <Compile Include="Graphics\TiledMap\Map.cs" />
+    <Compile Include="Graphics\TiledMap\Tile.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Audio\" />
     <Folder Include="Content\" />
     <Folder Include="Core\" />
-    <Folder Include="Extensions\" />
     <Folder Include="GameStates\" />
     <Folder Include="Graphics\" />
     <Folder Include="Graphics\Animations\" />
@@ -135,6 +133,5 @@
     <Folder Include="Network\" />
     <Folder Include="Physics\" />
     <Folder Include="Time\" />
-    <Folder Include="TiledMap\" />
   </ItemGroup>
 </Project>

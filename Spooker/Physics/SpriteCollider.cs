@@ -1,3 +1,13 @@
+//-----------------------------------------------------------------------------
+// SpriteCollider.cs
+//
+// Spooker Open Source Game Framework
+// Copyright (C) Indie Armory. All rights reserved.
+// Website: http://indiearmory.com
+// Other Contributors: exploit3r
+// License: MIT
+//-----------------------------------------------------------------------------
+
 using System;
 using Spooker.Graphics;
 
@@ -7,171 +17,114 @@ namespace Spooker.Physics
 	{
 		public static Rectangle GetAABB(Sprite sp)
 		{
-			//Store the sprite position
+			// Store the sprite position
 			var pos = sp.Transform.TransformPoint(Vector2.Zero);
 
-			//Store the size so we can calculate the other corners
+			// Store the size so we can calculate the other corners
 			var size = new Vector2(sp.SourceRect.Width, sp.SourceRect.Height);
 
-			//Store the sprite current rotation
+			// Store the sprite current rotation
 			var angle = sp.Rotation;
 
-			//Bail out early if the sprite isn't rotated
+			// Bail out early if the sprite isn't rotated
 			if (angle == 0.0f)
-			{
-				return new Rectangle(
-					(int)pos.X,
-					(int)pos.Y,
-					(int)size.X,
-					(int)size.Y);
-			}
+				return new Rectangle((int)pos.X, (int)pos.Y, (int)size.X, (int)size.Y);
 
-			//Calculate the other points as vectors from (0,0)
-			//Imagine sf::Vector2f A(0,0); but its not necessary
-			//as rotation is around this point.
-			var B = new Vector2(size.X, 0);
-			var C = new Vector2(size.X, size.Y);
-			var D = new Vector2(0, size.Y);
+			// Calculate the other points as vectors from (0,0)
+			// Imagine sf::Vector2f A(0,0); but its not necessary
+			// as rotation is around this point and rotate the points to
+			// match the sprite rotation
+			var b = RotatePoint (new Vector2(size.X, 0), angle);
+			var c = RotatePoint (new Vector2(size.X, size.Y), angle);
+			var d = RotatePoint (new Vector2(0, size.Y), angle);
 
-			//Rotate the points to match the sprite rotation
-			B = RotatePoint (B, angle);
-			C = RotatePoint (C, angle);
-			D = RotatePoint (D, angle);
+			// Round off to int and set the four corners of our Rect
+			var left = (int)MathHelper.Min (0.0f, b.X, c.X, d.X);
+			var top = (int)MathHelper.Min (0.0f, b.Y, c.Y, d.Y);
+			var right = (int)MathHelper.Max (0.0f, b.X, c.X, d.X);
+			var bottom = (int)MathHelper.Max (0.0f, b.Y, c.Y, d.Y);
 
-			//Round off to int and set the four corners of our Rect
-			var left = MinValue (0.0f, B.X, C.X, D.X);
-			var top = MinValue(0.0f, B.Y, C.Y, D.Y);
-			var right = MaxValue(0.0f, B.X, C.X, D.X);
-			var bottom = MaxValue(0.0f, B.Y, C.Y, D.Y);
-
-			//Create a Rect from out points and move it back to the correct position on the screen
-			var AABB = new Rectangle((int)left, (int)top, (int)(right - left), (int)(bottom - top));
-			AABB.X += (int)pos.X;
-			AABB.Y += (int)pos.Y;
-
-			//AABB.Offset((int)(pos.X), (int)(pos.Y));
-			return AABB;
+			// Create a Rect from out points and move it back to the correct position on the screen
+			return new Rectangle(left + (int)pos.X, top + (int)pos.Y, right - left, bottom - top);
 		}
 
-		public static bool PixelIntersects(Sprite sp1, Sprite sp2, float AlphaLimit)
+		public static bool PixelIntersects(Sprite sp1, Sprite sp2, float alphaLimit)
 		{
-			//Get AABBs of the two sprites
-			var Object1AABB = GetAABB(sp1);
-			var Object2AABB = GetAABB(sp2);
-			var Intersection = Rectangle.Empty;
+			// Get AABBs of the two sprites
+			var object1Aabb = GetAABB(sp1);
+			var object2Aabb = GetAABB(sp2);
 
-			if (Object1AABB.Intersects(Object2AABB))
+			if (object1Aabb.Intersects(object2Aabb))
 			{
-				//We've got an intersection we need to process the pixels
-				//In that Rect.
-				Rectangle.Intersect(ref Object1AABB, ref Object2AABB, out Intersection);
+				// Bail out now if AlphaLimit = 0
+				if (alphaLimit == 0) return true;
 
-				//Bail out now if AlphaLimit = 0
-				if (AlphaLimit == 0) return true;
+				// We've got an intersection we need to process the pixels in that Rect.
+				Rectangle Intersection;
+				Rectangle.Intersect(ref object1Aabb, ref object2Aabb, out Intersection);
 
-				//There are a few hacks here, sometimes the TransformToLocal returns negative points
-				//Or Points outside the image.  We need to check for these as they print to the error console
-				//which is slow, and then return black which registers as a hit.
+				// Get size of texture source rectangles
+				var o1SubRectSize = new Vector2(sp1.SourceRect.Width, sp1.SourceRect.Height);
+				var o2SubRectSize = new Vector2(sp2.SourceRect.Width, sp2.SourceRect.Height);
 
-				var O1SubRect = sp1.SourceRect;
-				var O2SubRect = sp2.SourceRect;
-
-				//Vector2f O1SubRectSize = new Vector2f(sp1.Texture.Width, sp1.Texture.Height);
-				//Vector2f O2SubRectSize = new Vector2f(sp2.Texture.Width, sp2.Texture.Height);
-				var O1SubRectSize = new Vector2(O1SubRect.Width, O1SubRect.Height);
-				var O2SubRectSize = new Vector2(O2SubRect.Width, O2SubRect.Height);
-
-				var o1v = Vector2.Zero;
-				var o2v = Vector2.Zero;
-
-				//Loop through our pixels
+				// Loop through our pixels
 				for (var i = Intersection.Left; i < Intersection.Left + Intersection.Width; i++)
 				{
 					for (var j = Intersection.Top; j < Intersection.Top + Intersection.Height; j++)
 					{
+						var o1v = sp1.Transform.TransformPoint(new Vector2(i, j));
+						var o2v = sp2.Transform.TransformPoint(new Vector2(i, j));
 
-						o1v = sp1.Transform.TransformPoint(new Vector2(i, j)); //Creating Objects each loop :(
-						o2v = sp2.Transform.TransformPoint(new Vector2(i, j));
-
-						//Hack to make sure pixels fall within the Sprite's Image
+						// Hack to make sure pixels fall within the Sprite's Image
 						if (o1v.X > 0 && o1v.Y > 0 && o2v.X > 0 && o2v.Y > 0 &&
-							o1v.X < O1SubRectSize.X && o1v.Y < O1SubRectSize.Y &&
-							o2v.X < O2SubRectSize.X && o2v.Y < O2SubRectSize.Y)
+							o1v.X < o1SubRectSize.X && o1v.Y < o1SubRectSize.Y &&
+							o2v.X < o2SubRectSize.X && o2v.Y < o2SubRectSize.Y)
 						{
-
-							//If both sprites have opaque pixels at the same point we've got a hit
-							Color c1 = sp1.Texture.GetPixel((int)o1v.X, (int)o1v.Y);
-							Color c2 = sp2.Texture.GetPixel((int)o2v.X, (int)o2v.Y);
-							if ((c1.A > AlphaLimit) &&
-								(c2.A > AlphaLimit))
-							{
+							// If both sprites have opaque pixels at the same point we've got a hit
+							var c1 = sp1.Texture.GetPixel((int)o1v.X, (int)o1v.Y);
+							var c2 = sp2.Texture.GetPixel((int)o2v.X, (int)o2v.Y);
+							if ((c1.A > alphaLimit) && (c2.A > alphaLimit))
 								return true;
-							}
 						}
 					}
 				}
-				return false;
 			}
+
 			return false;
 		}
 
 		public static bool BoundingBoxTest(Sprite sp1, Sprite sp2)
 		{
 
-			var A = Vector2.Zero;
-			var B = Vector2.Zero;
-			var C = Vector2.Zero;
-			var BL= Vector2.Zero;
-			var TR = Vector2.Zero;
-			var HalfSize1 = new Vector2(sp1.SourceRect.Width, sp1.SourceRect.Height);
-			var HalfSize2 = new Vector2(sp2.SourceRect.Width, sp2.SourceRect.Height);
-
-			//For somereason the Vector2d divide by operator
-			//was misbehaving
-			//Doing it manually
-			HalfSize1.X /= 2;
-			HalfSize1.Y /= 2;
-			HalfSize2.X /= 2;
-			HalfSize2.Y /= 2;
-
-			//Get the Angle we're working on
-			var Angle = sp1.Rotation - sp2.Rotation;
-			var CosA = (float)Math.Cos(MathHelper.ToRadians(Angle));
-			var SinA = (float)Math.Sin(MathHelper.ToRadians(Angle));
-
+			Vector2 A, B, C, BL, TR;
 			float t, x, a, dx, ext1, ext2;
 
+			var halfSize1 = new Vector2(sp1.SourceRect.Width /2, sp1.SourceRect.Height /2);
+			var halfSize2 = new Vector2(sp2.SourceRect.Width /2, sp2.SourceRect.Height /2);
+
+			//Get the Angle we're working on
+			var angle = sp1.Rotation - sp2.Rotation;
+			var cosA = (float)Math.Cos(MathHelper.ToRadians(angle));
+			var sinA = (float)Math.Sin(MathHelper.ToRadians(angle));
+
 			//Normalise the Center of Object2 so its axis aligned an represented in
-			//relation to Object 1
-			C = sp2.Position;
-
-			C.X -= sp1.Position.X;
-			C.Y -= sp1.Position.Y;
-
-			C = RotatePoint (C, sp2.Rotation);
-
-			//Get the Corners
-			BL = TR = C;
-			BL.X -= HalfSize2.X;
-			BL.Y -= HalfSize2.Y;
-
-			TR.X += HalfSize2.X;
-			TR.Y += HalfSize2.Y;
+			//relation to Object 1 and get the Corners
+			BL = TR = C = RotatePoint (sp2.Position - sp1.Position, sp2.Rotation);
+			BL -= halfSize2;
+			TR += halfSize2;
 
 			//Calculate the vertices of the rotate Rect
-			A.X = -HalfSize1.Y * SinA;
-			B.X = A.X;
-			t = HalfSize1.X * CosA;
+			B = A = new Vector2 (-halfSize1.Y * sinA, halfSize1.Y * cosA);
+
+			t = halfSize1.X * cosA;
 			A.X += t;
 			B.X -= t;
 
-			A.Y = HalfSize1.Y * CosA;
-			B.Y = A.Y;
-			t = HalfSize1.X * SinA;
+			t = halfSize1.X * sinA;
 			A.Y += t;
 			B.Y -= t;
 
-			t = SinA * CosA;
+			t = sinA * cosA;
 
 			// verify that A is vertical min/max, B is horizontal min/max
 			if (t < 0)
@@ -185,7 +138,7 @@ namespace Spooker.Physics
 			}
 
 			// verify that B is horizontal minimum (leftest-vertex)
-			if (SinA < 0)
+			if (sinA < 0)
 			{
 				B.X = -B.X;
 				B.Y = -B.Y;
@@ -257,28 +210,6 @@ namespace Spooker.Physics
 			return !((ext1 < BL.Y && ext2 < BL.Y) ||
 				(ext1 > TR.Y && ext2 > TR.Y));
 
-		}
-
-		private static float MinValue(float a, float b, float c, float d)
-		{
-			float min = a;
-
-			min = (b < min ? b : min);
-			min = (c < min ? c : min);
-			min = (d < min ? d : min);
-
-			return min;
-		}
-
-		private static float MaxValue(float a, float b, float c, float d)
-		{
-			float max = a;
-
-			max = (b > max ? b : max);
-			max = (c > max ? c : max);
-			max = (d > max ? d : max);
-
-			return max;
 		}
 		
 		private static Vector2 RotatePoint(Vector2 vec, float angle)

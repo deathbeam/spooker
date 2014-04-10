@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Spooker.Time;
 
 namespace Spooker.Content
 {
@@ -20,12 +21,12 @@ namespace Spooker.Content
 	/// textures, fonts, shaders and more.
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public class ContentManager : IDisposable
+	public class ContentManager : IUpdateable, IDisposable
     {
 		private readonly List<ContentProvider> _loaders = new List<ContentProvider> ();
 		
 		/// <summary>Directory, from what will content providers load data.</summary>
-		public string Directory { get; set; }
+		public string Directory;
 
 		////////////////////////////////////////////////////////////
 
@@ -67,8 +68,21 @@ namespace Spooker.Content
 		////////////////////////////////////////////////////////////
 		public void AddLoaders(List<ContentProvider> loaders)
 		{
-			foreach (ContentProvider loader in loaders)
+			foreach (var loader in loaders)
 				_loaders.Add(loader);
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Component uses this for updating itself
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void Update(GameTime gameTime)
+		{
+			var dt = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+			foreach (var loader in _loaders)
+				loader.Update(dt);
 		}
 
 		////////////////////////////////////////////////////////////
@@ -80,6 +94,7 @@ namespace Spooker.Content
 		{
 			foreach (var loader in _loaders)
 				loader.Dispose();
+
 			_loaders.Clear();
 		}
     }

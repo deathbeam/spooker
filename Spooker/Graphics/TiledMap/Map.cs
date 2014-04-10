@@ -11,10 +11,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using TiledSharp;
-using Spooker.Graphics;
-using Spooker.Core;
 
-namespace Spooker.TiledMap
+namespace Spooker.Graphics.TiledMap
 {
 	////////////////////////////////////////////////////////////
 	/// <summary>

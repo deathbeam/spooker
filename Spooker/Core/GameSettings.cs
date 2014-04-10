@@ -12,7 +12,6 @@ using System;
 using System.IO;
 using System.Xml.Serialization;
 using SFML.Window;
-using Spooker.Time;
 
 namespace Spooker.Core
 {

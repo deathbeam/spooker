@@ -208,7 +208,7 @@ namespace Spooker.Graphics.Particles
 		/// <summary>
 		/// Creates new instance of ParticleSettings class from file
 		/// </summary>
-		/// <param name="filename"></param>
+		/// <param name="stream"></param>
 		public ParticleSettings(Stream stream)
 		{
 			var reader = new StreamReader (stream);

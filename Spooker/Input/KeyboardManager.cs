@@ -24,7 +24,7 @@ namespace Spooker.Input
 		private readonly Dictionary<Keyboard.Key, bool> _keyStates = new Dictionary<Keyboard.Key, bool>();
 		private readonly Dictionary<Keyboard.Key, bool> _previousKeyStates = new Dictionary<Keyboard.Key, bool>();
 		private readonly IEnumerable<Keyboard.Key> _keysEnum = Enum.GetValues(typeof(Keyboard.Key)).Cast<Keyboard.Key>();
-
+		
 	    /// <summary>
 	    /// Creates new instance of KeyboardManager class.
 	    /// </summary>
@@ -45,13 +45,13 @@ namespace Spooker.Input
 		public void Update(GameTime gameTime)
         {
 			_previousKeyStates.Clear();
-			foreach(KeyValuePair<Keyboard.Key, bool> valuePair in _keyStates)
+			foreach(var prevKey in _keyStates)
 			{
-				_previousKeyStates.Add(valuePair.Key, valuePair.Value);
+				_previousKeyStates.Add(prevKey.Key, prevKey.Value);
 			}
 
 			_keyStates.Clear();
-			foreach(Keyboard.Key key in _keysEnum)
+			foreach(var key in _keysEnum)
 			{
 				_keyStates.Add(key, Keyboard.IsKeyPressed(key));
 			}

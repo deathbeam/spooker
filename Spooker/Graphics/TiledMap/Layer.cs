@@ -10,9 +10,8 @@
 
 using System.Collections.Generic;
 using TiledSharp;
-using Spooker.Graphics;
 
-namespace Spooker.TiledMap
+namespace Spooker.Graphics.TiledMap
 {
 	////////////////////////////////////////////////////////////
 	/// <summary>

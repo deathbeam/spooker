@@ -1,6 +1,15 @@
+//-----------------------------------------------------------------------------
+// StateFactory.cs
+//
+// Spooker Open Source Game Framework
+// Copyright (C) Indie Armory. All rights reserved.
+// Website: http://indiearmory.com
+// Other Contributors: None
+// License: MIT
+//-----------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Spooker.Graphics;
 using Spooker.Time;
 
@@ -10,6 +19,11 @@ namespace Spooker.GameStates
 	{
 		private readonly List<State> _stateStack = new List<State> ();
 
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Creates new instance of StateFactory class.
+		/// </summary>
+		////////////////////////////////////////////////////////////
 		public StateFactory (SFML.Graphics.RenderWindow graphicsDevice)
 		{
 			//Bind input events to components
@@ -56,6 +70,11 @@ namespace Spooker.GameStates
 			};
 		}
 
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Draws this instance of StateFactory class.
+		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
 			foreach (var state in _stateStack)
@@ -71,6 +90,11 @@ namespace Spooker.GameStates
 			}
 		}
 
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Updates this instance of StateFactory class.
+		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void Update(GameTime gameTime)
 		{
 			foreach (var state in _stateStack)
@@ -119,6 +143,11 @@ namespace Spooker.GameStates
 			_stateStack.RemoveAt(last);
 		}
 
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Checks if specified state is active.
+		/// </summary>
+		////////////////////////////////////////////////////////////
 		public bool IsActive(State state)
 		{
 			if (state.IsOverlay)
@@ -127,6 +156,11 @@ namespace Spooker.GameStates
 			return _stateStack.FindLast(s => !s.IsOverlay) == state;
 		}
 
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Disposes this instance of StateFactory class.
+		/// </summary>
+		////////////////////////////////////////////////////////////
 		public void Dispose()
 		{
 			foreach (var state in _stateStack)

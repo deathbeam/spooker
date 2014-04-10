@@ -1,3 +1,4 @@
+using System.Linq;
 using SFML.Window;
 using System.Collections.Generic;
 
@@ -37,46 +38,22 @@ namespace Spooker.Input
 
 		public bool IsPressed()
 		{
-			foreach(var trigger in _triggers)
-			{
-				if (trigger.IsPressed (_parent))
-					return true;
-			}
-
-			return false;
+		    return _triggers.Any(trigger => trigger.IsPressed(_parent));
 		}
 
-		public bool IsReleased()
-		{
-			foreach(var trigger in _triggers)
-			{
-				if (trigger.IsReleased (_parent))
-					return true;
-			}
+	    public bool IsReleased()
+	    {
+	        return _triggers.Any(trigger => trigger.IsReleased(_parent));
+	    }
 
-			return false;
-		}
+	    public bool IsDown()
+	    {
+	        return _triggers.Any(trigger => trigger.IsDown(_parent));
+	    }
 
-		public bool IsDown()
-		{
-			foreach(var trigger in _triggers)
-			{
-				if (trigger.IsDown (_parent))
-					return true;
-			}
-
-			return false;
-		}
-
-		public bool IsUp()
-		{
-			foreach(var trigger in _triggers)
-			{
-				if (trigger.IsUp (_parent))
-					return true;
-			}
-
-			return false;
-		}
+	    public bool IsUp()
+	    {
+	        return _triggers.Any(trigger => trigger.IsUp(_parent));
+	    }
 	}
 }

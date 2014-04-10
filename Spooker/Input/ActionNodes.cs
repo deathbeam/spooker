@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using SFML.Window;
 
 namespace Spooker.Input

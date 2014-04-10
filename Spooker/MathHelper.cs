@@ -94,33 +94,17 @@ namespace Spooker
             return value1 + (value2 - value1) * amount;
         }
 
-        public static double Max(double value1, double value2) {
-            return Math.Max(value1, value2);
-        }
-
-        public static double Min(double value1, double value2) {
-			return Math.Min(value1, value2);
-        }
-
-		public static double Min(double a, double b, double c, double d)
-		{
-			var min = a;
-
-			min = (b < min ? b : min);
-			min = (c < min ? c : min);
-			min = (d < min ? d : min);
-
+		public static double Min(params double[] values) {
+			var min = values[0];
+			for (var i = 1; i < values.Length; i++)
+				min = Math.Min(values[i], min);
 			return min;
 		}
 
-		public static double Max(double a, double b, double c, double d)
-		{
-			var max = a;
-
-			max = (b > max ? b : max);
-			max = (c > max ? c : max);
-			max = (d > max ? d : max);
-
+		public static double Max(params double[] values) {
+			var max = values[0];
+			for (var i = 1; i < values.Length; i++)
+				max = Math.Max(values[i], max);
 			return max;
 		}
 
@@ -201,8 +185,8 @@ namespace Spooker
 		/// Produces a random number.
 		/// </summary>
 		/// <returns></returns>
-		public static float Random() {
-			return (float)random.NextDouble();
+		public static double Random() {
+			return random.NextDouble();
 		}
     }
 }

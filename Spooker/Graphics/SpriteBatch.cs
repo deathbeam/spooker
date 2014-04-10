@@ -33,6 +33,7 @@ namespace Spooker.Graphics
 		private readonly SFML.Graphics.RenderTarget _graphicsDevice;
 		private SFML.Graphics.Vertex[] _vertices = new SFML.Graphics.Vertex[100 * 4];
 		private SFML.Graphics.Texture _activeTexture;
+		private SFML.Graphics.Text _str;
 		private bool _active;
 		private uint _queueCount;
 
@@ -83,6 +84,7 @@ namespace Spooker.Graphics
 	    ////////////////////////////////////////////////////////////
 		public SpriteBatch(SFML.Graphics.RenderTarget graphicsDevice, int capacity)
 		{
+			_str = new SFML.Graphics.Text ();
 			_graphicsDevice = graphicsDevice;
 			Max = capacity;
 		}
@@ -185,6 +187,22 @@ namespace Spooker.Graphics
 				scale.ToSfml(),
 				origin.ToSfml(),
 				rotation);
+		}
+
+		public void DrawString(SFML.Graphics.Font font, string text, int size, Vector2 position, Color color, float rotation, Vector2 origin,
+			Vector2 scale, SFML.Graphics.Text.Styles style = SFML.Graphics.Text.Styles.Regular)
+		{
+			_str.Font = font;
+			_str.DisplayedString = text;
+			_str.Position = position.ToSfml();
+			_str.Color = color.ToSfml();
+			_str.Rotation = rotation;
+			_str.Origin = origin.ToSfml();
+			_str.Scale = scale.ToSfml();
+			_str.Style = style;
+			_str.CharacterSize = (uint)size;
+
+			_graphicsDevice.Draw(_str);
 		}
 		#endregion
 

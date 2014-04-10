@@ -8,10 +8,9 @@
 // License: MIT
 //-----------------------------------------------------------------------------
 
-using Spooker.Graphics;
 using TiledSharp;
 
-namespace Spooker.TiledMap
+namespace Spooker.Graphics.TiledMap
 {
 	////////////////////////////////////////////////////////////
 	/// <summary>

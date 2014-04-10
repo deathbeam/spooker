@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Spooker.Graphics;
 using Spooker.Graphics.Particles;
+using Spooker.Time;
 
 namespace Spooker.Content
 {
@@ -21,24 +22,41 @@ namespace Spooker.Content
 	/// shaders. Stores only one type of data, depends on settings.
 	/// </summary>
 	////////////////////////////////////////////////////////////
-    public class ContentProvider : IDisposable
+	public class ContentProvider : IDisposable
     {
-        private readonly Dictionary<string, object> _assets = new Dictionary<string, object>();
+		public class Asset
+		{
+			public string Name;
+			public float TimeToLive;
+			public object Object;
+
+			public Asset(string name, float timeToLive, object obj)
+			{
+				Name = name;
+				TimeToLive = timeToLive;
+				Object = obj;
+			}
+		}
+
+		private Asset[] _assets = new Asset[10];
         
 		/// <summary>File extension of loaded game data.</summary>
-		public string Extension { get; set; }
+		public string Extension;
 
 		/// <summary>Folder containing loaded game data.</summary>
-		public string Folder { get; set; }
+		public string Folder;
 
 		/// <summary>Function used to load data for this content provider.</summary>
-		public Func<string, object> Load { get; set; }
+		public Func<string, object> Load;
 
 		/// <summary>Value that determines if content provider will store data to cache.</summary>
-		public bool Reuse { get; set; }
+		public bool Reuse;
 
 		/// <summary>Type of game data what content provider manages.</summary>
-		public Type Type { get; set; }
+		public Type Type;
+
+		/// <summary>Duration, after what will be each not re-used asset cleared from cache.</summary>
+		public TimeSpan TTL = TimeSpan.Zero;
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
@@ -52,14 +70,23 @@ namespace Spooker.Content
 				// Initialize content loaders
 				var temploaders = new List<ContentProvider>();
 
-				var loader = new ContentProvider(typeof(Texture), "textures", "png") {Load = str => new Texture(str)};
-			    temploaders.Add(loader);
+				temploaders.Add (new ContentProvider (typeof(Texture)) {
+					Folder = "textures",
+					Extension = "png",
+					Load = str => new Texture (str)
+				});
 
-				loader = new ContentProvider(typeof(SFML.Graphics.Font), "fonts", "ttf") {Load = str => new SFML.Graphics.Font(str)};
-			    temploaders.Add(loader);
+				temploaders.Add (new ContentProvider (typeof(SFML.Graphics.Font)) {
+					Folder = "fonts",
+					Extension = "ttf",
+					Load = str => new SFML.Graphics.Font (str)
+				});
 
-				loader = new ContentProvider(typeof(ParticleSettings), "particles", "sfp") {Load = str => new ParticleSettings(str)};
-			    temploaders.Add(loader);
+				temploaders.Add (new ContentProvider (typeof(ParticleSettings)) {
+					Folder = "particles",
+					Extension = "sfp",
+					Load = str => new ParticleSettings (str)
+				});
 
 				return temploaders;
 			}
@@ -67,26 +94,37 @@ namespace Spooker.Content
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of Content Provider class without
-		/// passing any arguments.
-		/// </summary>
-		////////////////////////////////////////////////////////////
-        public ContentProvider() {}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
 		/// Creates new instance of Content Provider class with
 		/// passing multiple arguments.
 		/// </summary>
 		////////////////////////////////////////////////////////////
-        public ContentProvider(Type type, string folder, string extension, bool reuse = true)
-        {
-            Type = type;
-            Folder = folder;
-            Extension = extension;
-            Reuse = reuse;
-        }
+		public ContentProvider(Type type, bool reuse = true)
+		{
+			Type = type;
+			Reuse = reuse;
+			TTL = TimeSpan.Zero;
+		}
 
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Component uses this for updating itself
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void Update(float dt)
+		{
+			if (TTL == TimeSpan.Zero)
+				return;
+
+			for(var i = 0; i < _assets.Length - 1; i++)
+			{
+				if (_assets[i].TimeToLive > 0)
+				{
+					_assets[i].TimeToLive -= dt;
+				}
+				else if (_assets[i].TimeToLive <= 0)
+					_assets[i] = null;
+			}
+		}
 		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Disposes this instance of Content Provider class.
@@ -95,9 +133,9 @@ namespace Spooker.Content
         public void Dispose()
         {
             if (!Type.IsAssignableFrom(typeof (IDisposable))) return;
-            foreach (object o in _assets.Values)
+			foreach (var asset in _assets)
             {
-                var disposable = o as IDisposable;
+				var disposable = asset.Object as IDisposable;
                 if (disposable != null) disposable.Dispose();
             }
         }
@@ -110,15 +148,43 @@ namespace Spooker.Content
 		////////////////////////////////////////////////////////////
         public virtual object Get(string name)
         {
-            object result;
-            if (Reuse && _assets.TryGetValue(name, out result))
+			var asset = FindAsset (name);
+			if (asset != null)
             {
-                return result;
+				asset.TimeToLive = (float)TTL.TotalMilliseconds;
+				return asset.Object;
             }
-            result = Load(name);
-            if (Reuse)
-                _assets.Add(name, result);
-            return result;
+		    asset = new Asset(name, (float)TTL.TotalMilliseconds, Load(name));
+		    if (Reuse)
+		        AddAsset(asset);
+		    return asset.Object;
         }
+
+		private void AddAsset(Asset asset)
+		{
+			for (var i = 0; i < _assets.Length - 1; i++)
+			{
+				if (_assets [i] == null)
+				{
+					_assets [i] = asset;
+					return;
+				}
+			}
+			var newSize = _assets.Length;
+			Array.Resize (ref _assets, newSize);
+			_assets[newSize] = asset;
+		}
+
+		private Asset FindAsset(string name)
+		{
+			for (var i = 0; i < _assets.Length - 1; i++)
+			{
+				if (_assets [i] != null && _assets [i].Name == name)
+				{
+					return _assets[i];
+				}
+			}
+			return null;
+		}
     }
 }

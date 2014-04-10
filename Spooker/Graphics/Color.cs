@@ -23,10 +23,7 @@ namespace Spooker.Graphics
 	{
 		#region Private fields
 
-		private float _r;
-		private float _g;
-		private float _b;
-		private float _a;
+		private float _r, _g, _b, _a;
 
 		#endregion
 
@@ -318,12 +315,12 @@ namespace Spooker.Graphics
 
 		public static Color Random
 		{
-			get { return new Color(MathHelper.Random(), MathHelper.Random(), MathHelper.Random()); }
+			get { return new Color((float)MathHelper.Random(), (float)MathHelper.Random(), (float)MathHelper.Random()); }
 		}
 
 		public static Color RandomAlpha
 		{
-			get { return new Color(MathHelper.Random(), MathHelper.Random(), MathHelper.Random(), MathHelper.Random()); }
+			get { return new Color((float)MathHelper.Random(), (float)MathHelper.Random(), (float)MathHelper.Random(), (float)MathHelper.Random()); }
 		}
 
 		#endregion

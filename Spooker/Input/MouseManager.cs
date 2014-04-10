@@ -38,13 +38,13 @@ namespace Spooker.Input
 		
 		public Vector2 GlobalPosition
 		{
-			get { return new Vector2((float)Mouse.GetPosition().X, (float)Mouse.GetPosition().Y); }
+			get { return new Vector2(Mouse.GetPosition().X, Mouse.GetPosition().Y); }
 			set { Mouse.SetPosition(new Vector2i((int)value.X, (int)value.Y)); }
 		}
 		
 		public Vector2 LocalPosition
 		{
-			get { return new Vector2 ((float)Mouse.GetPosition (_graphicsDevice).X,(float)Mouse.GetPosition (_graphicsDevice).Y); }
+			get { return new Vector2 (Mouse.GetPosition (_graphicsDevice).X,Mouse.GetPosition (_graphicsDevice).Y); }
 			set { Mouse.SetPosition(new Vector2i((int)value.X, (int)value.Y), _graphicsDevice); }
 		}
 

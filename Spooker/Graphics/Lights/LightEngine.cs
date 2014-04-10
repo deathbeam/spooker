@@ -8,11 +8,9 @@
 // License: MIT
 //-----------------------------------------------------------------------------
 
-using System;
-using System.IO;
 using System.Collections.Generic;
 using SFML.Graphics;
-using Spooker.Core;
+
 namespace Spooker.Graphics.Lights
 {
 	public class LightEngine : Drawable
@@ -65,10 +63,7 @@ namespace Spooker.Graphics.Lights
 					(light.Position.Y >= _camera.Bounds.Y - _lightSprite.GetLocalBounds().Height) &&
 					(light.Position.Y <= _camera.Bounds.Height + _lightSprite.GetLocalBounds().Height)) 
 				{
-					if (light.UseCamera)
-						_lightSprite.Position = _camera.Transform (light.Position).ToSfml ();
-					else
-						_lightSprite.Position = light.Position.ToSfml ();
+					_lightSprite.Position = light.UseCamera ? _camera.Transform (light.Position).ToSfml () : light.Position.ToSfml ();
 
 					_lightSprite.Color = light.Color.ToSfml();
 					_lightSprite.Scale = new SFML.Window.Vector2f (light.Ratio, light.Ratio);

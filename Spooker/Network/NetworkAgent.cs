@@ -37,8 +37,9 @@ namespace Spooker.Network
 		private NetOutgoingMessage _outgoingMessage;
 	    private readonly int _port;
 
-		public delegate void ConnectEvent ();
-		public ConnectEvent OnConnect;
+		public delegate void ConnectEvent (NetIncomingMessage data);
+		public event ConnectEvent OnConnect;
+		public event ConnectEvent OnDisconnect;
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
@@ -183,9 +184,14 @@ namespace Spooker.Network
 					if(_role == AgentRole.Server)
 						output += "Status Message: " + incomingMessage.ReadString() + "\n";
 
+					if (status == NetConnectionStatus.Disconnected)
+					{
+						OnDisconnect.Invoke(incomingMessage);
+					}
+
 					if (status == NetConnectionStatus.Connected)
 					{
-						OnConnect.Invoke();
+						OnConnect.Invoke(incomingMessage);
 					}
 					break;
 				case NetIncomingMessageType.Data:

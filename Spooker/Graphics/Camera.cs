@@ -8,8 +8,6 @@
 // License: MIT
 //-----------------------------------------------------------------------------
 
-using System;
-using SFML.Graphics;
 using Spooker.Time;
 
 namespace Spooker.Graphics
@@ -22,7 +20,7 @@ namespace Spooker.Graphics
 	////////////////////////////////////////////////////////////
 	public class Camera : IUpdateable
 	{
-		private Vector2 ActualPosition;
+		private Vector2 _actualPosition;
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
@@ -62,8 +60,8 @@ namespace Spooker.Graphics
 		public Vector2 Transform(Vector2 point)
 		{
 			return new Vector2 (
-				point.X - (ActualPosition.X - (Size.X / 2)),
-				point.Y - (ActualPosition.Y - (Size.Y / 2)));
+				point.X - (_actualPosition.X - (Size.X / 2)),
+				point.Y - (_actualPosition.Y - (Size.Y / 2)));
 		}
 
 		////////////////////////////////////////////////////////////
@@ -75,8 +73,8 @@ namespace Spooker.Graphics
 		{
 			get {
 				return new Rectangle(
-					(int)(ActualPosition.X - (Size.X / 2)),
-					(int)(ActualPosition.Y - (Size.Y / 2)),
+					(int)(_actualPosition.X - (Size.X / 2)),
+					(int)(_actualPosition.Y - (Size.Y / 2)),
 					(int)Size.X,
 					(int)Size.Y);
 			}
@@ -120,9 +118,9 @@ namespace Spooker.Graphics
 		////////////////////////////////////////////////////////////
 		public Camera(Rectangle rectangle)
 		{
-			Size = new Vector2 ((float)rectangle.Width, (float)rectangle.Height);
-			Position = new Vector2 ((float)rectangle.X, (float)rectangle.Y);
-			ActualPosition = Position;
+			Size = new Vector2 (rectangle.Width, rectangle.Height);
+			Position = new Vector2 (rectangle.X, rectangle.Y);
+			_actualPosition = Position;
 		}
 
 		////////////////////////////////////////////////////////////
@@ -132,18 +130,18 @@ namespace Spooker.Graphics
 		////////////////////////////////////////////////////////////
 		public void Update(GameTime gameTime)
 		{
-			if (ActualPosition == Position)
+			if (_actualPosition == Position)
 				return;
 
 			if (Smooth)
 			{
-				var dir = Vector2.Direction(ActualPosition, Position);
-				var len = Vector2.Distance(ActualPosition, Position);
-				ActualPosition += Vector2.LengthDir(dir, len * Smoothness);
+				var dir = Vector2.Direction(_actualPosition, Position);
+				var len = Vector2.Distance(_actualPosition, Position);
+				_actualPosition += Vector2.LengthDir(dir, len * Smoothness);
 			}
 			else
 			{
-				ActualPosition = Position;
+				_actualPosition = Position;
 			}
 		}
 	}

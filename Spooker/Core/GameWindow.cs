@@ -10,7 +10,6 @@
 
 using System;
 using System.IO;
-using System.Collections.Generic;
 using Spooker.GameStates;
 using Spooker.Graphics;
 using Spooker.Input;
@@ -146,6 +145,7 @@ namespace Spooker.Core
 		public virtual void Update(GameTime gameTime)
 		{
 			GameInput.Update (gameTime);
+			Content.Update (gameTime);
 			StateFactory.Update (gameTime);
 			Components.Update (gameTime);
 		}

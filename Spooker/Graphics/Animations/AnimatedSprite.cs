@@ -9,7 +9,6 @@
 //-----------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
 using Spooker.Time;
 
 namespace Spooker.Graphics.Animations
@@ -37,7 +36,7 @@ namespace Spooker.Graphics.Animations
 		{
 			get
 			{
-				return _animations.Find((Animation a)=>{return a.Name == name;}); 
+				return _animations.Find(a=> a.Name == name); 
 			}
 		}
 
@@ -93,6 +92,9 @@ namespace Spooker.Graphics.Animations
 		////////////////////////////////////////////////////////////
 		public void Update(GameTime gameTime)
 		{
+			// do not update if animation is paused
+			if (_pause) return;
+
 			// calculate dt, the change in the since the last frame.
 			var dt = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
@@ -103,7 +105,7 @@ namespace Spooker.Graphics.Animations
 			var duration = (float)this [_currentAnim].Duration.TotalMilliseconds;
 
 			// it's time to a next frame?
-			if (!_pause && _currentAnim != null &&_timeSinceStart > duration)
+			if (_currentAnim != null &&_timeSinceStart > duration)
 			{
 				_timeSinceStart = 0;
 
