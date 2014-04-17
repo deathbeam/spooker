@@ -73,7 +73,6 @@ namespace Spooker.Audio
 		{
 			if (_currentMusic == null)
 				return;
-			_currentMusic.Stop();
 			_currentMusic.Dispose ();
 		}
 

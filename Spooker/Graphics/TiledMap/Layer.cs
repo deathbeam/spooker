@@ -47,11 +47,11 @@ namespace Spooker.Graphics.TiledMap
 				return;
 
 			foreach (var tile in _tiles)
-				if ((tile.Position.X >= camera.Bounds.X - _tileSize.X) &&
-					(tile.Position.X <= camera.Bounds.Width + _tileSize.X) &&
-					(tile.Position.Y >= camera.Bounds.Y - _tileSize.Y) &&
-					(tile.Position.Y <= camera.Bounds.Height + _tileSize.Y)) 
+			{
+				var rect = new Rectangle ((int)tile.Position.X, (int)tile.Position.Y, (int)_tileSize.X, (int)_tileSize.Y);
+				if (camera.Intersects(rect)) 
 					tile.Draw(spriteBatch, camera, Color, effects);
+			}
 		}
 
 		////////////////////////////////////////////////////////////

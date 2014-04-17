@@ -93,7 +93,7 @@ namespace Spooker.Graphics.Animations
 		public void Update(GameTime gameTime)
 		{
 			// do not update if animation is paused
-			if (_pause) return;
+			if (_currentAnim == null || _pause) return;
 
 			// calculate dt, the change in the since the last frame.
 			var dt = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -105,7 +105,7 @@ namespace Spooker.Graphics.Animations
 			var duration = (float)this [_currentAnim].Duration.TotalMilliseconds;
 
 			// it's time to a next frame?
-			if (_currentAnim != null &&_timeSinceStart > duration)
+			if (_timeSinceStart > duration)
 			{
 				_timeSinceStart = 0;
 

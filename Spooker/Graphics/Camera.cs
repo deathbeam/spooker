@@ -60,8 +60,8 @@ namespace Spooker.Graphics
 		public Vector2 Transform(Vector2 point)
 		{
 			return new Vector2 (
-				point.X - (_actualPosition.X - (Size.X / 2)),
-				point.Y - (_actualPosition.Y - (Size.Y / 2)));
+				point.X - Bounds.X,
+				point.Y - Bounds.Y);
 		}
 
 		////////////////////////////////////////////////////////////
@@ -82,16 +82,12 @@ namespace Spooker.Graphics
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Checks if object is visible in current camera area
+		/// Checks if object intersects with current camera area
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public bool ObjectIsVisible(Vector2 position, Vector2 size)
+		public bool Intersects(Rectangle rect)
 		{
-			return (Bounds.Intersects(new Rectangle(
-				(int)position.X,
-				(int)position.Y,
-				(int)size.X,
-				(int)size.Y)));
+			return (Bounds.Intersects(rect));
 		}
 
 		////////////////////////////////////////////////////////////

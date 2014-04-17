@@ -11,6 +11,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TiledSharp;
+using Spooker.Physics;
 
 namespace Spooker.Graphics.TiledMap
 {
@@ -96,6 +97,17 @@ namespace Spooker.Graphics.TiledMap
 			foreach (var layer in map.Layers)
 				_layers.Add(new Layer(layer, TileSize, gidDict));
         }
+
+		public bool Intersects(Rectangle rectangle)
+		{
+			foreach (var rect in CollisionRects)
+				if (RectCollider.Intersects(rectangle, rect)) return true;
+
+			foreach (var poly in CollisionPolys)
+				if (RectCollider.Intersects(rectangle, poly)) return true;
+
+			return false;
+		}
 
 		private Dictionary<int, KeyValuePair<Rectangle, Texture>> ConvertGidDict(IEnumerable<TmxTileset> tilesets)
 		{

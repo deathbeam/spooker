@@ -7,8 +7,6 @@ namespace Spooker.Input
 	public class GameInput : IUpdateable
 	{
 		private readonly List<InputAction> _actions;
-		private float _lastUpdate;
-		public float UpdateDelay;
 		public KeyboardManager Keyboard;
 		public MouseManager Mouse;
 
@@ -39,13 +37,6 @@ namespace Spooker.Input
 
 		public void Update(GameTime gameTime)
 		{
-			var dt = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-			_lastUpdate += dt;
-
-			if (_lastUpdate < UpdateDelay)
-				return;
-
-			_lastUpdate = 0;
 			Keyboard.Update (gameTime);
 			Mouse.Update (gameTime);
 

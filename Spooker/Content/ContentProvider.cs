@@ -24,7 +24,7 @@ namespace Spooker.Content
 	////////////////////////////////////////////////////////////
 	public class ContentProvider : IDisposable
     {
-		public class Asset
+		private class Asset
 		{
 			public string Name;
 			public float TimeToLive;

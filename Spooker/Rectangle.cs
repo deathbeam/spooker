@@ -173,10 +173,9 @@ namespace Spooker
 
         public bool Intersects(Rectangle value)
 		{
-            return value.Left < Right &&
-                   Left < value.Right &&
-                   value.Top < Bottom &&
-                   Top < value.Bottom;
+			bool result;
+			Intersects(ref value, out result);
+			return result;
         }
 
 
