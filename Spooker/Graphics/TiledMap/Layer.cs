@@ -33,27 +33,9 @@ namespace Spooker.Graphics.TiledMap
 		/// <summary>Determines if layer will be drawn or not</summary>
 		public bool Visible;
 
-		////////////////////////////////////////////////////////////
-	    /// <summary>
-	    /// Draws this instance of Layer class
-	    /// </summary>
-	    /// <param name="spriteBatch">Spritebatch used for rendering</param>
-	    /// <param name="camera">Camera used for rendering tiles</param>
-	    /// <param name="effects"></param>
-	    ////////////////////////////////////////////////////////////
-		public void Draw(SpriteBatch spriteBatch, Camera camera, SpriteEffects effects = SpriteEffects.None)
-		{
-			if (!Visible || Color.A == 0)
-				return;
-
-			foreach (var tile in _tiles)
-			{
-				var rect = new Rectangle ((int)tile.Position.X, (int)tile.Position.Y, (int)_tileSize.X, (int)_tileSize.Y);
-				if (camera.Intersects(rect)) 
-					tile.Draw(spriteBatch, camera, Color, effects);
-			}
-		}
-
+		/// <summary>Properties of this layer</summary>
+		public Dictionary<string, string> Properties;
+		
 		////////////////////////////////////////////////////////////
 	    /// <summary>
 	    /// Creates new instance of Layer class
@@ -64,6 +46,7 @@ namespace Spooker.Graphics.TiledMap
 	    ////////////////////////////////////////////////////////////
 		public Layer(TmxLayer layer, Vector2 tileSize, Dictionary<int, KeyValuePair<Rectangle, Texture>> gidDict)
         {
+			Properties = layer.Properties;
             Name = layer.Name;
             Visible = layer.Visible;
 			Color = new Color (1f, 1f, 1f, (float)layer.Opacity);
@@ -79,5 +62,19 @@ namespace Spooker.Graphics.TiledMap
 			        _tiles.Add (new Tile (t, tileSize, gidDict[gid].Key, gidDict[gid].Value));
 			}
         }
+
+		internal void Draw(SpriteBatch spriteBatch, Camera camera, SpriteEffects effects = SpriteEffects.None)
+		{
+			if (!Visible || Color.A == 0)
+				return;
+
+			foreach (var tile in _tiles)
+			{
+				var rect = new Rectangle ((int)tile.Position.X, (int)tile.Position.Y, (int)_tileSize.X, (int)_tileSize.Y);
+				if (camera.Bounds.Intersects(rect))
+					tile.Draw(spriteBatch, camera, Color, effects);
+			}
+		}
+
     }
 }

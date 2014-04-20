@@ -23,48 +23,34 @@ namespace Spooker.Graphics.TiledMap
 	////////////////////////////////////////////////////////////
 	public class Map : IDrawable
     {
-		// TODO: Make map class more dynamic (not only for loading Tiled tmx maps)
-
-		private readonly List<Layer> _layers;
 		private readonly Camera _camera;
 
-	    /// <summary>Width of map in pixels.</summary>
+		/// <summary>Layers of this map.</summary>
+		public List<Layer> Layers;
+
+		/// <summary>Width of map (in tiles).</summary>
 		public int Width;
 
-		/// <summary>Height of map in pixels.</summary>
+		/// <summary>Height of map (in tiles).</summary>
 		public int Height;
 
 		/// <summary>Width and height of one tile (in pixels)</summary>
 		public Vector2 TileSize;
 
-		/// <summary>List of polygons what can be used for collisions</summary>
-		public List<Polygon> CollisionPolys;
+		/// <summary>List of all objects in this map</summary>
+		public List<Object> Objects;
 
-		/// <summary>List of rectangles what can be used for collisions</summary>
-		public List<Rectangle> CollisionRects;
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Draws this instance of Map.
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
-        {
-			spriteBatch.Begin ();
-			foreach (var layer in _layers)
-				layer.Draw(spriteBatch, _camera, effects);
-			spriteBatch.End ();
-        }
+		/// <summary>Properties of this map</summary>
+		public Dictionary<string, string> Properties;
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Draws specified layer of map (you must begin and end
-		/// SpriteBatch externally!).
+		/// Calculates the area the map should display (in pixels)
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public void Draw(int layer, SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
+		public Rectangle Bounds
 		{
-			_layers[layer].Draw (spriteBatch, _camera, effects);
+			get { return new Rectangle (0, 0, Width * (int)TileSize.X, Height * (int)TileSize.Y); }
 		}
 
 		////////////////////////////////////////////////////////////
@@ -80,6 +66,7 @@ namespace Spooker.Graphics.TiledMap
 		    _camera = camera;
 
 			var map = new TmxMap(filename);
+			Properties = map.Properties;
             Width = map.Width;
             Height = map.Height;
 			TileSize = new Vector2 (map.TileWidth, map.TileHeight);
@@ -87,26 +74,49 @@ namespace Spooker.Graphics.TiledMap
 			var gidDict = ConvertGidDict (map.Tilesets);
 
 			foreach(var objectGroup in map.ObjectGroups)
-			{
-				CollisionPolys = ConvertCollisionPolys(objectGroup.Objects);
-				CollisionRects = ConvertCollisionRects (objectGroup.Objects);
-			}
+				Objects = ConvertObjects(objectGroup.Objects, gidDict);
 
             // Load layers
-			_layers = new List<Layer>();
+			Layers = new List<Layer>();
 			foreach (var layer in map.Layers)
-				_layers.Add(new Layer(layer, TileSize, gidDict));
+				Layers.Add(new Layer(layer, TileSize, gidDict));
         }
 
-		public bool Intersects(Rectangle rectangle)
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Draws all layers of this map.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
-			foreach (var rect in CollisionRects)
-				if (RectCollider.Intersects(rectangle, rect)) return true;
+			spriteBatch.Begin ();
+			foreach (var layer in Layers)
+				layer.Draw(spriteBatch, _camera, effects);
+			spriteBatch.End ();
+		}
 
-			foreach (var poly in CollisionPolys)
-				if (RectCollider.Intersects(rectangle, poly)) return true;
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Finds and draws layer specified by its name.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void Draw(SpriteBatch spriteBatch, string name, SpriteEffects effects = SpriteEffects.None)
+		{
+			spriteBatch.Begin ();
+			Layers.Find(l=> l.Name == name).Draw (spriteBatch, _camera, effects);
+			spriteBatch.End ();
+		}
 
-			return false;
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Finds and draws layer specified by its index.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void Draw(SpriteBatch spriteBatch, int index, SpriteEffects effects = SpriteEffects.None)
+		{
+			spriteBatch.Begin ();
+			Layers[index].Draw (spriteBatch, _camera, effects);
+			spriteBatch.End ();
 		}
 
 		private Dictionary<int, KeyValuePair<Rectangle, Texture>> ConvertGidDict(IEnumerable<TmxTileset> tilesets)
@@ -142,35 +152,39 @@ namespace Spooker.Graphics.TiledMap
 			return gidDict;
 		}
 
-		private List<Polygon> ConvertCollisionPolys(IEnumerable<TmxObjectGroup.TmxObject> objects)
+		private List<Object> ConvertObjects(IEnumerable<TmxObjectGroup.TmxObject> objects, Dictionary<int, KeyValuePair<Rectangle, Texture>> gidDict)
 		{
-			var polys = new List<Polygon>();
+			var objList = new List<Object>();
 
 		    foreach (var o in objects)
 			{
-			    List<Line> lines;
-			    Polygon p;
-			    if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polyline)
-				{
-					lines = new List<Line> ();
-					p = new Polygon();
+				var p = new Polygon();
+				var lines = new List<Line> ();
 
+				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Basic || o.ObjectType == TmxObjectGroup.TmxObjectType.Tile)
+				{
+					lines.Add (new Line (
+						o.X, o.Y, o.X + o.Width, o.Y));
+					lines.Add (new Line (
+						o.X + o.Width, o.Y, o.X + o.Width, o.Y + o.Height));
+					lines.Add (new Line (
+						o.X, o.Y + o.Height, o.X + o.Width, o.Y + o.Height));
+					lines.Add (new Line (
+						o.X, o.Y, o.X, o.Y + o.Height));
+				}
+
+				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polyline)
+				{
 					for (int i = 0; i < o.Points.Count - 1; i++)
 						lines.Add(new Line(
 							o.Points[i].Item1 + o.X,
 							o.Points[i].Item2 + o.Y,
 							o.Points[i + 1].Item1 + o.X,
 							o.Points[i + 1].Item2 + o.Y));
-
-					p.Lines = lines;
-					polys.Add(p);
 				}
 
 				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polygon)
 				{
-					lines = new List<Line> ();
-					p = new Polygon();
-
 					for (var i = 0; i < o.Points.Count; i++)
 				    {
 						if (i == (o.Points.Count - 1))
@@ -186,18 +200,28 @@ namespace Spooker.Graphics.TiledMap
 								o.Points[i + 1].Item1 + o.X,
 								o.Points[i + 1].Item2 + o.Y));
 				    }
-
-				    p.Lines = lines;
-				    polys.Add(p);
 				}
+
+				p.Lines = lines;
+
+				var obj = new Object (_camera);
+
+				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Tile)
+				{
+					obj.Texture = gidDict [o.Tile.Gid].Value;
+					obj.SourceRect = gidDict [o.Tile.Gid].Key;
+				}
+
+				obj.Name = o.Name;
+				obj.Type = o.Type;
+				obj.Position = new Vector2 (o.X, o.Y);
+				obj.Size = new Vector2 (o.Width, o.Height);
+				obj.Properties = o.Properties;
+				obj.Collision = p;
+				objList.Add (obj);
 			}
 
-			return polys;
-		}
-
-		private List<Rectangle> ConvertCollisionRects(IEnumerable<TmxObjectGroup.TmxObject> objects)
-		{
-			return (from o in objects where o.ObjectType == TmxObjectGroup.TmxObjectType.Basic select new Rectangle(o.X, o.Y, o.Width, o.Height)).ToList();
+			return objList;
 		}
     }
 }

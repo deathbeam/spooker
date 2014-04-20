@@ -30,28 +30,6 @@ namespace Spooker.Graphics.TiledMap
 		}
 
 		////////////////////////////////////////////////////////////
-	    /// <summary>
-	    /// Draws this instance of Tile class
-	    /// </summary>
-	    /// <param name="spriteBatch">Spritebatch used for rendering</param>
-	    /// <param name="camera">Camera used for rendering tile</param>
-	    /// <param name="color"></param>
-	    /// <param name="effects"></param>
-	    ////////////////////////////////////////////////////////////
-		public void Draw(SpriteBatch spriteBatch, Camera camera, Color color, SpriteEffects effects = SpriteEffects.None)
-        {
-			spriteBatch.Draw(
-				_texture,
-				camera.Transform(_position),
-				_sourceRect,
-				color,
-				Vector2.One,
-				Vector2.Zero,
-				0f,
-				effects);
-        }
-
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Creates new instance of Tile class
 		/// </summary>
@@ -63,8 +41,21 @@ namespace Spooker.Graphics.TiledMap
 		public Tile(TmxLayerTile tile, Vector2 tileSize, Rectangle tileRect, Texture tileSheet)
         {
 			_texture = tileSheet;
-			_position = new Vector2 (tile.X * tileSize.X, tile.Y * tileSize.Y);
+			_position = new Vector2 (tile.X, tile.Y) * tileSize;
 			_sourceRect = tileRect;
         }
+		
+		internal void Draw(SpriteBatch spriteBatch, Camera camera, Color color, SpriteEffects effects = SpriteEffects.None)
+		{
+			spriteBatch.Draw(
+				_texture,
+				camera.Transform(_position),
+				_sourceRect,
+				color,
+				Vector2.One,
+				Vector2.Zero,
+				0f,
+				effects);
+		}
     }
 }

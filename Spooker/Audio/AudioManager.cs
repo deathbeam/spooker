@@ -41,15 +41,15 @@ namespace Spooker.Audio
 		{
 			if (!Directory.Exists(SoundDirectory)) return;
 
-			FileInfo[] files = new DirectoryInfo(SoundDirectory)
-				.GetFiles("*." + SoundExtension, SearchOption.AllDirectories);
+			FileInfo[] files = new DirectoryInfo(SoundDirectory).GetFiles(
+				"*." + SoundExtension,
+				SearchOption.AllDirectories);
 
 			_sounds.Clear();
 			foreach (var file in files)
-			{
-				_sounds.Add(file.Name.Remove(file.Name.Length - 4, 4),
+				_sounds.Add(
+					file.Name.Remove(file.Name.Length - 4, 4),
 					new SoundBuffer(file.FullName));
-			}
 		}
 
 		////////////////////////////////////////////////////////////

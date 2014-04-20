@@ -56,13 +56,10 @@ namespace Spooker.Graphics.Lights
 			foreach(var light in _lights)
 			{
 				var rect = new Rectangle ((int)light.Position.X, (int)light.Position.Y, (int)_lightSprite.GetLocalBounds ().Width, (int)_lightSprite.GetLocalBounds ().Height);
-				if (_camera.Intersects(rect)) 
-				{
-					_lightSprite.Position = light.UseCamera ? _camera.Transform (light.Position).ToSfml () : light.Position.ToSfml ();
-					_lightSprite.Color = light.Color.ToSfml();
-					_lightSprite.Scale = new SFML.Window.Vector2f (light.Ratio, light.Ratio);
-					_lightTexture.Draw(_lightSprite, new RenderStates(BlendMode.Add));
-				}
+				_lightSprite.Position = light.UseCamera ? _camera.Transform (light.Position).ToSfml () : light.Position.ToSfml ();
+				_lightSprite.Color = light.Color.ToSfml();
+				_lightSprite.Scale = new SFML.Window.Vector2f (light.Ratio, light.Ratio);
+				_lightTexture.Draw(_lightSprite, new RenderStates(BlendMode.Add));
 			}
 
 			_lightTexture.Display();

@@ -24,7 +24,7 @@ namespace Spooker.Graphics.Animations
 		#region Variables
 
 		private readonly List<Animation> _animations;
-		private string _currentAnim;
+		private Animation _currentAnim;
 		private float _timeSinceStart;
 		private bool _pause;
 
@@ -53,18 +53,20 @@ namespace Spooker.Graphics.Animations
 
 		#region Functions
 
-		public void AddAnim(string name)
+		public void AddAnim(string name, bool repeat = true)
 		{
-			_animations.Add (new Animation(name));
+			_animations.Add (new Animation(name, repeat));
 		}
 
 		public void PlayAnim(string name)
 		{
-			if (_currentAnim == name)
+			var anim = this [name];
+
+			if (_currentAnim == anim)
 				return;
 
 			_pause = false;
-			_currentAnim = name;
+			_currentAnim = anim;
 			_timeSinceStart = 0;
 		}
 
@@ -102,14 +104,18 @@ namespace Spooker.Graphics.Animations
 			_timeSinceStart += dt;
 
 			// get duration of current animation
-			var duration = (float)this [_currentAnim].Duration.TotalMilliseconds;
+			var duration = (float)_currentAnim.Duration.TotalMilliseconds;
 
 			// it's time to a next frame?
 			if (_timeSinceStart > duration)
 			{
 				_timeSinceStart = 0;
 
-				SourceRect = this[_currentAnim].GetNextFrame ();
+				var frame = _currentAnim.GetNextFrame ();
+				SourceRect = frame;
+
+				if (frame == Rectangle.Empty)
+					_currentAnim = null;
 			}
 		}
 

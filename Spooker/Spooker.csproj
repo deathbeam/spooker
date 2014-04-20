@@ -119,6 +119,7 @@
     <Compile Include="Graphics\TiledMap\Layer.cs" />
     <Compile Include="Graphics\TiledMap\Map.cs" />
     <Compile Include="Graphics\TiledMap\Tile.cs" />
+    <Compile Include="Graphics\TiledMap\Object.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
