@@ -9,15 +9,19 @@
 //-----------------------------------------------------------------------------
 
 using System;
+using Spooker.Physics;
 
 namespace Spooker
 {
 	[Serializable]
-	public struct Circle : IEquatable<Circle>
+	public struct Circle : IEquatable<Circle>, ICollidable
 	{
 		#region Public fields
 
+		/// <summary>Center point of circle</summary>
 		public Vector2 Position;
+
+		/// <summary>Distance from center to circle bounds</summary>
 		public float Radius;
 
 		#endregion Public fields
@@ -33,6 +37,26 @@ namespace Spooker
 		#endregion Constructors
 
 		#region Public methods
+
+		public bool Intersects(Line line)
+		{
+			return CircleCollider.Intersects (this, line);
+		}
+
+		public bool Intersects(Rectangle rectangle)
+		{
+			return CircleCollider.Intersects (this, rectangle);
+		}
+
+		public bool Intersects(Circle circle)
+		{
+			return CircleCollider.Intersects (this, circle);
+		}
+
+		public bool Intersects(Polygon polygon)
+		{
+			return CircleCollider.Intersects (this, polygon);
+		}
 
 		public bool Equals(Circle other)
 		{

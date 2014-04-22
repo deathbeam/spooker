@@ -9,11 +9,12 @@
 //-----------------------------------------------------------------------------
 
 using System;
+using Spooker.Physics;
 
 namespace Spooker
 {
 	[Serializable]
-	public struct Line : IEquatable<Line>
+	public struct Line : IEquatable<Line>, ICollidable
 	{
 		#region Public fields
 
@@ -34,6 +35,47 @@ namespace Spooker
 		#endregion
 
 		#region Public methods
+
+		public bool Intersects(Line line)
+		{
+			return LineCollider.Intersects (this, line);
+		}
+
+		public bool Intersects(Rectangle rectangle)
+		{
+			return LineCollider.Intersects (this, rectangle);
+		}
+
+		public bool Intersects(Circle circle)
+		{
+			return LineCollider.Intersects (this, circle);
+		}
+
+		public bool Intersects(Polygon polygon)
+		{
+			return LineCollider.Intersects (this, polygon);
+		}
+
+		public float Distance(Vector2 point)
+		{
+			var a = new Vector2 (X1, Y1);
+			var b = new Vector2 (X2, Y2);
+			var pointVector = point - a;
+			var lineVector = (b - a);
+			lineVector.Normalize();
+			var lineLength = (float)(b - a).Length();
+			var intersectDistanceFromA = Vector2.Dot(lineVector, pointVector);
+
+			if (intersectDistanceFromA < 0f)
+				return -1f;
+			if (intersectDistanceFromA > lineLength)
+				return -1f;
+
+			lineVector *= intersectDistanceFromA;
+			var intersectPoint = a + lineVector;
+
+			return (float)(point - intersectPoint).Length();
+		}
 
 		public bool Equals(Line other)
 		{

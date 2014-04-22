@@ -61,7 +61,7 @@ namespace Spooker.Physics
 
 				// We've got an intersection we need to process the pixels in that Rect.
 				Rectangle Intersection;
-				Rectangle.Intersect(ref object1Aabb, ref object2Aabb, out Intersection);
+				RectCollider.Intersect(ref object1Aabb, ref object2Aabb, out Intersection);
 
 				// Get size of texture source rectangles
 				var o1SubRectSize = new Vector2(sp1.SourceRect.Width, sp1.SourceRect.Height);
@@ -96,7 +96,7 @@ namespace Spooker.Physics
 		public static bool BoundingBoxTest(Sprite sp1, Sprite sp2)
 		{
 
-			Vector2 A, B, C, BL, TR;
+			Vector2 A, B, BL, TR;
 			float t, x, a, dx, ext1, ext2;
 
 			var halfSize1 = new Vector2(sp1.SourceRect.Width /2, sp1.SourceRect.Height /2);
@@ -109,7 +109,7 @@ namespace Spooker.Physics
 
 			//Normalise the Center of Object2 so its axis aligned an represented in
 			//relation to Object 1 and get the Corners
-			BL = TR = C = RotatePoint (sp2.Position - sp1.Position, sp2.Rotation);
+			BL = TR = RotatePoint (sp2.Position - sp1.Position, sp2.Rotation);
 			BL -= halfSize2;
 			TR += halfSize2;
 

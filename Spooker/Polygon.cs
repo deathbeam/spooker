@@ -11,11 +11,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Spooker.Physics;
 
 namespace Spooker
 {
 	[Serializable]
-	public struct Polygon : IEquatable<Polygon>
+	public struct Polygon : IEquatable<Polygon>, ICollidable
 	{
 		#region Public fields
 
@@ -33,6 +34,26 @@ namespace Spooker
 		#endregion
 
 		#region Public methods
+
+		public bool Intersects(Line line)
+		{
+			return PolygonCollider.Intersects (this, line);
+		}
+
+		public bool Intersects(Rectangle rectangle)
+		{
+			return PolygonCollider.Intersects (this, rectangle);
+		}
+
+		public bool Intersects(Circle circle)
+		{
+			return PolygonCollider.Intersects (this, circle);
+		}
+
+		public bool Intersects(Polygon polygon)
+		{
+			return PolygonCollider.Intersects (this, polygon);
+		}
 
 		public bool Equals(Polygon other)
 		{

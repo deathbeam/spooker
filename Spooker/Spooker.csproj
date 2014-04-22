@@ -120,6 +120,9 @@
     <Compile Include="Graphics\TiledMap\Map.cs" />
     <Compile Include="Graphics\TiledMap\Tile.cs" />
     <Compile Include="Graphics\TiledMap\Object.cs" />
+    <Compile Include="Graphics\TiledMap\ObjectType.cs" />
+    <Compile Include="Physics\ICollidable.cs" />
+    <Compile Include="Ellipse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

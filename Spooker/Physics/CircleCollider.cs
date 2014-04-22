@@ -8,6 +8,9 @@
 // License: MIT
 //-----------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Spooker.Physics
 {
 	public static class CircleCollider
@@ -19,6 +22,33 @@ namespace Spooker.Physics
 
 			return Vector2.Distance(circle1.Position, circle2.Position) <=
 				circle1.Radius + circle2.Radius;
+		}
+		
+		public static bool Intersects(Circle circle, Line line)
+		{
+			var distance = line.Distance (circle.Position);
+			if (distance < circle.Radius && distance != -1f)
+				return true;
+			return false;
+		}
+
+		public static bool Intersects(Circle circle, Polygon polygon)
+		{
+			return polygon.Lines.Any(t => LineCollider.Intersects(t, circle));
+		}
+
+		public static bool Intersects(Circle circle, Rectangle rectangle)
+		{
+			var lines = new List<Line>
+			{
+				new Line(rectangle.X, rectangle.Y, rectangle.X + rectangle.Width, rectangle.Y),
+				new Line(rectangle.X, rectangle.Y, rectangle.X, rectangle.Y + rectangle.Height),
+				new Line(rectangle.X + rectangle.Width, rectangle.Y, rectangle.X + rectangle.Width,
+					rectangle.Y + rectangle.Height),
+				new Line(rectangle.X, rectangle.Y + rectangle.Height, rectangle.X + rectangle.Width,
+					rectangle.Y + rectangle.Height)
+			};
+			return lines.Any (t => LineCollider.Intersects (t, circle));
 		}
 	}
 }

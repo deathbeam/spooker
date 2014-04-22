@@ -15,10 +15,10 @@ namespace Spooker.Graphics.Lights
 {
 	public class LightEngine : Drawable
 	{
-		private List<Light> _lights;
+		private readonly List<Light> _lights;
+        private readonly RenderTexture _lightTexture;
+        private readonly Camera _camera;
 		private SFML.Graphics.Sprite _lightSprite;
-		private RenderTexture _lightTexture;
-		private Camera _camera;
 
 		public Color ClearColor = Color.Black;
 
@@ -55,7 +55,6 @@ namespace Spooker.Graphics.Lights
 
 			foreach(var light in _lights)
 			{
-				var rect = new Rectangle ((int)light.Position.X, (int)light.Position.Y, (int)_lightSprite.GetLocalBounds ().Width, (int)_lightSprite.GetLocalBounds ().Height);
 				_lightSprite.Position = light.UseCamera ? _camera.Transform (light.Position).ToSfml () : light.Position.ToSfml ();
 				_lightSprite.Color = light.Color.ToSfml();
 				_lightSprite.Scale = new SFML.Window.Vector2f (light.Ratio, light.Ratio);

@@ -12,7 +12,7 @@ namespace Spooker.Input
 
 	public class KeyNode : ActionNode
 	{
-		private Keyboard.Key _key;
+		private readonly Keyboard.Key _key;
 
 		public KeyNode(Keyboard.Key key)
 		{
@@ -42,7 +42,7 @@ namespace Spooker.Input
 
 	public class MouseNode : ActionNode
 	{
-		private Mouse.Button _button;
+		private readonly Mouse.Button _button;
 
 		public MouseNode(Mouse.Button button)
 		{

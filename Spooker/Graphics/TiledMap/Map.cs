@@ -9,9 +9,7 @@
 //-----------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Linq;
 using TiledSharp;
-using Spooker.Physics;
 
 namespace Spooker.Graphics.TiledMap
 {
@@ -158,33 +156,44 @@ namespace Spooker.Graphics.TiledMap
 
 		    foreach (var o in objects)
 			{
-				var p = new Polygon();
-				var lines = new List<Line> ();
-
-				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Basic || o.ObjectType == TmxObjectGroup.TmxObjectType.Tile)
+				var obj = new Object (_camera)
 				{
-					lines.Add (new Line (
-						o.X, o.Y, o.X + o.Width, o.Y));
-					lines.Add (new Line (
-						o.X + o.Width, o.Y, o.X + o.Width, o.Y + o.Height));
-					lines.Add (new Line (
-						o.X, o.Y + o.Height, o.X + o.Width, o.Y + o.Height));
-					lines.Add (new Line (
-						o.X, o.Y, o.X, o.Y + o.Height));
+				    Name = o.Name,
+				    Type = o.Type,
+				    Position = new Vector2(o.X, o.Y),
+				    Size = new Vector2(o.Width, o.Height),
+				    Properties = o.Properties
+				};
+
+				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Basic)
+				{
+					obj.ObjectType = ObjectType.Rectangle;
+					obj.Shape = new Rectangle (o.X, o.Y, o.Width, o.Height);
+				}
+
+				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Ellipse)
+				{
+					obj.ObjectType = ObjectType.Ellipse;
+					obj.Shape = new Circle (new Vector2 (o.X + o.Width / 2, o.Y + o.Height / 2), o.Width /2);
 				}
 
 				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polyline)
 				{
+					var lines = new List<Line> ();
 					for (int i = 0; i < o.Points.Count - 1; i++)
 						lines.Add(new Line(
 							o.Points[i].Item1 + o.X,
 							o.Points[i].Item2 + o.Y,
 							o.Points[i + 1].Item1 + o.X,
 							o.Points[i + 1].Item2 + o.Y));
+
+					obj.ObjectType = ObjectType.Polyline;
+					obj.Shape = new Polygon (lines);
 				}
 
 				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polygon)
 				{
+					var lines = new List<Line> ();
 					for (var i = 0; i < o.Points.Count; i++)
 				    {
 						if (i == (o.Points.Count - 1))
@@ -200,24 +209,20 @@ namespace Spooker.Graphics.TiledMap
 								o.Points[i + 1].Item1 + o.X,
 								o.Points[i + 1].Item2 + o.Y));
 				    }
+
+					obj.ObjectType = ObjectType.Polygon;
+					obj.Shape = new Polygon (lines);
 				}
-
-				p.Lines = lines;
-
-				var obj = new Object (_camera);
 
 				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Tile)
 				{
+					obj.ObjectType = ObjectType.Graphic;
+					obj.Shape = new Rectangle (o.X, o.Y - o.Height, o.Width, o.Height);
 					obj.Texture = gidDict [o.Tile.Gid].Value;
 					obj.SourceRect = gidDict [o.Tile.Gid].Key;
+					obj.Position.Y -= o.Height;
 				}
 
-				obj.Name = o.Name;
-				obj.Type = o.Type;
-				obj.Position = new Vector2 (o.X, o.Y);
-				obj.Size = new Vector2 (o.Width, o.Height);
-				obj.Properties = o.Properties;
-				obj.Collision = p;
 				objList.Add (obj);
 			}
 

@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using Spooker.Graphics;
 using Spooker.Graphics.Particles;
-using Spooker.Time;
 
 namespace Spooker.Content
 {
@@ -26,9 +25,9 @@ namespace Spooker.Content
     {
 		private class Asset
 		{
-			public string Name;
-			public float TimeToLive;
-			public object Object;
+			public readonly string Name;
+			public readonly object Object;
+            public float TimeToLive;
 
 			public Asset(string name, float timeToLive, object obj)
 			{
@@ -68,27 +67,29 @@ namespace Spooker.Content
 			get 
 			{
 				// Initialize content loaders
-				var temploaders = new List<ContentProvider>();
+				var temploaders = new List<ContentProvider>
+				{
+				    new ContentProvider(typeof (Texture))
+				    {
+				        Folder = "textures",
+				        Extension = "png",
+				        Load = str => new Texture(str)
+				    },
+				    new ContentProvider(typeof (SFML.Graphics.Font))
+				    {
+				        Folder = "fonts",
+				        Extension = "ttf",
+				        Load = str => new SFML.Graphics.Font(str)
+				    },
+				    new ContentProvider(typeof (ParticleSettings))
+				    {
+				        Folder = "particles",
+				        Extension = "sfp",
+				        Load = str => new ParticleSettings(str)
+				    }
+				};
 
-				temploaders.Add (new ContentProvider (typeof(Texture)) {
-					Folder = "textures",
-					Extension = "png",
-					Load = str => new Texture (str)
-				});
-
-				temploaders.Add (new ContentProvider (typeof(SFML.Graphics.Font)) {
-					Folder = "fonts",
-					Extension = "ttf",
-					Load = str => new SFML.Graphics.Font (str)
-				});
-
-				temploaders.Add (new ContentProvider (typeof(ParticleSettings)) {
-					Folder = "particles",
-					Extension = "sfp",
-					Load = str => new ParticleSettings (str)
-				});
-
-				return temploaders;
+			    return temploaders;
 			}
 		}
 

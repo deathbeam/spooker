@@ -34,7 +34,7 @@ namespace Spooker.Graphics.Particles
 		private readonly Queue<Particle> _freeParticles;
 
 		// The settings used for this particle system
-		private ParticleSettings _settings;
+		private readonly ParticleSettings _settings;
 
 		// the BlendState used when rendering the particles.
 		private SFML.Graphics.RenderStates _blendState;

@@ -6,8 +6,8 @@ namespace Spooker.Input
 {
 	public class InputAction
 	{
-		private GameInput _parent;
-		private List<ActionNode> _triggers;
+		private readonly GameInput _parent;
+		private readonly List<ActionNode> _triggers;
 
 		public string Name;
 

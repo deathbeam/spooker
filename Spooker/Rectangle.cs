@@ -8,11 +8,12 @@
 //-----------------------------------------------------------------------------
 
 using System;
+using Spooker.Physics;
 
 namespace Spooker
 {
 	[Serializable]
-    public struct Rectangle : IEquatable<Rectangle>
+	public struct Rectangle : IEquatable<Rectangle>, ICollidable
 	{
         #region Public Fields
 
@@ -111,6 +112,26 @@ namespace Spooker
             return !(a == b);
         }
 
+		public bool Intersects(Line line)
+		{
+			return RectCollider.Intersects (this, line);
+		}
+
+		public bool Intersects(Rectangle rectangle)
+		{
+			return RectCollider.Intersects (this, rectangle);
+		}
+
+		public bool Intersects(Circle circle)
+		{
+			return RectCollider.Intersects (this, circle);
+		}
+
+		public bool Intersects(Polygon polygon)
+		{
+			return RectCollider.Intersects (this, polygon);
+		}
+
         public void Offset(Point offset)
 		{
             X += offset.X;
@@ -169,46 +190,6 @@ namespace Spooker
         public override int GetHashCode()
 		{
             return (X ^ Y ^ Width ^ Height);
-        }
-
-        public bool Intersects(Rectangle value)
-		{
-			bool result;
-			Intersects(ref value, out result);
-			return result;
-        }
-
-
-        public void Intersects(ref Rectangle value, out bool result)
-		{
-            result = value.Left < Right &&
-                     Left < value.Right &&
-                     value.Top < Bottom &&
-                     Top < value.Bottom;
-        }
-
-        public static Rectangle Intersect(Rectangle value1, Rectangle value2)
-		{
-            Rectangle rectangle;
-            Intersect(ref value1, ref value2, out rectangle);
-            return rectangle;
-        }
-
-
-        public static void Intersect(ref Rectangle value1, ref Rectangle value2, out Rectangle result)
-		{
-            if (value1.Intersects(value2))
-			{
-				var rightSide = Math.Min(value1.X + value1.Width, value2.X + value2.Width);
-				var leftSide = Math.Max(value1.X, value2.X);
-				var topSide = Math.Max(value1.Y, value2.Y);
-				var bottomSide = Math.Min(value1.Y + value1.Height, value2.Y + value2.Height);
-                result = new Rectangle(leftSide, topSide, rightSide - leftSide, bottomSide - topSide);
-            }
-            else
-			{
-                result = new Rectangle(0, 0, 0, 0);
-            }
         }
 
         public static Rectangle Union(Rectangle value1, Rectangle value2)

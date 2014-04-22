@@ -9,6 +9,7 @@
 //-----------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Spooker.Physics;
 
 namespace Spooker.Graphics.TiledMap
 {
@@ -18,16 +19,17 @@ namespace Spooker.Graphics.TiledMap
 	/// TiledSharp.
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public class Object : IDrawable
+	public class Object : IDrawable, ICollidable
 	{
 		private readonly Camera _camera;
 
 		public string Name;
 		public string Type;
+		public ObjectType ObjectType;
 		public Vector2 Position;
 		public Vector2 Size;
 		public Dictionary<string, string> Properties;
-		public Polygon Collision;
+		public ICollidable Shape;
 		public Texture Texture;
 		public Rectangle SourceRect;
 
@@ -38,18 +40,29 @@ namespace Spooker.Graphics.TiledMap
 
 		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
-			if (Texture == null)
-				return;
+			if (ObjectType == ObjectType.Graphic)
+				spriteBatch.Draw(Texture, _camera.Transform(Position), SourceRect,
+					Color.White, Vector2.One, Vector2.Zero, 0f, effects);
+		}
 
-			spriteBatch.Draw(
-				Texture,
-				_camera.Transform(Position),
-				SourceRect,
-				Color.White,
-				Vector2.One,
-				Vector2.Zero,
-				0f,
-				effects);
+		public bool Intersects(Line line)
+		{
+			return Shape.Intersects (line);
+		}
+
+		public bool Intersects(Rectangle rectangle)
+		{
+			return Shape.Intersects (rectangle);
+		}
+
+		public bool Intersects(Circle circle)
+		{
+			return Shape.Intersects (circle);
+		}
+
+		public bool Intersects(Polygon polygon)
+		{
+			return Shape.Intersects (polygon);
 		}
 	}
 }

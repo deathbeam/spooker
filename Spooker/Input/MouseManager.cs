@@ -24,7 +24,7 @@ namespace Spooker.Input
 		private readonly Dictionary<Mouse.Button, bool> _buttonStates = new Dictionary<Mouse.Button, bool>();
 		private readonly Dictionary<Mouse.Button, bool> _previousButtonStates = new Dictionary<Mouse.Button, bool>();
 		private readonly IEnumerable<Mouse.Button> _buttonEnum = Enum.GetValues(typeof(Mouse.Button)).Cast<Mouse.Button>();
-		private SFML.Graphics.RenderWindow _graphicsDevice;
+		private readonly SFML.Graphics.RenderWindow _graphicsDevice;
 		
 		public event Action<MouseWheelEventArgs> OnWheelScroll;
 		public event Action<MouseWheelEventArgs> OnWheelScrollUp;

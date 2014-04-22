@@ -31,9 +31,9 @@ namespace Spooker.Graphics
 		
 		private readonly List<BatchedTexture> _textures = new List<BatchedTexture>();
 		private readonly SFML.Graphics.RenderTarget _graphicsDevice;
-		private SFML.Graphics.Vertex[] _vertices = new SFML.Graphics.Vertex[100 * 4];
+        private readonly SFML.Graphics.Text _str;
+        private SFML.Graphics.Vertex[] _vertices = new SFML.Graphics.Vertex[100 * 4];
 		private SFML.Graphics.Texture _activeTexture;
-		private SFML.Graphics.Text _str;
 		private bool _active;
 		private uint _queueCount;
 

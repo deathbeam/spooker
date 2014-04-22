@@ -33,6 +33,11 @@ namespace Spooker.Physics
 		{
 			return polygon.Lines.Any(t => LineCollider.Intersects(t, rectangle));
 		}
+
+		public static bool Intersects(Polygon polygon, Circle circle)
+		{
+			return CircleCollider.Intersects (circle, polygon);
+		}
 	}
 }
 

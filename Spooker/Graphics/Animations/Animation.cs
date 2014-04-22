@@ -15,9 +15,9 @@ namespace Spooker.Graphics.Animations
 {
 	public class Animation
 	{
-		private int _currentFrame;
-		private List<Rectangle> _frames;
-		private bool _repeat;
+		private readonly List<Rectangle> _frames;
+		private readonly bool _repeat;
+        private int _currentFrame;
 		internal string Name;
 
 		/// <summary>Defines for how long will be one frame drawn</summary>
