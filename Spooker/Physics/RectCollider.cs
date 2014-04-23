@@ -16,19 +16,19 @@ namespace Spooker.Physics
 {
 	public static class RectCollider
 	{
-		public static void Intersect(ref Rectangle value1, ref Rectangle value2, out Rectangle result)
+		public static Rectangle Intersect(Rectangle rectangle1, Rectangle rectangle2)
 		{
-			if (value1.Intersects(value2))
+			if (rectangle1.Intersects(rectangle2))
 			{
-				var rightSide = Math.Min(value1.X + value1.Width, value2.X + value2.Width);
-				var leftSide = Math.Max(value1.X, value2.X);
-				var topSide = Math.Max(value1.Y, value2.Y);
-				var bottomSide = Math.Min(value1.Y + value1.Height, value2.Y + value2.Height);
-				result = new Rectangle(leftSide, topSide, rightSide - leftSide, bottomSide - topSide);
+				var rightSide = Math.Min(rectangle1.X + rectangle1.Width, rectangle2.X + rectangle2.Width);
+				var leftSide = Math.Max(rectangle1.X, rectangle2.X);
+				var topSide = Math.Max(rectangle1.Y, rectangle2.Y);
+				var bottomSide = Math.Min(rectangle1.Y + rectangle1.Height, rectangle2.Y + rectangle2.Height);
+				return new Rectangle(leftSide, topSide, rightSide - leftSide, bottomSide - topSide);
 			}
 			else
 			{
-				result = new Rectangle(0, 0, 0, 0);
+				return Rectangle.Empty;
 			}
 		}
 

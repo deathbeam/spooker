@@ -3,35 +3,38 @@ using Spooker.Physics;
 
 namespace Spooker
 {
-	public class Ellipse : ICollidable
+	public class Ellipse
 	{
-		private Circle _circle;
-		private Rectangle _rect;
+		/// <summary>Center point of ellipse</summary>
+		public Vector2 Position;
 
-		public Ellipse (Vector2 position, Vector2 size)
+		/// <summary>Size of ellipse</summary>
+		public Vector2 Size;
+
+		public Ellipse (int x, int y, int width, int height)
 		{
-			_circle = new Circle (position + (size / 2), size.X / 2);
-			_rect = new Rectangle ((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
+			Position = new Vector2 (x, y);
+			Size = new Vector2 (width, height);
 		}
 
 		public bool Intersects(Line line)
 		{
-			return _circle.Intersects (line) && _rect.Intersects(line);
+			return EllipseCollider.Intersects (this, line);
 		}
 
 		public bool Intersects(Rectangle rectangle)
 		{
-			return _circle.Intersects (rectangle) && _rect.Intersects(rectangle);
+			return EllipseCollider.Intersects (this, rectangle);
 		}
 
-		public bool Intersects(Circle circle)
+		public bool Intersects(Ellipse ellipse)
 		{
-			return _circle.Intersects (circle) && _rect.Intersects(circle);
+			return EllipseCollider.Intersects (this, ellipse);
 		}
 
 		public bool Intersects(Polygon polygon)
 		{
-			return _circle.Intersects (polygon) && _rect.Intersects(polygon);
+			return EllipseCollider.Intersects (this, polygon);
 		}
 	}
 }

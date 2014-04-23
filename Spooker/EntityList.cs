@@ -18,7 +18,7 @@ namespace Spooker
 	////////////////////////////////////////////////////////////
 	/// <summary>
 	/// Used for automated managing various classes with implemented
-	/// drawable, updateable and loadable interface.
+	/// drawable, updateable and loadable interfaces.
 	/// </summary>
 	////////////////////////////////////////////////////////////
 	public class EntityList : IDrawable, IUpdateable, IDisposable

@@ -43,7 +43,7 @@ namespace Spooker
         #endregion Constructors
 
 
-        #region Public methods
+		#region Operators
 
         public static bool operator ==(Point a, Point b)
 		{
@@ -54,6 +54,10 @@ namespace Spooker
 		{
             return !a.Equals(b);
         }
+
+		#endregion Operators
+
+		#region Public methods
 
         public bool Equals(Point other)
 		{

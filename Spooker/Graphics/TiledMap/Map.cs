@@ -41,24 +41,20 @@ namespace Spooker.Graphics.TiledMap
 		/// <summary>Properties of this map</summary>
 		public Dictionary<string, string> Properties;
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Calculates the area the map should display (in pixels)
+		/// Gets the bounds of this map (in pixels).
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <value>The bounds.</value>
 		public Rectangle Bounds
 		{
 			get { return new Rectangle (0, 0, Width * (int)TileSize.X, Height * (int)TileSize.Y); }
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of Map class.
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.TiledMap.Map"/> class.
 		/// </summary>
-		/// <param name="filename">Path to map file</param>
-		/// <param name="camera">Camera used for rendering map tiles
-		/// </param>
-		////////////////////////////////////////////////////////////
+		/// <param name="camera">Camera.</param>
+		/// <param name="filename">Filename.</param>
 		public Map(Camera camera, string filename)
         {
 		    _camera = camera;
@@ -71,8 +67,8 @@ namespace Spooker.Graphics.TiledMap
 
 			var gidDict = ConvertGidDict (map.Tilesets);
 
-			foreach(var objectGroup in map.ObjectGroups)
-				Objects = ConvertObjects(objectGroup.Objects, gidDict);
+			// Load objects
+			Objects = ConvertObjects(map.ObjectGroups, gidDict);
 
             // Load layers
 			Layers = new List<Layer>();
@@ -80,11 +76,11 @@ namespace Spooker.Graphics.TiledMap
 				Layers.Add(new Layer(layer, TileSize, gidDict));
         }
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Draws all layers of this map.
+		/// Component uses this for drawing itself
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="spriteBatch">Sprite batch.</param>
+		/// <param name="effects">Effects.</param>
 		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
 			spriteBatch.Begin ();
@@ -93,24 +89,26 @@ namespace Spooker.Graphics.TiledMap
 			spriteBatch.End ();
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Finds and draws layer specified by its name.
+		/// Draw the layer specified by its name.
 		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void Draw(SpriteBatch spriteBatch, string name, SpriteEffects effects = SpriteEffects.None)
+		/// <param name="spriteBatch">Sprite batch.</param>
+		/// <param name="name">Name.</param>
+		/// <param name="effects">Effects.</param>
+		public void Draw(string name, SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
 			spriteBatch.Begin ();
 			Layers.Find(l=> l.Name == name).Draw (spriteBatch, _camera, effects);
 			spriteBatch.End ();
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Finds and draws layer specified by its index.
+		/// Draw the layer specified by its index.
 		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void Draw(SpriteBatch spriteBatch, int index, SpriteEffects effects = SpriteEffects.None)
+		/// <param name="spriteBatch">Sprite batch.</param>
+		/// <param name="index">Index.</param>
+		/// <param name="effects">Effects.</param>
+		public void Draw(int index, SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
 			spriteBatch.Begin ();
 			Layers[index].Draw (spriteBatch, _camera, effects);
@@ -150,80 +148,83 @@ namespace Spooker.Graphics.TiledMap
 			return gidDict;
 		}
 
-		private List<Object> ConvertObjects(IEnumerable<TmxObjectGroup.TmxObject> objects, Dictionary<int, KeyValuePair<Rectangle, Texture>> gidDict)
+		private List<Object> ConvertObjects(IEnumerable<TmxObjectGroup> objectGroups, Dictionary<int, KeyValuePair<Rectangle, Texture>> gidDict)
 		{
 			var objList = new List<Object>();
 
-		    foreach (var o in objects)
+			foreach (var objectGroup in objectGroups)
 			{
-				var obj = new Object (_camera)
+				foreach (var o in objectGroup.Objects)
 				{
-				    Name = o.Name,
-				    Type = o.Type,
-				    Position = new Vector2(o.X, o.Y),
-				    Size = new Vector2(o.Width, o.Height),
-				    Properties = o.Properties
-				};
+					var obj = new Object (_camera)
+					{
+					    Name = o.Name,
+					    Type = o.Type,
+					    Position = new Vector2(o.X, o.Y),
+					    Size = new Vector2(o.Width, o.Height),
+					    Properties = o.Properties
+					};
 
-				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Basic)
-				{
-					obj.ObjectType = ObjectType.Rectangle;
-					obj.Shape = new Rectangle (o.X, o.Y, o.Width, o.Height);
-				}
+					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Basic)
+					{
+						obj.ObjectType = ObjectType.Rectangle;
+						obj.Shape = new Rectangle (o.X, o.Y, o.Width, o.Height);
+					}
 
-				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Ellipse)
-				{
-					obj.ObjectType = ObjectType.Ellipse;
-					obj.Shape = new Circle (new Vector2 (o.X + o.Width / 2, o.Y + o.Height / 2), o.Width /2);
-				}
+					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Ellipse)
+					{
+						obj.ObjectType = ObjectType.Ellipse;
+						obj.Shape = new Circle (new Vector2 (o.X + o.Width / 2, o.Y + o.Height / 2), o.Width /2);
+					}
 
-				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polyline)
-				{
-					var lines = new List<Line> ();
-					for (int i = 0; i < o.Points.Count - 1; i++)
-						lines.Add(new Line(
-							o.Points[i].Item1 + o.X,
-							o.Points[i].Item2 + o.Y,
-							o.Points[i + 1].Item1 + o.X,
-							o.Points[i + 1].Item2 + o.Y));
-
-					obj.ObjectType = ObjectType.Polyline;
-					obj.Shape = new Polygon (lines);
-				}
-
-				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polygon)
-				{
-					var lines = new List<Line> ();
-					for (var i = 0; i < o.Points.Count; i++)
-				    {
-						if (i == (o.Points.Count - 1))
-							lines.Add(new Line(
-								o.Points[0].Item1 + o.X,
-								o.Points[0].Item2 + o.Y,
-								o.Points[i].Item1 + o.X,
-								o.Points[i].Item2 + o.Y));
-						else
+					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polyline)
+					{
+						var lines = new List<Line> ();
+						for (int i = 0; i < o.Points.Count - 1; i++)
 							lines.Add(new Line(
 								o.Points[i].Item1 + o.X,
 								o.Points[i].Item2 + o.Y,
 								o.Points[i + 1].Item1 + o.X,
 								o.Points[i + 1].Item2 + o.Y));
-				    }
 
-					obj.ObjectType = ObjectType.Polygon;
-					obj.Shape = new Polygon (lines);
+						obj.ObjectType = ObjectType.Polyline;
+						obj.Shape = new Polygon (lines);
+					}
+
+					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polygon)
+					{
+						var lines = new List<Line> ();
+						for (var i = 0; i < o.Points.Count; i++)
+					    {
+							if (i == (o.Points.Count - 1))
+								lines.Add(new Line(
+									o.Points[0].Item1 + o.X,
+									o.Points[0].Item2 + o.Y,
+									o.Points[i].Item1 + o.X,
+									o.Points[i].Item2 + o.Y));
+							else
+								lines.Add(new Line(
+									o.Points[i].Item1 + o.X,
+									o.Points[i].Item2 + o.Y,
+									o.Points[i + 1].Item1 + o.X,
+									o.Points[i + 1].Item2 + o.Y));
+					    }
+
+						obj.ObjectType = ObjectType.Polygon;
+						obj.Shape = new Polygon (lines);
+					}
+
+					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Tile)
+					{
+						obj.ObjectType = ObjectType.Graphic;
+						obj.Shape = new Rectangle (o.X, o.Y - o.Height, o.Width, o.Height);
+						obj.Texture = gidDict [o.Tile.Gid].Value;
+						obj.SourceRect = gidDict [o.Tile.Gid].Key;
+						obj.Position.Y -= o.Height;
+					}
+
+					objList.Add (obj);
 				}
-
-				if (o.ObjectType == TmxObjectGroup.TmxObjectType.Tile)
-				{
-					obj.ObjectType = ObjectType.Graphic;
-					obj.Shape = new Rectangle (o.X, o.Y - o.Height, o.Width, o.Height);
-					obj.Texture = gidDict [o.Tile.Gid].Value;
-					obj.SourceRect = gidDict [o.Tile.Gid].Key;
-					obj.Position.Y -= o.Height;
-				}
-
-				objList.Add (obj);
 			}
 
 			return objList;

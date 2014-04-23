@@ -18,33 +18,28 @@ namespace Spooker.Time
     /// </summary>
     public class Clock
     {
-        #region Variables
+		#region Private Fields
+
 		private readonly Stopwatch _timer = Stopwatch.StartNew();
-        #endregion
+
+		#endregion Private Fields
 
         #region Properties
-		/// <summary>
-		/// 
-		/// </summary>
+
 		public GameTime ElapsedTime
         {
 			get { return GameTime.FromTicks(_timer.ElapsedTicks); }
         }
-
-		/// <summary>
-		/// 
-		/// </summary>
+		
 		public TimeSpan ElapsedTimeFromSpan
 		{
 			get { return TimeSpan.FromTicks(_timer.ElapsedTicks); }
 		}
+
         #endregion
 
         #region Functions
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
+
 		public GameTime Restart()
         {
 			var tm = GameTime.FromTicks(_timer.ElapsedTicks);
@@ -52,11 +47,7 @@ namespace Spooker.Time
             _timer.Start();
             return tm;
         }
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
+		
 		public TimeSpan RestartFromSpan()
 		{
 			var tm = TimeSpan.FromTicks(_timer.ElapsedTicks);
@@ -64,6 +55,7 @@ namespace Spooker.Time
 			_timer.Start();
 			return tm;
 		}
+
         #endregion
     }
 }

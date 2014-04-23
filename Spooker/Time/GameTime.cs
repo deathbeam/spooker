@@ -20,28 +20,26 @@ namespace Spooker.Time
 	////////////////////////////////////////////////////////////
 	public class GameTime
     {
-        #region Variables
+		#region Private Fields
+
+		private long _elapsedticks;
+
+		#endregion Private Fields
+
+
+		#region Public Fields
+
 		/// <summary>Returns how much time has passed since last update</summary>
 		public TimeSpan ElapsedGameTime = TimeSpan.Zero;
 
 		/// <summary>Returns how much time has passed since starting game</summary>
 		public TimeSpan TotalElapsedGameTime = TimeSpan.Zero;
-        
-		private long _elapsedticks;
-        #endregion
+
+		#endregion Public Fields
+
 
         #region Properties
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public static GameTime Zero
-        {
-			get { return new GameTime(0); }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
+       
         public long Ticks
         {
 			get { return _elapsedticks; }
@@ -87,38 +85,27 @@ namespace Spooker.Time
         {
             _elapsedticks = totalTicks;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ticks"></param>
-        /// <returns></returns>
+
+		public static GameTime Zero
+		{
+			get { return new GameTime(0); }
+		}
+        
         public static GameTime FromTicks(long ticks)
         {
             return new GameTime(ticks);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="milliseconds"></param>
-        /// <returns></returns>
+
         public static GameTime FromMilliseconds(long milliseconds)
         {
             return FromSeconds(milliseconds / 1000d);
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="seconds"></param>
-        /// <returns></returns>
+        
         public static GameTime FromSeconds(double seconds)
         {
             return FromTicks((long)(seconds * Frequency));
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="minutes"></param>
-        /// <returns></returns>
+        
         public static GameTime FromMinutes(float minutes)
         {
             return FromSeconds(minutes * 60d);
@@ -127,11 +114,7 @@ namespace Spooker.Time
         #endregion
 
         #region Functions
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="dt"></param>
+		
 		public void Update(TimeSpan dt)
 		{
 			ElapsedGameTime = dt;

@@ -18,11 +18,11 @@ namespace Spooker.Graphics
 	////////////////////////////////////////////////////////////
 	public interface IDrawable
 	{
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Component uses this for drawing itself
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="spriteBatch">Sprite batch.</param>
+		/// <param name="effects">Effects.</param>
 		void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None);
 	}
 }

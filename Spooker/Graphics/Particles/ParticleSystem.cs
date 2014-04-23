@@ -102,7 +102,7 @@ namespace Spooker.Graphics.Particles
 		/// </summary>
 		private Vector2 PickRandomDirection()
 		{
-			var angle = MathHelper.RandomRange(
+			var angle = MathHelper.Random(
 				_settings.MinDirectionAngle,
 				_settings.MaxDirectionAngle);
 
@@ -169,13 +169,13 @@ namespace Spooker.Graphics.Particles
 
 			// Adjust the velocity based on our random values
 			Vector2 direction = PickRandomDirection();
-			var speed = (float)MathHelper.RandomRange(_settings.MinInitialSpeed, _settings.MaxInitialSpeed);
+			var speed = (float)MathHelper.Random(_settings.MinInitialSpeed, _settings.MaxInitialSpeed);
 			velocity += direction * speed;
 
 			// pick some random values for our particle
-			var lifetime =(float) MathHelper.RandomRange(_settings.MinLifetime, _settings.MaxLifetime);
-			var scale = (float)MathHelper.RandomRange(_settings.MinSize, _settings.MaxSize);
-			var rotationSpeed =  (float)MathHelper.RandomRange(_settings.MinRotationSpeed, _settings.MaxRotationSpeed);
+			var lifetime =(float) MathHelper.Random(_settings.MinLifetime, _settings.MaxLifetime);
+			var scale = (float)MathHelper.Random(_settings.MinSize, _settings.MaxSize);
+			var rotationSpeed =  (float)MathHelper.Random(_settings.MinRotationSpeed, _settings.MaxRotationSpeed);
 
 			// our settings angles are in degrees, so we must convert to radians
 			rotationSpeed = (float)MathHelper.ToRadians(rotationSpeed);
@@ -187,7 +187,7 @@ namespace Spooker.Graphics.Particles
 			case AccelerationMode.Scalar:
 				// randomly pick our acceleration using our direction and 
 				// the MinAcceleration/MaxAcceleration values
-				var accelerationScale = (float)MathHelper.RandomRange(
+				var accelerationScale = (float)MathHelper.Random(
 					_settings.MinAccelerationScale, _settings.MaxAccelerationScale);
 				acceleration = direction * accelerationScale;
 				break;
@@ -203,8 +203,8 @@ namespace Spooker.Graphics.Particles
 				break;
 			case AccelerationMode.Vector:
 				acceleration = new Vector2(
-					(float)MathHelper.RandomRange(_settings.MinAccelerationVector.X, _settings.MaxAccelerationVector.X),
-					(float)MathHelper.RandomRange(_settings.MinAccelerationVector.Y, _settings.MaxAccelerationVector.Y));
+					(float)MathHelper.Random(_settings.MinAccelerationVector.X, _settings.MaxAccelerationVector.X),
+					(float)MathHelper.Random(_settings.MinAccelerationVector.Y, _settings.MaxAccelerationVector.Y));
 				break;
 			}
 

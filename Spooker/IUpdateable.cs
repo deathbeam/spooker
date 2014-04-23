@@ -14,17 +14,15 @@ namespace Spooker
 {
 	////////////////////////////////////////////////////////////
 	/// <summary>
-	/// Impements Update void, what is used for example
-	/// in EntityList class.
+	/// Interface used for updateable objects
 	/// </summary>
 	////////////////////////////////////////////////////////////
     public interface IUpdateable
     {
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Component uses this for updating itself
+		/// Component uses this for updating itself.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="gameTime">Provides snapshot of timing values.</param>
 		void Update(GameTime gameTime);
     }
 }

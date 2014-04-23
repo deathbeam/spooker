@@ -71,7 +71,7 @@ namespace Spooker.Graphics.Particles
 			TimeSinceStart = 0.0f;
 
 			// set rotation to some random value between 0 and 360 degrees.
-			Rotation = (float)MathHelper.RandomRange(0, (float)MathHelper.TwoPi);
+			Rotation = (float)MathHelper.Random(0, (float)MathHelper.TwoPi);
 		}
 
         /// <summary>

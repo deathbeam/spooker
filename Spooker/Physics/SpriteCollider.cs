@@ -60,8 +60,7 @@ namespace Spooker.Physics
 				if (alphaLimit == 0) return true;
 
 				// We've got an intersection we need to process the pixels in that Rect.
-				Rectangle Intersection;
-				RectCollider.Intersect(ref object1Aabb, ref object2Aabb, out Intersection);
+				var Intersection = RectCollider.Intersect (object1Aabb, object2Aabb);
 
 				// Get size of texture source rectangles
 				var o1SubRectSize = new Vector2(sp1.SourceRect.Width, sp1.SourceRect.Height);

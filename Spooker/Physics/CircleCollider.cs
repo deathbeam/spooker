@@ -34,7 +34,7 @@ namespace Spooker.Physics
 
 		public static bool Intersects(Circle circle, Polygon polygon)
 		{
-			return polygon.Lines.Any(t => LineCollider.Intersects(t, circle));
+			return polygon.Lines.Any(t => Intersects(circle, t));
 		}
 
 		public static bool Intersects(Circle circle, Rectangle rectangle)
@@ -48,7 +48,7 @@ namespace Spooker.Physics
 				new Line(rectangle.X, rectangle.Y + rectangle.Height, rectangle.X + rectangle.Width,
 					rectangle.Y + rectangle.Height)
 			};
-			return lines.Any (t => LineCollider.Intersects (t, circle));
+			return lines.Any (t => Intersects (circle, t));
 		}
 	}
 }

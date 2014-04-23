@@ -110,11 +110,9 @@ namespace Spooker.Graphics.Animations
 			if (_timeSinceStart > duration)
 			{
 				_timeSinceStart = 0;
+				SourceRect = _currentAnim.GetNextFrame ();
 
-				var frame = _currentAnim.GetNextFrame ();
-				SourceRect = frame;
-
-				if (frame == Rectangle.Empty)
+				if (SourceRect == Rectangle.Empty)
 					_currentAnim = null;
 			}
 		}

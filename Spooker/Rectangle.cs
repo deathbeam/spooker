@@ -27,11 +27,6 @@ namespace Spooker
 
         #region Public Properties
 
-        public static Rectangle Empty
-		{
-			get { return new Rectangle(0, 0, 0, 0); }
-        }
-
         public int Left
 		{
             get { return X; }
@@ -52,7 +47,23 @@ namespace Spooker
             get { return (Y + Height); }
         }
 
+		public Point Location
+		{
+			get { return new Point(X, Y); }
+		}
+
+		public Point Center
+		{
+			get { return new Point(X + (Width / 2), Y + (Height / 2)); }
+		}
+
+		public bool IsEmpty
+		{
+			get { return ((((Width == 0) && (Height == 0)) && (X == 0)) && (Y == 0)); }
+		}
+
         #endregion Public Properties
+
 
 		#region SFML Helpers
 
@@ -69,7 +80,7 @@ namespace Spooker
 			return new SFML.Graphics.IntRect(X, Y, Width, Height);
 		}
 
-		#endregion
+		#endregion SFML Helpers
 
 
         #region Constructors
@@ -82,15 +93,27 @@ namespace Spooker
             Height = height;
         }
 
+		public static Rectangle Empty
+		{
+			get { return new Rectangle(0, 0, 0, 0); }
+		}
+
         #endregion Constructors
 
 
-        #region Public Methods
+		#region Static Methods
 
-        public static bool operator ==(Rectangle a, Rectangle b)
+		public static Rectangle Union(Rectangle value1, Rectangle value2)
 		{
-            return ((a.X == b.X) && (a.Y == b.Y) && (a.Width == b.Width) && (a.Height == b.Height));
-        }
+			var x = Math.Min(value1.X, value2.X);
+			var y = Math.Min(value1.Y, value2.Y);
+			return new Rectangle(x, y, Math.Max(value1.Right, value2.Right) - x, Math.Max(value1.Bottom, value2.Bottom) - y);
+		}
+
+		#endregion Static Methods
+
+		
+        #region Public Methods
 
         public bool Contains(int x, int y)
 		{
@@ -105,11 +128,6 @@ namespace Spooker
         public bool Contains(Rectangle value)
 		{
             return ((((X <= value.X) && ((value.X + value.Width) <= (X + Width))) && (Y <= value.Y)) && ((value.Y + value.Height) <= (Y + Height)));
-        }
-
-        public static bool operator !=(Rectangle a, Rectangle b)
-		{
-            return !(a == b);
         }
 
 		public bool Intersects(Line line)
@@ -144,32 +162,12 @@ namespace Spooker
             Y += offsetY;
         }
 
-        public Point Location
-		{
-			get { return new Point(X, Y); }
-            set
-			{
-                X = value.X;
-                Y = value.Y;
-            }
-        }
-
-        public Point Center
-		{
-			get { return new Point(X + (Width / 2), Y + (Height / 2)); }
-        }
-		
         public void Inflate(int horizontalValue, int verticalValue)
 		{
             X -= horizontalValue;
             Y -= verticalValue;
             Width += horizontalValue * 2;
             Height += verticalValue * 2;
-        }
-
-        public bool IsEmpty
-		{
-			get { return ((((Width == 0) && (Height == 0)) && (X == 0)) && (Y == 0)); }
         }
 
         public bool Equals(Rectangle other)
@@ -192,21 +190,21 @@ namespace Spooker
             return (X ^ Y ^ Width ^ Height);
         }
 
-        public static Rectangle Union(Rectangle value1, Rectangle value2)
-		{
-			var x = Math.Min(value1.X, value2.X);
-			var y = Math.Min(value1.Y, value2.Y);
-			return new Rectangle(x, y, Math.Max(value1.Right, value2.Right) - x, Math.Max(value1.Bottom, value2.Bottom) - y);
-        }
-
-        public static void Union(ref Rectangle value1, ref Rectangle value2, out Rectangle result)
-		{
-            result.X = Math.Min(value1.X, value2.X);
-            result.Y = Math.Min(value1.Y, value2.Y);
-            result.Width = Math.Max(value1.Right, value2.Right) - result.X;
-            result.Height = Math.Max(value1.Bottom, value2.Bottom) - result.Y;
-        }
-
         #endregion Public Methods
+
+
+		#region Operators
+
+		public static bool operator ==(Rectangle a, Rectangle b)
+		{
+			return ((a.X == b.X) && (a.Y == b.Y) && (a.Width == b.Width) && (a.Height == b.Height));
+		}
+
+		public static bool operator !=(Rectangle a, Rectangle b)
+		{
+			return !(a == b);
+		}
+
+		#endregion Operators
     }
 }

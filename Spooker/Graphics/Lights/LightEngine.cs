@@ -18,7 +18,9 @@ namespace Spooker.Graphics.Lights
 		private readonly List<Light> _lights;
         private readonly RenderTexture _lightTexture;
         private readonly Camera _camera;
+		private readonly RenderStates _drawStates;
 		private SFML.Graphics.Sprite _lightSprite;
+		private SFML.Graphics.Sprite _drawSprite;
 
 		public Color ClearColor = Color.Black;
 
@@ -26,6 +28,8 @@ namespace Spooker.Graphics.Lights
 		{
 			_lights = new List<Light>();
 			_lightTexture = new RenderTexture (1024, 1024);
+			_drawSprite = new SFML.Graphics.Sprite ();
+			_drawStates = new RenderStates (BlendMode.Multiply);
 			_camera = camera;
 			ChangeTexture (texture);
 		}
@@ -62,9 +66,8 @@ namespace Spooker.Graphics.Lights
 			}
 
 			_lightTexture.Display();
-			graphicsDevice.Draw (
-				new SFML.Graphics.Sprite (_lightTexture.Texture),
-				new RenderStates(BlendMode.Multiply));
+			_drawSprite.Texture = _lightTexture.Texture;
+			graphicsDevice.Draw (_drawSprite, _drawStates);
 		}
 	}
 }

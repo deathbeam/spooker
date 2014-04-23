@@ -36,14 +36,12 @@ namespace Spooker.Graphics.TiledMap
 		/// <summary>Properties of this layer</summary>
 		public Dictionary<string, string> Properties;
 		
-		////////////////////////////////////////////////////////////
-	    /// <summary>
-	    /// Creates new instance of Layer class
-	    /// </summary>
-	    /// <param name="layer">Base layer loaded with TiledSharp</param>
-	    /// <param name="tileSize">Size of one tile (in pixels)</param>
-	    /// <param name="gidDict">Dictionary of tiles for this layer</param>
-	    ////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.TiledMap.Layer"/> class.
+		/// </summary>
+		/// <param name="layer">Layer.</param>
+		/// <param name="tileSize">Tile size.</param>
+		/// <param name="gidDict">Gid dict.</param>
 		public Layer(TmxLayer layer, Vector2 tileSize, Dictionary<int, KeyValuePair<Rectangle, Texture>> gidDict)
         {
 			Properties = layer.Properties;

@@ -123,6 +123,7 @@
     <Compile Include="Graphics\TiledMap\ObjectType.cs" />
     <Compile Include="Physics\ICollidable.cs" />
     <Compile Include="Ellipse.cs" />
+    <Compile Include="Physics\EllipseCollider.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

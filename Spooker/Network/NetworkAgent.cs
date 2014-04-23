@@ -153,11 +153,10 @@ namespace Spooker.Network
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Reads every message in the queue and returns a list of
+		/// Reads every message in the queue and processes a list of
 		/// data messages. Other message types just write a Console
 		/// note. This should be called every update by the Game
-		/// Screen. The Game Screen should implement the actual
-		/// handling of messages.
+		/// Screen.
 		/// </summary>
 		////////////////////////////////////////////////////////////
 		public void Update(GameTime gameTime)
