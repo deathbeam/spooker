@@ -16,11 +16,10 @@ namespace Spooker.Graphics.Lights
 	public class LightEngine : Drawable
 	{
 		private readonly List<Light> _lights;
-        private readonly RenderTexture _lightTexture;
         private readonly Camera _camera;
 		private readonly RenderStates _drawStates;
-		private SFML.Graphics.Sprite _lightSprite;
-		private SFML.Graphics.Sprite _drawSprite;
+		private RenderTexture _lightTexture;
+		private SFML.Graphics.Sprite _lightSprite, _drawSprite;
 
 		public Color ClearColor = Color.Black;
 

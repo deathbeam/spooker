@@ -114,11 +114,10 @@ namespace Spooker.Time
         #endregion
 
         #region Functions
-		
-		public void Update(TimeSpan dt)
+
+		public void Update(IUpdateable updateable)
 		{
-			ElapsedGameTime = dt;
-			TotalElapsedGameTime += dt;
+			updateable.Update (this);
 		}
 
         public override bool Equals(object obj)

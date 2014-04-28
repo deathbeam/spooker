@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using SFML.Audio;
+using Spooker.Content;
 
 namespace Spooker.Audio
 {
@@ -37,7 +38,7 @@ namespace Spooker.Audio
 		/// Loads audio files from specified audio folder to cache.
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public void LoadContent()
+		public void LoadContent(ContentManager content)
 		{
 			if (!Directory.Exists(SoundDirectory)) return;
 

@@ -189,18 +189,22 @@ namespace Spooker.Graphics
 				rotation);
 		}
 
-		public void DrawString(SFML.Graphics.Font font, string text, int size, Vector2 position, Color color, float rotation, Vector2 origin,
-			Vector2 scale, SFML.Graphics.Text.Styles style = SFML.Graphics.Text.Styles.Regular)
+		public void Draw(Font font, string text, int characterSize, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, Text.Styles style, SpriteEffects effects = SpriteEffects.None)
 		{
-			_str.Font = font;
+			if (!_active) throw new Exception("Call Begin first.");
+
+			if (effects != SpriteEffects.None)
+				scale = scale * ScaleEffectMultiplier.Get (effects);
+
+			_str.Font = font.ToSfml ();
 			_str.DisplayedString = text;
 			_str.Position = position.ToSfml();
 			_str.Color = color.ToSfml();
 			_str.Rotation = rotation;
 			_str.Origin = origin.ToSfml();
 			_str.Scale = scale.ToSfml();
-			_str.Style = style;
-			_str.CharacterSize = (uint)size;
+			_str.Style = (SFML.Graphics.Text.Styles)style;
+			_str.CharacterSize = (uint)characterSize;
 
 			_graphicsDevice.Draw(_str);
 		}

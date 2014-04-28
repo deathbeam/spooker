@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// IUpdateable.cs
+// ILoadable.cs
 //
 // Spooker Open Source Game Framework
 // Copyright (C) Indie Armory. All rights reserved.
@@ -8,21 +8,18 @@
 // License: MIT
 //-----------------------------------------------------------------------------
 
-using Spooker.Time;
-
-namespace Spooker
+namespace Spooker.Content
 {
 	////////////////////////////////////////////////////////////
 	/// <summary>
-	/// Interface used for updateable objects
+	/// Interface used for loadable objects
 	/// </summary>
 	////////////////////////////////////////////////////////////
-    public interface IUpdateable
+    public interface ILoadable
     {
 		/// <summary>
-		/// Component uses this for updating itself.
+		/// Component uses this for loading itself
 		/// </summary>
-		/// <param name="gameTime">Provides snapshot of timing values.</param>
-		void Update(GameTime gameTime);
+		void LoadContent(ContentManager content);
     }
 }

@@ -45,6 +45,11 @@ namespace Spooker.Graphics
 
 		#region SFML Helpers
 
+		internal Texture (SFML.Graphics.Texture copy)
+		{
+			_texture = new SFML.Graphics.Texture (copy);
+		}
+
 		internal SFML.Graphics.Texture ToSfml()
 		{
 			return _texture;

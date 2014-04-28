@@ -25,12 +25,12 @@ namespace Spooker.Input
 			Mouse = new MouseManager (graphicsDevice);
 		}
 
-		public void AddAction(string name)
+		public void Add(string name)
 		{
 			_actions.Add (new InputAction(this, name));
 		}
 
-		public void RemoveAction(string name)
+		public void Remove(string name)
 		{
 			_actions.Remove (this[name]);
 		}
@@ -41,16 +41,7 @@ namespace Spooker.Input
 			Mouse.Update (gameTime);
 
 			foreach (var action in _actions)
-			{
-				if (action.IsDown() && action.OnHold != null)
-					action.OnHold ();
-				else if (action.IsUp() && action.OnIdle != null)
-					action.OnIdle ();
-				else if (action.IsPressed() && action.OnPress != null)
-					action.OnPress ();
-				else if (action.IsReleased() && action.OnRelease != null)
-					action.OnRelease ();
-			}
+				action.Trigger ();
 		}
 	}
 }

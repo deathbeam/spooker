@@ -85,6 +85,11 @@ namespace Spooker.Content
 				loader.Update(dt);
 		}
 
+		public void LoadContent(ILoadable loadable)
+		{
+			loadable.LoadContent (this);
+		}
+
 		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Disposes this intance of Content Manager.

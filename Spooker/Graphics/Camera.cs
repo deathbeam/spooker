@@ -22,6 +22,18 @@ namespace Spooker.Graphics
 	{
 		private Vector2 _actualPosition;
 
+		public interface IFollowable
+		{
+			Vector2 FollowPosition();
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// This is used for following specified focusable object
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public IFollowable Follow;
+
 		////////////////////////////////////////////////////////////
 		/// <summary>
         /// Toggle for smooth camera transition
@@ -116,6 +128,9 @@ namespace Spooker.Graphics
 		////////////////////////////////////////////////////////////
 		public void Update(GameTime gameTime)
 		{
+			if (Follow != null)
+				Position = Follow.FollowPosition ();
+
 			if (_actualPosition == Position)
 				return;
 

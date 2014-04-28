@@ -75,11 +75,11 @@ namespace Spooker.Content
 				        Extension = "png",
 				        Load = str => new Texture(str)
 				    },
-				    new ContentProvider(typeof (SFML.Graphics.Font))
+					new ContentProvider(typeof (Font))
 				    {
 				        Folder = "fonts",
 				        Extension = "ttf",
-				        Load = str => new SFML.Graphics.Font(str)
+				        Load = str => new Font(str)
 				    },
 				    new ContentProvider(typeof (ParticleSettings))
 				    {

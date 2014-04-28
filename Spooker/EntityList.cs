@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Spooker.Graphics;
 using Spooker.Time;
+using Spooker.Content;
 
 namespace Spooker
 {
@@ -21,10 +22,11 @@ namespace Spooker
 	/// drawable, updateable and loadable interfaces.
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public class EntityList : IDrawable, IUpdateable, IDisposable
+	public class EntityList : IDrawable, IUpdateable, IDisposable, ILoadable
     {
 		private readonly HashSet<IUpdateable> _updateables = new HashSet<IUpdateable>();
 		private readonly HashSet<IDrawable> _drawables = new HashSet<IDrawable>();
+		private readonly HashSet<ILoadable> _loadables = new HashSet<ILoadable>();
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
@@ -39,7 +41,7 @@ namespace Spooker
 
 			if (updateable != null) _updateables.Add(updateable);
 			if (drawable != null) _drawables.Add(drawable);
-			if (loadable != null) loadable.LoadContent();
+			if (loadable != null) _loadables.Add(loadable);
         }
 
 		////////////////////////////////////////////////////////////
@@ -55,6 +57,17 @@ namespace Spooker
 			var disposable = component as IDisposable;
 			if (disposable != null) disposable.Dispose();
         }
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Loads all loadable entities in stack.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void LoadContent(ContentManager content)
+		{
+			foreach (var loadable in _loadables)
+				loadable.LoadContent (content);
+		}
 
 		////////////////////////////////////////////////////////////
 		/// <summary>

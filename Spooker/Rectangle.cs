@@ -47,14 +47,19 @@ namespace Spooker
             get { return (Y + Height); }
         }
 
-		public Point Location
+		public Vector2 Location
 		{
-			get { return new Point(X, Y); }
+			get { return new Vector2(X, Y); }
 		}
 
-		public Point Center
+		public Vector2 Size
 		{
-			get { return new Point(X + (Width / 2), Y + (Height / 2)); }
+			get { return new Vector2(Width, Height); }
+		}
+
+		public Vector2 Center
+		{
+			get { return new Vector2(X + (Width / 2), Y + (Height / 2)); }
 		}
 
 		public bool IsEmpty

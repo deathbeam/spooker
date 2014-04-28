@@ -12,6 +12,7 @@ using SFML.Window;
 using Spooker.Graphics;
 using Spooker.Core;
 using Spooker.Time;
+using Spooker.Content;
 
 namespace Spooker.GameStates
 {
@@ -21,7 +22,7 @@ namespace Spooker.GameStates
 	/// updating for one scene.
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public abstract class State : GameComponent, IDrawable, IUpdateable
+	public abstract class State : GameComponent, IDrawable, IUpdateable, ILoadable
 	{
 		#region Properties
 		////////////////////////////////////////////////////////////
@@ -69,6 +70,7 @@ namespace Spooker.GameStates
 			InactiveMode = UpdateMode.All;
 			IsOverlay = false;
 			Components = new EntityList ();
+			LoadContent (game.Content);
 		}
 		#endregion
 
@@ -124,6 +126,7 @@ namespace Spooker.GameStates
 		#endregion
 
 		#region Functions
+
 		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Called when a state is added to game (pushed to stack).
@@ -139,6 +142,16 @@ namespace Spooker.GameStates
 		public virtual void Leave()
 		{
 			Components.Dispose ();
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Called when a state is created.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public virtual void LoadContent(ContentManager content)
+		{
+			Components.LoadContent (content);
 		}
 
 		////////////////////////////////////////////////////////////

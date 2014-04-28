@@ -33,12 +33,6 @@ namespace Spooker.Core
 			get { return Game.GraphicsDevice; }
 		}
 
-		/// <summary>Manages various game content (audio, textures, fonts....).</summary>
-		protected ContentManager Content
-		{ 
-			get { return Game.Content; }
-		}
-
 		/// <summary>Can play various audio files.</summary>
 		protected AudioManager Audio
 		{ 

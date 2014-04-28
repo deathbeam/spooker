@@ -25,10 +25,10 @@ namespace Spooker.Core
 	/// usefull components like Audio, Spritebatch, Input and so.
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public abstract class GameWindow : IDrawable, IUpdateable, IDisposable
+	public abstract class GameWindow : IDrawable, IUpdateable, IDisposable, ILoadable
 	{
 		/// <summary>Manages various game content (audio, textures, fonts....).</summary>
-		public ContentManager Content;
+		internal ContentManager Content;
 
 		/// <summary>Can play various audio files.</summary>
 		public AudioManager Audio;
@@ -88,13 +88,14 @@ namespace Spooker.Core
 				gameSettings.ContentDirectory,
 				gameSettings.SoundDirectory);
 			Audio.SoundExtension = gameSettings.SoundExtension;
-			Audio.LoadContent ();
 
 			_clearColor = gameSettings.ClearColor;
 			_gameTime = GameTime.FromMilliseconds(gameSettings.UpdaterateLimit);
 
 			//Workaround for not closing game window correctly
 			GraphicsDevice.Closed += (sender, e) => Dispose();
+
+			LoadContent (Content);
 		}
 
 		////////////////////////////////////////////////////////////
@@ -104,18 +105,25 @@ namespace Spooker.Core
 		////////////////////////////////////////////////////////////
 		public void Run()
 		{
-			var elapsedTime = TimeSpan.Zero;
 			var frameClock = new Clock();
+			var accumulator = TimeSpan.Zero;
 
 			while (GraphicsDevice.IsOpen())
 			{
-				elapsedTime += frameClock.RestartFromSpan();
-				_gameTime.Update (elapsedTime);
+				var dt = frameClock.RestartFromSpan ();
 
-				while (elapsedTime.Ticks >= _gameTime.Ticks)
+				if (dt.TotalMilliseconds > 25f)
+					dt = new TimeSpan (0, 0, 0, 0, 25);
+
+				_gameTime.ElapsedGameTime = dt;
+
+				accumulator += dt;
+
+				while (accumulator.Ticks >= _gameTime.Ticks)
 				{
-					elapsedTime -= new TimeSpan(_gameTime.Ticks);
+					accumulator -= new TimeSpan(_gameTime.Ticks);
 					Update (_gameTime);
+					_gameTime.TotalElapsedGameTime += dt;
 				}
 
 				GraphicsDevice.Clear(_clearColor.ToSfml());
@@ -124,6 +132,16 @@ namespace Spooker.Core
 				GraphicsDevice.Display();
 				GraphicsDevice.DispatchEvents();
 			}
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Called when a state is created.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public virtual void LoadContent(ContentManager content)
+		{
+			Audio.LoadContent (content);
 		}
 
 		////////////////////////////////////////////////////////////
@@ -144,8 +162,8 @@ namespace Spooker.Core
 		////////////////////////////////////////////////////////////
 		public virtual void Update(GameTime gameTime)
 		{
-			GameInput.Update (gameTime);
 			Content.Update (gameTime);
+			GameInput.Update (gameTime);
 			StateFactory.Update (gameTime);
 			Components.Update (gameTime);
 		}

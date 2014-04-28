@@ -53,12 +53,12 @@ namespace Spooker.Graphics.Animations
 
 		#region Functions
 
-		public void AddAnim(string name, bool repeat = true)
+		public void Add(string name, bool repeat = true)
 		{
 			_animations.Add (new Animation(name, repeat));
 		}
 
-		public void PlayAnim(string name)
+		public void Play(string name)
 		{
 			var anim = this [name];
 
@@ -70,17 +70,17 @@ namespace Spooker.Graphics.Animations
 			_timeSinceStart = 0;
 		}
 
-		public void PauseAnim()
+		public void Pause()
 		{
 			_pause = true;
 		}
 
-		public void ResumeAnim()
+		public void Resume()
 		{
 			_pause = false;
 		}
 
-		public void StopAnim()
+		public void Stop()
 		{
 			_currentAnim = null;
 		}

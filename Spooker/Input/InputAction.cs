@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using SFML.Window;
 using System.Collections.Generic;
@@ -10,12 +11,11 @@ namespace Spooker.Input
 		private readonly List<ActionNode> _triggers;
 
 		public string Name;
-
-		public delegate void TriggerEvent();
-		public TriggerEvent OnPress;
-		public TriggerEvent OnRelease;
-		public TriggerEvent OnHold;
-		public TriggerEvent OnIdle;
+		
+		public event Action OnPress;
+		public event Action OnRelease;
+		public event Action OnHold;
+		public event Action OnIdle;
 		
 		public InputAction (GameInput parent, string name)
 		{
@@ -34,6 +34,18 @@ namespace Spooker.Input
 		{
 			_triggers.Add (
 				new MouseNode (button));
+		}
+
+		public void Trigger()
+		{
+			if (IsDown() && OnHold != null)
+				OnHold ();
+			else if (IsUp() && OnIdle != null)
+				OnIdle ();
+			else if (IsPressed() && OnPress != null)
+				OnPress ();
+			else if (IsReleased() && OnRelease != null)
+				OnRelease ();
 		}
 
 		public bool IsPressed()

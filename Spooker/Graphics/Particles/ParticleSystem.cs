@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Spooker.Time;
 using Spooker.Core;
+using Spooker.Content;
 
 namespace Spooker.Graphics.Particles
 {
@@ -87,7 +88,7 @@ namespace Spooker.Graphics.Particles
 		/// Override the base class LoadContent to load the texture. once it's
 		/// loaded, calculate the origin.
 		/// </summary>
-		public void LoadContent()
+		public void LoadContent(ContentManager content)
 		{
 			// load the graphic....
 			_sprite = new Sprite (new Texture(_settings.TextureFilename));

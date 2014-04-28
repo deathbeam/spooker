@@ -83,9 +83,9 @@ namespace Spooker.GameStates
 				{
 					state.Draw (spriteBatch, effects);
 
-					var stateUi =  state as StateUi;
-					if (stateUi != null)
-						stateUi.DrawGui (spriteBatch, effects);
+					var stateGUI =  state as StateGUI;
+					if (stateGUI != null)
+						stateGUI.DrawGUI (spriteBatch, effects);
 				}
 			}
 		}
