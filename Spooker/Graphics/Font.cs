@@ -1,3 +1,13 @@
+//-----------------------------------------------------------------------------
+// Font.cs
+//
+// Spooker Open Source Game Framework
+// Copyright (C) Indie Armory. All rights reserved.
+// Website: http://indiearmory.com
+// Other Contributors: None
+// License: MIT
+//-----------------------------------------------------------------------------
+
 using System.IO;
 
 namespace Spooker.Graphics

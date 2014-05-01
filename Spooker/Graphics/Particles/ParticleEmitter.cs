@@ -71,7 +71,7 @@ namespace Spooker.Graphics.Particles
 		public void Update(GameTime gameTime, Vector2 newPosition)
 		{
 			// Work out how much time has passed since the previous update.
-			var elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+			var elapsedTime = (float)gameTime.ElapsedGameTime.Seconds;
 
 			if (elapsedTime > 0)
 			{

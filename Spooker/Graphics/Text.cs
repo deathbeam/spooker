@@ -1,8 +1,18 @@
+//-----------------------------------------------------------------------------
+// Text.cs
+//
+// Spooker Open Source Game Framework
+// Copyright (C) Indie Armory. All rights reserved.
+// Website: http://indiearmory.com
+// Other Contributors: Laurent Gomila @ http://sfml-dev.org, omeg
+// License: MIT
+//-----------------------------------------------------------------------------
+
 using System;
 
 namespace Spooker.Graphics
 {
-	public class Text : IDrawable
+	public class Text : Transformable, IDrawable
 	{
 		[Flags]
 		public enum Styles : byte
@@ -22,16 +32,16 @@ namespace Spooker.Graphics
 
 		#region Private fields
 
-		private readonly SFML.Graphics.Transformable _transformable;
 		private bool _needsUpdate;
 		private string _displayedString;
+		private int _characterSize;
 		private Vector2 _size;
+		private Font _font;
+
 		#endregion
 
 		#region Public fields
 		
-		public int CharacterSize;
-		public Font Font;
 		public Color Color;
 		public Styles Style;
 
@@ -45,28 +55,16 @@ namespace Spooker.Graphics
 			set { _displayedString = value; _needsUpdate = true; }
 		}
 
-		public Vector2 Position
+		public int CharacterSize
 		{
-			get { return new Vector2 (_transformable.Position); }
-			set { _transformable.Position = value.ToSfml(); }
+			get { return _characterSize; }
+			set { _characterSize = value; _needsUpdate = true; }
 		}
 
-		public Vector2 Scale
+		public Font Font
 		{
-			get { return new Vector2 (_transformable.Scale); }
-			set { _transformable.Scale = value.ToSfml(); }
-		}
-
-		public Vector2 Origin
-		{
-			get { return new Vector2 (_transformable.Origin); }
-			set { _transformable.Origin = value.ToSfml(); }
-		}
-
-		public float Rotation
-		{
-			get { return _transformable.Rotation; }
-			set { _transformable.Rotation = value; }
+			get { return _font; }
+			set { _font = value; _needsUpdate = true; }
 		}
 
 		public Vector2 Size
@@ -76,10 +74,8 @@ namespace Spooker.Graphics
 				if (_needsUpdate)
 				{
 					if (Environment.OSVersion.Platform != PlatformID.Win32NT)
-					{
 						if (_displayedString[_displayedString.Length - 1] != '\0')
 							_displayedString += '\0';
-					}
 
 					var extents = new Point (0, Font.LineSpacing (CharacterSize));
 					var prev = '\0';
@@ -87,23 +83,16 @@ namespace Spooker.Graphics
 					foreach (var cur in DisplayedString)
 					{
 						prev = cur;
-						if (cur == '\n' || cur == '\v')
-							continue;
+						if (cur == '\n' || cur == '\v') continue;
 						extents.X += Font.Glyph(CharacterSize, cur, false).Advance;
 					}
 
 					_size = new Vector2 (extents.X, extents.Y);
-
 					_needsUpdate = false;
 				}
 
 				return _size;
 			}
-		}
-
-		public Transform Transform
-		{
-			get { return new Transform (_transformable.Transform); }
 		}
 
 		public Rectangle DestRect
@@ -119,9 +108,8 @@ namespace Spooker.Graphics
 
 		#region Constructors
 
-		public Text (Text copy)
+		public Text (Text copy) : base(copy)
 		{
-			_transformable = new SFML.Graphics.Transformable(copy._transformable);
 			DisplayedString = copy.DisplayedString;
 			CharacterSize = copy.CharacterSize;
 			Font = new Font(copy.Font);
@@ -131,7 +119,6 @@ namespace Spooker.Graphics
 
 		public Text (Font font)
 		{
-			_transformable = new SFML.Graphics.Transformable ();
 			Font = new Font (font);
 			Color = Color.White;
 			Style = Styles.Regular;

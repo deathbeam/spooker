@@ -10,23 +10,24 @@
 
 using System.Collections.Generic;
 using System;
+using Spooker.Time;
 
 namespace Spooker.Graphics.Animations
 {
 	public class Animation
 	{
 		private readonly List<Rectangle> _frames;
-		private readonly bool _repeat;
+		private AnimType _animType;
         private int _currentFrame;
 		internal string Name;
 
 		/// <summary>Defines for how long will be one frame drawn</summary>
-		public TimeSpan Duration;
+		public GameSpan Duration;
 
-		public Animation (string name, bool repeat)
+		public Animation (string name, AnimType animType)
 		{
 			Name = name;
-			_repeat = repeat;
+			_animType = animType;
 			_frames = new List<Rectangle> ();
 		}
 
@@ -42,17 +43,17 @@ namespace Spooker.Graphics.Animations
 
 		public Rectangle GetNextFrame()
 		{
+			if (_animType == AnimType.None)
+				return _frames [0];
+
 			_currentFrame++;
 
 			if (_currentFrame == _frames.Count)
 			{
-				if (!_repeat)
-					return Rectangle.Empty;
-
+				if (_animType == AnimType.LoopOnce) _animType = AnimType.None;
 				_currentFrame = 0;
 			}
 
-			// Get the current frame
 			return _frames [_currentFrame];
 		}
 	}

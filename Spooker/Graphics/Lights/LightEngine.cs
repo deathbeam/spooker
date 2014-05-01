@@ -21,7 +21,10 @@ namespace Spooker.Graphics.Lights
 		private RenderTexture _lightTexture;
 		private SFML.Graphics.Sprite _lightSprite, _drawSprite;
 
-		public Color ClearColor = Color.Black;
+		/// <summary>
+		/// The color of the ambient.
+		/// </summary>
+		public Color AmbientColor = Color.Black;
 
 		public LightEngine (Camera camera, Texture texture)
 		{
@@ -54,13 +57,13 @@ namespace Spooker.Graphics.Lights
 
 		public void Draw(RenderTarget graphicsDevice, RenderStates states)
 		{
-			_lightTexture.Clear (ClearColor.ToSfml ());
+			_lightTexture.Clear (AmbientColor.ToSfml ());
 
 			foreach(var light in _lights)
 			{
-				_lightSprite.Position = light.UseCamera ? _camera.Transform (light.Position).ToSfml () : light.Position.ToSfml ();
+				_lightSprite.Position = light.UseCamera ? _camera.Transform.TransformPoint (light.Position).ToSfml () : light.Position.ToSfml ();
 				_lightSprite.Color = light.Color.ToSfml();
-				_lightSprite.Scale = new SFML.Window.Vector2f (light.Ratio, light.Ratio);
+				_lightSprite.Scale = new SFML.Window.Vector2f (light.Ratio * _camera.Scale.X, light.Ratio * _camera.Scale.Y);
 				_lightTexture.Draw(_lightSprite, new RenderStates(BlendMode.Add));
 			}
 

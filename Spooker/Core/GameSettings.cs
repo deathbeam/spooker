@@ -85,7 +85,10 @@ namespace Spooker.Core
 		public string SoundExtension = "ogg";
 
 		/// <summary>Determines how fast will be update rate of game (in miliseconds).</summary>
-		public long UpdaterateLimit = 1;
+		public long TimeStep = 1;
+
+		/// <summary>Determines cap of timestep (in miliseconds).</summary>
+		public long TimeStepCap = 25;
 
 		/// <summary>Sets default background color of empty rendering window</summary>
 		public Graphics.Color ClearColor = Graphics.Color.Black;
@@ -149,7 +152,8 @@ namespace Spooker.Core
 			DepthBits = temp.DepthBits;
 			StencilBits = temp.StencilBits;
 			BitsPerPixel = temp.BitsPerPixel;
-			UpdaterateLimit = temp.UpdaterateLimit;
+			TimeStep = temp.TimeStep;
+			TimeStepCap = temp.TimeStepCap;
 			ClearColor = temp.ClearColor;
 			Title = temp.Title;
 			Style = temp.Style;

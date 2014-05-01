@@ -18,132 +18,92 @@ namespace Spooker.Graphics
 	/// updateable area of game screen
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public class Camera : IUpdateable
+	public class Camera : Transformable, IUpdateable
 	{
-		private Vector2 _actualPosition;
-
 		public interface IFollowable
 		{
+			/// <summary>
+			/// Follows the position.
+			/// </summary>
+			/// <returns>The position.</returns>
 			Vector2 FollowPosition();
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// This is used for following specified focusable object
+		/// This is used for following specified followable object.
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public IFollowable Follow;
 
-		////////////////////////////////////////////////////////////
-		/// <summary>
-        /// Toggle for smooth camera transition
-        /// </summary>
-		////////////////////////////////////////////////////////////
-		public bool Smooth;
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Smoothness determines how quickly the transition will
-		/// take place. Higher smoothness will reach the target
-		/// position faster.
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public float Smoothness;
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Center point of the camera
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public Vector2 Position;
-
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Size of camera visible area
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public Vector2 Size;
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Transforms position based on current camera position
+		/// Gets or sets the zoom of this camera.
 		/// </summary>
-		////////////////////////////////////////////////////////////
-		public Vector2 Transform(Vector2 point)
+		/// <value>The zoom.</value>
+		public float Zoom
 		{
-			return new Vector2 (
-				point.X - Bounds.X,
-				point.Y - Bounds.Y);
+			get { return Scale.X; }
+			set { Scale = new Vector2 ((float)MathHelper.Clamp (value, 0.0001f, 10f)); }
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Calculates the area the camera should display
+		/// Gets or sets the position.
 		/// </summary>
-		////////////////////////////////////////////////////////////
-		public Rectangle Bounds
+		/// <value>The position.</value>
+		public new Vector2 Position
 		{
-			get {
-				return new Rectangle(
-					(int)(_actualPosition.X - (Size.X / 2)),
-					(int)(_actualPosition.Y - (Size.Y / 2)),
-					(int)Size.X,
-					(int)Size.Y);
-			}
+			get { return Origin; }
+			set { Origin = value; }
 		}
 
-		////////////////////////////////////////////////////////////
+		private new Vector2 Origin
+		{
+			get { return base.Origin; }
+			set { base.Origin = value; }
+		}
+
+		private new Vector2 Scale
+		{
+			get { return base.Scale; }
+			set { base.Scale = value; }
+		}
+
 		/// <summary>
-		/// Returns new instance of Camera class with default settings
+		/// Returns new instance of Camera class with default settings.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <value>The default.</value>
 		public static Camera Default
 		{
 			get
 			{
-				return new Camera(new Rectangle(400, 300, 800, 600))
-                {
-                    Smoothness = 0.33f,
-                    Smooth = false,
-                };
+				return new Camera (new Rectangle (400, 300, 800, 600));
 			}
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of Camera class.
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Camera"/> class.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="rectangle">Rectangle.</param>
 		public Camera(Rectangle rectangle)
 		{
 			Size = new Vector2 (rectangle.Width, rectangle.Height);
-			Position = new Vector2 (rectangle.X, rectangle.Y);
-			_actualPosition = Position;
+			base.Origin = new Vector2 (rectangle.X, rectangle.Y);
+			base.Position = Size / 2;
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Updates camera position based on camera smooth settings.
+		/// Component uses this for updating itself.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="gameTime">Provides snapshot of timing values.</param>
 		public void Update(GameTime gameTime)
 		{
+			Scale = new Vector2 ((float)MathHelper.Clamp (Scale.X, 0.01, 10), (float)MathHelper.Clamp (Scale.Y, 0.01, 10));
+
 			if (Follow != null)
 				Position = Follow.FollowPosition ();
-
-			if (_actualPosition == Position)
-				return;
-
-			if (Smooth)
-			{
-				var dir = Vector2.Direction(_actualPosition, Position);
-				var len = Vector2.Distance(_actualPosition, Position);
-				_actualPosition += Vector2.LengthDir(dir, len * Smoothness);
-			}
-			else
-			{
-				_actualPosition = Position;
-			}
 		}
 	}
 }

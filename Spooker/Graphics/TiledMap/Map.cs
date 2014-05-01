@@ -77,15 +77,16 @@ namespace Spooker.Graphics.TiledMap
         }
 
 		/// <summary>
-		/// Component uses this for drawing itself
+		/// Component uses this for drawing itself (spriteBatch is started and ended in this sub,
+		/// so do not put this into already started spriteBatch.
 		/// </summary>
 		/// <param name="spriteBatch">Sprite batch.</param>
 		/// <param name="effects">Effects.</param>
 		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
-			spriteBatch.Begin ();
+			spriteBatch.Begin (SpriteBlendMode.Alpha, SpriteSortMode.FrontToBack, _camera.Transform);
 			foreach (var layer in Layers)
-				layer.Draw(spriteBatch, _camera, effects);
+				layer.Draw(spriteBatch, effects);
 			spriteBatch.End ();
 		}
 
@@ -97,9 +98,7 @@ namespace Spooker.Graphics.TiledMap
 		/// <param name="effects">Effects.</param>
 		public void Draw(string name, SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
-			spriteBatch.Begin ();
-			Layers.Find(l=> l.Name == name).Draw (spriteBatch, _camera, effects);
-			spriteBatch.End ();
+			Layers.Find(l=> l.Name == name).Draw (spriteBatch, effects);
 		}
 
 		/// <summary>
@@ -110,9 +109,7 @@ namespace Spooker.Graphics.TiledMap
 		/// <param name="effects">Effects.</param>
 		public void Draw(int index, SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
-			spriteBatch.Begin ();
-			Layers[index].Draw (spriteBatch, _camera, effects);
-			spriteBatch.End ();
+			Layers[index].Draw (spriteBatch, effects);
 		}
 
 		private Dictionary<int, KeyValuePair<Rectangle, Texture>> ConvertGidDict(IEnumerable<TmxTileset> tilesets)
@@ -156,7 +153,7 @@ namespace Spooker.Graphics.TiledMap
 			{
 				foreach (var o in objectGroup.Objects)
 				{
-					var obj = new Object (_camera)
+					var obj = new Object ()
 					{
 					    Name = o.Name,
 					    Type = o.Type,

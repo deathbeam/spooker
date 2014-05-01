@@ -104,90 +104,90 @@ namespace Spooker.Graphics.Particles
 		public AccelerationMode AccelerationMode = AccelerationMode.None;
 
 		/// <summary>
-		// Controls how the particle velocity will change over their lifetime. If set
-		// to 1, particles will keep going at the same speed as when they were created.
-		// If set to 0, particles will come to a complete stop right before they die.
-		// Values greater than 1 make the particles speed up over time. This field is
-		// used when using the AccelerationMode.EndVelocity mode.
+		/// Controls how the particle velocity will change over their lifetime. If set
+		/// to 1, particles will keep going at the same speed as when they were created.
+		/// If set to 0, particles will come to a complete stop right before they die.
+		/// Values greater than 1 make the particles speed up over time. This field is
+		/// used when using the AccelerationMode.EndVelocity mode.
 		/// </summary>
 		public float EndVelocity = 1f;
 
 		/// <summary>
-		// Controls the minimum acceleration for the particle when using the
-		// AccelerationMode.Scalar mode.
+		/// Controls the minimum acceleration for the particle when using the
+		/// AccelerationMode.Scalar mode.
 		/// </summary>
 		public float MinAccelerationScale = 0;
 
 		/// <summary>
-		// Controls the maximum acceleration for the particle when using the
-		// AccelerationMode.Scalar mode.
+		/// Controls the maximum acceleration for the particle when using the
+		/// AccelerationMode.Scalar mode.
 		/// </summary>
 		public float MaxAccelerationScale = 0;
 
 		/// <summary>
-		// Controls the minimum acceleration for the particle when using the
-		// AccelerationMode.Vector mode.
+		/// Controls the minimum acceleration for the particle when using the
+		/// AccelerationMode.Vector mode.
 		/// </summary>
 		public Vector2 MinAccelerationVector = Vector2.Zero;
 
 		/// <summary>
-		// Controls the maximum acceleration for the particle when using the
-		// AccelerationMode.Vector mode.
+		/// Controls the maximum acceleration for the particle when using the
+		/// AccelerationMode.Vector mode.
 		/// </summary>
 		public Vector2 MaxAccelerationVector = Vector2.Zero;
 
 		/// <summary>
-		// Controls how much particles are influenced by the velocity of the object
-		// which created them. AddParticles takes in a Vector2 which is the base velocity
-		// for the particles being created. That velocity is first multiplied by this
-		// EmitterVelocitySensitivity to determine how much the particles are actually
-		// affected by that velocity.
+		/// Controls how much particles are influenced by the velocity of the object
+		/// which created them. AddParticles takes in a Vector2 which is the base velocity
+		/// for the particles being created. That velocity is first multiplied by this
+		/// EmitterVelocitySensitivity to determine how much the particles are actually
+		/// affected by that velocity.
 		/// </summary>
 		public float EmitterVelocitySensitivity = 0;
 
 		/// <summary>
-		// Range of values controlling how fast the particles rotate. Again, these
-		// values should be in degrees for easier XML authoring.
+		/// Range of values controlling how fast the particles rotate. Again, these
+		/// values should be in degrees for easier XML authoring.
 		/// </summary>
 		public float MinRotationSpeed = 0;
 
 		/// <summary>
-		// Range of values controlling how fast the particles rotate. Again, these
-		// values should be in degrees for easier XML authoring.
+		/// Range of values controlling how fast the particles rotate. Again, these
+		/// values should be in degrees for easier XML authoring.
 		/// </summary>
 		public float MaxRotationSpeed = 0;
 
 		/// <summary>
-		// Range of values controlling how long a particle will last.
+		/// Range of values controlling how long a particle will last.
 		/// </summary>
 		public float MinLifetime;
 
 		/// <summary>
-		// Range of values controlling how long a particle will last.
+		/// Range of values controlling how long a particle will last.
 		/// </summary>
 		public float MaxLifetime;
 
 		/// <summary>
-		// Range of values controlling how big the particles are
+		/// Range of values controlling how big the particles are
 		/// </summary>
 		public float MinSize = 1;
 
 		/// <summary>
-		// Range of values controlling how big the particles are
+		/// Range of values controlling how big the particles are
 		/// </summary>
 		public float MaxSize = 1;
 
 		/// <summary>
-		// Controls the gravity applied to the particles. This can pull particles down
-		// to simulate gravity, up for effects like smoke, or any other direction.   
+		/// Controls the gravity applied to the particles. This can pull particles down
+		/// to simulate gravity, up for effects like smoke, or any other direction.   
 		/// </summary>     
 		public Vector2 Gravity = Vector2.Zero;
 
 		/// <summary>
-		// Alpha blending settings. Our default gives us a BlendState equivalent to
-		// BlendState.AlphaBlend which is suitable for many particle effects.
+		/// Alpha blending settings. Our default gives us a BlendState equivalent to
+		/// BlendState.AlphaBlend which is suitable for many particle effects.
 		/// </summary>
-		public BlendMode BlendMode = BlendMode.Alpha;
+		public SpriteBlendMode BlendMode = SpriteBlendMode.Alpha;
 
 		/// <summary>
 		/// Creates new instance of ParticleSettings class

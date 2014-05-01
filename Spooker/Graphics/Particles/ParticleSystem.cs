@@ -17,10 +17,12 @@ using Spooker.Content;
 namespace Spooker.Graphics.Particles
 {
 	/// <summary>
-	/// 
+	/// Particle system.
 	/// </summary>
-	public class ParticleSystem : GameComponent, IDrawable, IUpdateable, ILoadable
+	public class ParticleSystem : GameComponent, IDrawable, IUpdateable
 	{
+		#region Private fields
+
 		// the graphic this particle system will use.
 		private Sprite _sprite;
 
@@ -38,7 +40,9 @@ namespace Spooker.Graphics.Particles
 		private readonly ParticleSettings _settings;
 
 		// the BlendState used when rendering the particles.
-		private SFML.Graphics.RenderStates _blendState;
+		private SpriteBlendMode _blendState;
+
+		#endregion
 
 		/// <summary>
 		/// returns the number of particles that are available for a new effect.
@@ -48,24 +52,24 @@ namespace Spooker.Graphics.Particles
 			get { return _freeParticles.Count; }
 		}
 
-	    /// <summary>
-	    /// Constructs a new ParticleSystem.
-	    /// </summary>
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Particles.ParticleSystem"/> class.
+		/// </summary>
+		/// <param name="game">The host for this particle system.</param>
 		/// <param name="settings">Settings used for this particle system.</param>
-	    /// <param name="game">The host for this particle system.</param>
 		public ParticleSystem(GameWindow game, ParticleSettings settings)
 			: this(game, settings, 10)
 		{ }
 
 
-	    /// <summary>
-	    /// Constructs a new ParticleSystem.
-	    /// </summary>
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Particles.ParticleSystem"/> class.
+		/// </summary>
+		/// <param name="game">The host for this particle system.</param>
 		/// <param name="settings">Settings used for this particle system.</param>
-	    /// <param name="game">The host for this particle system.</param>
-	    /// <param name="initialParticleCount">The initial number of particles this
-	    /// system expects to use. The system will grow as needed, however setting
-	    /// this value to be as close as possible will reduce allocations.</param>
+		/// <param name="initialParticleCount">The initial number of particles this
+		/// system expects to use. The system will grow as needed, however setting
+		/// this value to be as close as possible will reduce allocations.</param>
 		public ParticleSystem(GameWindow game, ParticleSettings settings, int initialParticleCount)
 			: base(game)
 		{
@@ -82,19 +86,12 @@ namespace Spooker.Graphics.Particles
 				_particles.Add(new Particle());
 				_freeParticles.Enqueue(_particles[i]);
 			}
-		}
 
-		/// <summary>
-		/// Override the base class LoadContent to load the texture. once it's
-		/// loaded, calculate the origin.
-		/// </summary>
-		public void LoadContent(ContentManager content)
-		{
 			// load the graphic....
 			_sprite = new Sprite (new Texture(_settings.TextureFilename));
 
 			// create the blend state using the values from our settings
-			_blendState = new SFML.Graphics.RenderStates (_settings.BlendMode);
+			_blendState = _settings.BlendMode;
 		}
 
 		/// <summary>
@@ -127,8 +124,7 @@ namespace Spooker.Graphics.Particles
 		{
 			// the number of particles we want for this effect is a random number
 			// somewhere between the two constants specified by the settings.
-			var random = new Random ();
-			int numParticles = random.Next(_settings.MinNumParticles, _settings.MaxNumParticles);
+			int numParticles = (int)MathHelper.Random(_settings.MinNumParticles, _settings.MaxNumParticles);
 
 			// create that many particles, if you can.
 			for (int i = 0; i < numParticles; i++)
@@ -228,7 +224,7 @@ namespace Spooker.Graphics.Particles
 		{
 			// calculate dt, the change in the since the last frame. the particle
 			// updates will use this value.
-			var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+			var dt = (float)gameTime.ElapsedGameTime.Seconds;
 
 			// go through all of the particles...
 			foreach (Particle p in _particles)
@@ -256,7 +252,7 @@ namespace Spooker.Graphics.Particles
 		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
 			// tell sprite batch to begin
-			spriteBatch.Begin();
+			spriteBatch.Begin (_blendState);
 
 			foreach (Particle p in _particles)
 			{
@@ -297,7 +293,7 @@ namespace Spooker.Graphics.Particles
 
 			// tell sprite batch to end, using the spriteBlendMode specified in
 			// particle settings
-			spriteBatch.End (_blendState);
+			spriteBatch.End ();
 		}
 	}
 }

@@ -15,6 +15,9 @@ using Spooker.Time;
 
 namespace Spooker.GameStates
 {
+	/// <summary>
+	/// State factory.
+	/// </summary>
 	public class StateFactory : IDrawable, IUpdateable, IDisposable
 	{
 		private readonly List<State> _stateStack = new List<State> ();
@@ -26,7 +29,6 @@ namespace Spooker.GameStates
 		////////////////////////////////////////////////////////////
 		public StateFactory (SFML.Graphics.RenderWindow graphicsDevice)
 		{
-			//Bind input events to components
 			graphicsDevice.MouseWheelMoved += (sender, e) =>
 			{ 
 				var states = _stateStack.FindAll(s => s.IsActive || s.InactiveMode.HasFlag(UpdateMode.Input));
@@ -83,9 +85,11 @@ namespace Spooker.GameStates
 				{
 					state.Draw (spriteBatch, effects);
 
-					var stateGUI =  state as StateGUI;
-					if (stateGUI != null)
-						stateGUI.DrawGUI (spriteBatch, effects);
+					if (state is StateGUI)
+					{
+						var stateGUI = state as StateGUI;
+						stateGUI.DrawGUI ();
+					}
 				}
 			}
 		}
@@ -98,10 +102,8 @@ namespace Spooker.GameStates
 		public void Update(GameTime gameTime)
 		{
 			foreach (var state in _stateStack)
-			{
 				if (state.IsActive || state.InactiveMode.HasFlag(UpdateMode.Update))
 					state.Update (gameTime);
-			}
 		}
 
 		////////////////////////////////////////////////////////////
@@ -112,9 +114,7 @@ namespace Spooker.GameStates
 		public void SetState(State state)
 		{
 			foreach (var s in _stateStack)
-			{
 				s.Leave();
-			}
 
 			_stateStack.Clear();
 			PushState(state);
@@ -165,6 +165,7 @@ namespace Spooker.GameStates
 		{
 			foreach (var state in _stateStack)
 				state.Leave ();
+
 			_stateStack.Clear ();
 		}
 	}

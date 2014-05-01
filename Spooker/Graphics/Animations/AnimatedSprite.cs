@@ -53,9 +53,9 @@ namespace Spooker.Graphics.Animations
 
 		#region Functions
 
-		public void Add(string name, bool repeat = true)
+		public void Add(string name, AnimType animType)
 		{
-			_animations.Add (new Animation(name, repeat));
+			_animations.Add (new Animation(name, animType));
 		}
 
 		public void Play(string name)
@@ -98,22 +98,19 @@ namespace Spooker.Graphics.Animations
 			if (_currentAnim == null || _pause) return;
 
 			// calculate dt, the change in the since the last frame.
-			var dt = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+			var dt = (float)gameTime.ElapsedGameTime.Milliseconds;
 
 			// increment time since starting playing this animation
 			_timeSinceStart += dt;
 
 			// get duration of current animation
-			var duration = (float)_currentAnim.Duration.TotalMilliseconds;
+			var duration = (float)_currentAnim.Duration.Milliseconds;
 
 			// it's time to a next frame?
 			if (_timeSinceStart > duration)
 			{
 				_timeSinceStart = 0;
 				SourceRect = _currentAnim.GetNextFrame ();
-
-				if (SourceRect == Rectangle.Empty)
-					_currentAnim = null;
 			}
 		}
 

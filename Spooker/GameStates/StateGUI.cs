@@ -172,13 +172,9 @@ namespace Spooker.GameStates
 		#endregion
 
 		#region Functions
-		internal void DrawGUI(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
+		internal void DrawGUI()
 		{
-			//TODO: Remove need of using an empty spritebatch to actually display gui.
-			// It is pretty weird and I dont know why I must do it.
-			spriteBatch.Begin();
 			_gamegui.RenderCanvas ();
-			spriteBatch.End ();
 		}
 		#endregion
 	}

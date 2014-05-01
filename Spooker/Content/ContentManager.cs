@@ -79,7 +79,7 @@ namespace Spooker.Content
 		////////////////////////////////////////////////////////////
 		public void Update(GameTime gameTime)
 		{
-			var dt = (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+			var dt = (float)gameTime.ElapsedGameTime.Milliseconds;
 
 			foreach (var loader in _loaders)
 				loader.Update(dt);

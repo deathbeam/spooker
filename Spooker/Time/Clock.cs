@@ -26,35 +26,22 @@ namespace Spooker.Time
 
         #region Properties
 
-		public GameTime ElapsedTime
+		public GameSpan ElapsedTime
         {
-			get { return GameTime.FromTicks(_timer.ElapsedTicks); }
+			get { return GameSpan.FromTicks(_timer.ElapsedTicks); }
         }
-		
-		public TimeSpan ElapsedTimeFromSpan
-		{
-			get { return TimeSpan.FromTicks(_timer.ElapsedTicks); }
-		}
 
         #endregion
 
         #region Functions
 
-		public GameTime Restart()
+		public GameSpan Restart()
         {
-			var tm = GameTime.FromTicks(_timer.ElapsedTicks);
+			var tm = GameSpan.FromTicks(_timer.ElapsedTicks);
             _timer.Reset();
             _timer.Start();
             return tm;
         }
-		
-		public TimeSpan RestartFromSpan()
-		{
-			var tm = TimeSpan.FromTicks(_timer.ElapsedTicks);
-			_timer.Reset();
-			_timer.Start();
-			return tm;
-		}
 
         #endregion
     }

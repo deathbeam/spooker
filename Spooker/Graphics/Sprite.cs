@@ -10,14 +10,8 @@
 
 namespace Spooker.Graphics
 {
-	public class Sprite : IDrawable
+	public class Sprite : Transformable, IDrawable
 	{
-		#region Private fields
-
-		private readonly SFML.Graphics.Transformable _transformable;
-
-		#endregion
-
 		#region Public fields
 
 		public Texture Texture;
@@ -28,38 +22,9 @@ namespace Spooker.Graphics
 
 		#region Properties
 
-		public Vector2 Position
-		{
-			get { return new Vector2 (_transformable.Position); }
-			set { _transformable.Position = value.ToSfml(); }
-		}
-
-		public Vector2 Scale
-		{
-			get { return new Vector2 (_transformable.Scale); }
-			set { _transformable.Scale = value.ToSfml(); }
-		}
-
 		public Vector2 Size
 		{
 			get { return Texture.Size; }
-		}
-
-		public Vector2 Origin
-		{
-			get { return new Vector2 (_transformable.Origin); }
-			set { _transformable.Origin = value.ToSfml(); }
-		}
-
-		public float Rotation
-		{
-			get { return _transformable.Rotation; }
-			set { _transformable.Rotation = value; }
-		}
-
-		public Transform Transform
-		{
-			get { return new Transform (_transformable.Transform); }
 		}
 
 		public Rectangle DestRect
@@ -75,9 +40,8 @@ namespace Spooker.Graphics
 
 		#region Constructors
 
-		public Sprite (Sprite copy)
+		public Sprite (Sprite copy) : base(copy)
 		{
-			_transformable = new SFML.Graphics.Transformable(copy._transformable);
 			Texture = new Texture(copy.Texture);
 			Color = new Color(copy.Color);
 			SourceRect = copy.SourceRect;
@@ -85,7 +49,6 @@ namespace Spooker.Graphics
 
 		public Sprite (Texture texture)
 		{
-			_transformable = new SFML.Graphics.Transformable ();
 			Texture = new Texture (texture);
 			Color = Color.White;
 			SourceRect = new Rectangle (0, 0, (int)Texture.Size.X, (int)Texture.Size.Y);

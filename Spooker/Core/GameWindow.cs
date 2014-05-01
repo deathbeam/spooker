@@ -46,7 +46,9 @@ namespace Spooker.Core
 		protected EntityList Components;
 		
 		private readonly SpriteBatch _spriteBatch;
-		private readonly GameTime _gameTime = GameTime.Zero;
+		private readonly GameTime _gameTime;
+		private readonly GameSpan _timeStep;
+		private readonly GameSpan _timeStepCap;
 		private readonly Color _clearColor = Color.Black;
 
 		////////////////////////////////////////////////////////////
@@ -90,7 +92,9 @@ namespace Spooker.Core
 			Audio.SoundExtension = gameSettings.SoundExtension;
 
 			_clearColor = gameSettings.ClearColor;
-			_gameTime = GameTime.FromMilliseconds(gameSettings.UpdaterateLimit);
+			_gameTime = new GameTime ();
+			_timeStep = GameSpan.FromMilliseconds(gameSettings.TimeStep);
+			_timeStepCap = GameSpan.FromMilliseconds(gameSettings.TimeStepCap);
 
 			//Workaround for not closing game window correctly
 			GraphicsDevice.Closed += (sender, e) => Dispose();
@@ -106,29 +110,28 @@ namespace Spooker.Core
 		public void Run()
 		{
 			var frameClock = new Clock();
-			var accumulator = TimeSpan.Zero;
+			var accumulator = GameSpan.Zero;
 
 			while (GraphicsDevice.IsOpen())
 			{
-				var dt = frameClock.RestartFromSpan ();
+				var dt = frameClock.Restart ();
 
-				if (dt.TotalMilliseconds > 25f)
-					dt = new TimeSpan (0, 0, 0, 0, 25);
+				if (dt > _timeStepCap)
+					dt = _timeStepCap;
 
 				_gameTime.ElapsedGameTime = dt;
 
 				accumulator += dt;
 
-				while (accumulator.Ticks >= _gameTime.Ticks)
+				while (accumulator >= _timeStep)
 				{
-					accumulator -= new TimeSpan(_gameTime.Ticks);
+					accumulator -= GameSpan.FromTicks (_timeStep.Ticks);
 					Update (_gameTime);
-					_gameTime.TotalElapsedGameTime += dt;
+					_gameTime.TotalGameTime += dt;
 				}
 
 				GraphicsDevice.Clear(_clearColor.ToSfml());
 				Draw (_spriteBatch);
-				GraphicsDevice.Draw (_spriteBatch);
 				GraphicsDevice.Display();
 				GraphicsDevice.DispatchEvents();
 			}

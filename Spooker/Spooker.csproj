@@ -15,7 +15,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
+    <OutputPath>..\Build\Debug</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,15 +27,18 @@
       </CustomCommands>
     </CustomCommands>
     <PlatformTarget>x86</PlatformTarget>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>..\Build\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>..\Build\Release\Spooker.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -43,24 +46,31 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Gwen">
       <HintPath>..\Lib\Gwen.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Gwen.SFML">
       <HintPath>..\Lib\Gwen.SFML.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Lidgren.Network">
       <HintPath>..\Lib\Lidgren.Network.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="sfmlnet-audio-2">
       <HintPath>..\Lib\sfmlnet-audio-2.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="sfmlnet-graphics-2">
       <HintPath>..\Lib\sfmlnet-graphics-2.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="sfmlnet-window-2">
       <HintPath>..\Lib\sfmlnet-window-2.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="TiledSharp">
       <HintPath>..\Lib\TiledSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -100,7 +110,6 @@
     <Compile Include="Core\GameComponent.cs" />
     <Compile Include="Core\GameSettings.cs" />
     <Compile Include="Core\GameWindow.cs" />
-    <Compile Include="Graphics\Transform.cs" />
     <Compile Include="Graphics\Animations\Animation.cs" />
     <Compile Include="Graphics\Animations\AnimatedSprite.cs" />
     <Compile Include="Graphics\Particles\Particle.cs" />
@@ -126,6 +135,10 @@
     <Compile Include="GameStates\StateGUI.cs" />
     <Compile Include="Content\ILoadable.cs" />
     <Compile Include="Time\IUpdateable.cs" />
+    <Compile Include="Graphics\Transformable.cs" />
+    <Compile Include="Time\GameSpan.cs" />
+    <Compile Include="Graphics\Animations\AnimType.cs" />
+    <Compile Include="Matrix.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

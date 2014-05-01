@@ -14,12 +14,32 @@ using SFML.Window;
 
 namespace Spooker.Graphics
 {
+	/// <summary>
+	/// Sorting options to use when rendering.
+	/// </summary>
+	public enum SpriteSortMode : byte
+	{
+		FrontToBack = 0,
+		BackToFront = 1
+	}
+
+	/// <summary>
+	/// Blending options to use when rendering.
+	/// </summary>
+	public enum SpriteBlendMode : byte
+	{
+		None = 0,
+		Alpha = 1,
+		Additive = 2,
+		Multiply = 3
+	}
+
 	////////////////////////////////////////////////////////////
 	/// <summary>
 	/// Provides optimized drawing of sprites
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public class SpriteBatch : SFML.Graphics.Drawable, IDisposable
+	public class SpriteBatch : IDisposable
 	{
 		#region Private fields
 
@@ -31,9 +51,11 @@ namespace Spooker.Graphics
 		
 		private readonly List<BatchedTexture> _textures = new List<BatchedTexture>();
 		private readonly SFML.Graphics.RenderTarget _graphicsDevice;
-        private readonly SFML.Graphics.Text _str;
+        private SFML.Graphics.Text _str;
+		private SFML.Graphics.RenderStates _states;
         private SFML.Graphics.Vertex[] _vertices = new SFML.Graphics.Vertex[100 * 4];
 		private SFML.Graphics.Texture _activeTexture;
+		private SpriteSortMode _sortMode;
 		private bool _active;
 		private uint _queueCount;
 
@@ -86,6 +108,7 @@ namespace Spooker.Graphics
 		{
 			_str = new SFML.Graphics.Text ();
 			_graphicsDevice = graphicsDevice;
+			_states = SFML.Graphics.RenderStates.Default;
 			Max = capacity;
 		}
 		#endregion
@@ -94,17 +117,67 @@ namespace Spooker.Graphics
 
 		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Begins this vertex batch, so we can draw sprites after.
+		/// Begins this sprite batch, so we can draw sprites after.
 		/// </summary>
 		////////////////////////////////////////////////////////////
 		public void Begin()
 		{
+			Begin (SpriteBlendMode.Alpha, SpriteSortMode.FrontToBack);
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Begins this sprite batch, so we can draw sprites after.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void Begin(SpriteBlendMode blendMode)
+		{
+			Begin (blendMode, SpriteSortMode.FrontToBack);
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Begins this sprite batch, so we can draw sprites after.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void Begin(SpriteBlendMode blendMode, SpriteSortMode sortMode, Matrix transMatrix)
+		{
+			Begin (blendMode, sortMode);
+			_states.Transform = transMatrix.ToSfml ();
+		}
+
+		////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Begins this sprite batch, so we can draw sprites after.
+		/// </summary>
+		////////////////////////////////////////////////////////////
+		public void Begin(SpriteBlendMode blendMode, SpriteSortMode sortMode)
+		{
 			if (_active) throw new Exception("Already active");
 			Count = 0;
 			_textures.Clear();
-			_active = true;
+			_sortMode = SpriteSortMode.FrontToBack;
 
+			switch (blendMode)
+			{
+			case SpriteBlendMode.None:
+				_states.BlendMode = SFML.Graphics.BlendMode.None;
+				break;
+			case SpriteBlendMode.Alpha:
+				_states.BlendMode = SFML.Graphics.BlendMode.Alpha;
+				break;
+			case SpriteBlendMode.Additive:
+				_states.BlendMode = SFML.Graphics.BlendMode.Add;
+				break;
+			case SpriteBlendMode.Multiply:
+				_states.BlendMode = SFML.Graphics.BlendMode.Multiply;
+				break;
+			default:
+				_states.BlendMode = SFML.Graphics.BlendMode.Alpha;
+				break;
+			}
 			_activeTexture = null;
+			_active = true;
 		}
 
 		////////////////////////////////////////////////////////////
@@ -115,30 +188,14 @@ namespace Spooker.Graphics
 		////////////////////////////////////////////////////////////
 		public void End()
 		{
-			End (SFML.Graphics.RenderStates.Default);
-		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Ends this vertex batch, so we can not draw any more
-		/// sprites.
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void End(SFML.Graphics.RenderStates states)
-		{
 			if (!_active) throw new Exception("Call Begin first.");
+
 			Enqueue();
 			_active = false;
-			_graphicsDevice.Draw (this, states);
+			Draw (_graphicsDevice, _states);
 		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Draws all queued sprites for this vertex batch. Call
-		/// this only after calling End().
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void Draw(SFML.Graphics.RenderTarget target, SFML.Graphics.RenderStates states)
+		
+		private void Draw(SFML.Graphics.RenderTarget target, SFML.Graphics.RenderStates states)
 		{
 			if (_active) throw new Exception("Call End first.");
 
@@ -177,24 +234,17 @@ namespace Spooker.Graphics
 			if (!_active) throw new Exception("Call Begin first.");
 
 			if (effects != SpriteEffects.None)
-				scale = scale * ScaleEffectMultiplier.Get (effects);
+				scale *= ScaleEffectMultiplier.Get (effects);
 
-			WriteQuad(
-				texture.ToSfml(),
-				position.ToSfml(),
-				sourceRect.ToSfml(),
-				color.ToSfml(),
-				scale.ToSfml(),
-				origin.ToSfml(),
-				rotation);
+			WriteQuad (texture.ToSfml (), position.ToSfml (), sourceRect.ToSfml (), color.ToSfml (), scale.ToSfml (), origin.ToSfml (), rotation);
 		}
 
 		public void Draw(Font font, string text, int characterSize, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, Text.Styles style, SpriteEffects effects = SpriteEffects.None)
 		{
-			if (!_active) throw new Exception("Call Begin first.");
+			if (!_active) throw new Exception ("Call Begin first.");
 
 			if (effects != SpriteEffects.None)
-				scale = scale * ScaleEffectMultiplier.Get (effects);
+				scale *= ScaleEffectMultiplier.Get (effects);
 
 			_str.Font = font.ToSfml ();
 			_str.DisplayedString = text;
@@ -206,7 +256,7 @@ namespace Spooker.Graphics
 			_str.Style = (SFML.Graphics.Text.Styles)style;
 			_str.CharacterSize = (uint)characterSize;
 
-			_graphicsDevice.Draw(_str);
+			_graphicsDevice.Draw(_str, _states);
 		}
 		#endregion
 
@@ -215,11 +265,13 @@ namespace Spooker.Graphics
 		private void Enqueue()
 		{
 			if (_queueCount > 0)
-				_textures.Add(new BatchedTexture
-					{
+			{
+			    if (_sortMode == SpriteSortMode.BackToFront) _textures.Reverse ();
+				_textures.Add (new BatchedTexture {
 						Texture = _activeTexture,
-						Count = _queueCount
-					});
+					Count = _queueCount
+				});
+			}
 			_queueCount = 0;
 		}
 

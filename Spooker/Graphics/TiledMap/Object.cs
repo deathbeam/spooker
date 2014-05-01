@@ -21,8 +21,6 @@ namespace Spooker.Graphics.TiledMap
 	////////////////////////////////////////////////////////////
 	public class Object : IDrawable, ICollidable
 	{
-		private readonly Camera _camera;
-
 		public string Name;
 		public string Type;
 		public ObjectType ObjectType;
@@ -33,15 +31,10 @@ namespace Spooker.Graphics.TiledMap
 		public Texture Texture;
 		public Rectangle SourceRect;
 
-		public Object(Camera camera)
-		{
-			_camera = camera;
-		}
-
 		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
 			if (ObjectType == ObjectType.Graphic)
-				spriteBatch.Draw(Texture, _camera.Transform(Position), SourceRect,
+				spriteBatch.Draw(Texture, Position, SourceRect,
 					Color.White, Vector2.One, Vector2.Zero, 0f, effects);
 		}
 

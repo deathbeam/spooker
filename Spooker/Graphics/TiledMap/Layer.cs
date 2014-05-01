@@ -61,17 +61,13 @@ namespace Spooker.Graphics.TiledMap
 			}
         }
 
-		internal void Draw(SpriteBatch spriteBatch, Camera camera, SpriteEffects effects = SpriteEffects.None)
+		internal void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
 			if (!Visible || Color.A == 0)
 				return;
 
 			foreach (var tile in _tiles)
-			{
-				var rect = new Rectangle ((int)tile.Position.X, (int)tile.Position.Y, (int)_tileSize.X, (int)_tileSize.Y);
-				if (camera.Bounds.Intersects(rect))
-					tile.Draw(spriteBatch, camera, Color, effects);
-			}
+				tile.Draw(spriteBatch, Color, effects);
 		}
 
     }

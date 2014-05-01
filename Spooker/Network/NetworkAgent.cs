@@ -16,20 +16,12 @@ using Spooker.Time;
 
 namespace Spooker.Network
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public enum AgentRole
+	public enum AgentRole : byte
 	{
-		/// <summary></summary>
 		Client,
-        /// <summary></summary>
 		Server
 	}
 
-	/// <summary>
-	/// 
-	/// </summary>
 	public class NetworkAgent : IUpdateable
 	{
 		private readonly NetPeer _peer;

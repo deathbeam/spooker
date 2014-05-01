@@ -23,7 +23,7 @@ namespace Spooker.Graphics.TiledMap
 		private readonly Texture _texture;
 		private readonly Vector2 _position;
 		private readonly Rectangle _sourceRect;
-		
+
 		public Vector2 Position
 		{
 			get { return _position; }
@@ -45,11 +45,11 @@ namespace Spooker.Graphics.TiledMap
 			_sourceRect = tileRect;
         }
 		
-		internal void Draw(SpriteBatch spriteBatch, Camera camera, Color color, SpriteEffects effects = SpriteEffects.None)
+		internal void Draw(SpriteBatch spriteBatch, Color color, SpriteEffects effects = SpriteEffects.None)
 		{
 			spriteBatch.Draw(
 				_texture,
-				camera.Transform(_position),
+				_position,
 				_sourceRect,
 				color,
 				Vector2.One,
