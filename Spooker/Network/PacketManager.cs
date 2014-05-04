@@ -13,29 +13,30 @@ using System.Collections.Generic;
 namespace Spooker.Network
 {
 	/// <summary>
-	/// 
+	/// Packet manager.
 	/// </summary>
 	public class PacketManager
 	{
 		private readonly Dictionary<int,Packet> _packets = new Dictionary<int, Packet>();
 
 		/// <summary>
-		/// 
+		/// Adds the packet.
 		/// </summary>
-		/// <param name="packet"></param>
-		/// <returns></returns>
-		public int AddPacket(Packet packet)
+		/// <returns>The packet.</returns>
+		/// <param name="id">Identifier.</param>
+		/// <param name="packet">Packet.</param>
+		public int AddPacket(int id, Packet packet)
 		{
-			var id = packet.PacketId;
 			_packets.Add (id, packet);
 			return id;
 		}
 
+
 		/// <summary>
-		/// 
+		/// Gets the packet.
 		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
+		/// <returns>The packet.</returns>
+		/// <param name="id">Identifier.</param>
 		public Packet GetPacket(int id)
 		{
 			Packet packet;

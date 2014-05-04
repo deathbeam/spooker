@@ -48,10 +48,11 @@ namespace Spooker.Graphics
 			public uint Count;
 			public SFML.Graphics.Texture Texture;
 		}
-		
+
+		private readonly List<SpriteBatch> _batchers = new List<SpriteBatch>();
 		private readonly List<BatchedTexture> _textures = new List<BatchedTexture>();
 		private readonly SFML.Graphics.RenderTarget _graphicsDevice;
-        private SFML.Graphics.Text _str;
+		private readonly SFML.Graphics.Text _str;
 		private SFML.Graphics.RenderStates _states;
         private SFML.Graphics.Vertex[] _vertices = new SFML.Graphics.Vertex[100 * 4];
 		private SFML.Graphics.Texture _activeTexture;
@@ -122,7 +123,7 @@ namespace Spooker.Graphics
 		////////////////////////////////////////////////////////////
 		public void Begin()
 		{
-			Begin (SpriteBlendMode.Alpha, SpriteSortMode.FrontToBack);
+			Begin (SpriteBlendMode.Alpha);
 		}
 
 		////////////////////////////////////////////////////////////
@@ -140,10 +141,9 @@ namespace Spooker.Graphics
 		/// Begins this sprite batch, so we can draw sprites after.
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public void Begin(SpriteBlendMode blendMode, SpriteSortMode sortMode, Matrix transMatrix)
+		public void Begin(SpriteBlendMode blendMode, SpriteSortMode sortMode)
 		{
-			Begin (blendMode, sortMode);
-			_states.Transform = transMatrix.ToSfml ();
+			Begin (blendMode, sortMode, Matrix.Identity);
 		}
 
 		////////////////////////////////////////////////////////////
@@ -151,9 +151,16 @@ namespace Spooker.Graphics
 		/// Begins this sprite batch, so we can draw sprites after.
 		/// </summary>
 		////////////////////////////////////////////////////////////
-		public void Begin(SpriteBlendMode blendMode, SpriteSortMode sortMode)
+		public void Begin(SpriteBlendMode blendMode, SpriteSortMode sortMode, Matrix transMatrix)
 		{
-			if (_active) throw new Exception("Already active");
+			if (_active) 
+			{
+				var batcher = new SpriteBatch (_graphicsDevice);
+				batcher.Begin (blendMode, sortMode);
+				_batchers.Add (batcher);
+				return;
+			}
+		
 			Count = 0;
 			_textures.Clear();
 			_sortMode = SpriteSortMode.FrontToBack;
@@ -172,11 +179,9 @@ namespace Spooker.Graphics
 			case SpriteBlendMode.Multiply:
 				_states.BlendMode = SFML.Graphics.BlendMode.Multiply;
 				break;
-			default:
-				_states.BlendMode = SFML.Graphics.BlendMode.Alpha;
-				break;
 			}
 			_activeTexture = null;
+			_states.Transform = transMatrix.ToSfml ();
 			_active = true;
 		}
 
@@ -189,6 +194,13 @@ namespace Spooker.Graphics
 		public void End()
 		{
 			if (!_active) throw new Exception("Call Begin first.");
+
+			if (_batchers.Count > 0)
+			{
+				_batchers [_batchers.Count - 1].End ();
+				_batchers.RemoveAt (_batchers.Count - 1);
+				return;
+			}
 
 			Enqueue();
 			_active = false;

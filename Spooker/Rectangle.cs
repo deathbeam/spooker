@@ -8,12 +8,11 @@
 //-----------------------------------------------------------------------------
 
 using System;
-using Spooker.Physics;
 
 namespace Spooker
 {
 	[Serializable]
-	public struct Rectangle : IEquatable<Rectangle>, ICollidable
+	public struct Rectangle : IEquatable<Rectangle>
 	{
         #region Public Fields
 
@@ -135,26 +134,6 @@ namespace Spooker
             return ((((X <= value.X) && ((value.X + value.Width) <= (X + Width))) && (Y <= value.Y)) && ((value.Y + value.Height) <= (Y + Height)));
         }
 
-		public bool Intersects(Line line)
-		{
-			return RectCollider.Intersects (this, line);
-		}
-
-		public bool Intersects(Rectangle rectangle)
-		{
-			return RectCollider.Intersects (this, rectangle);
-		}
-
-		public bool Intersects(Circle circle)
-		{
-			return RectCollider.Intersects (this, circle);
-		}
-
-		public bool Intersects(Polygon polygon)
-		{
-			return RectCollider.Intersects (this, polygon);
-		}
-
         public void Offset(Point offset)
 		{
             X += offset.X;
@@ -174,6 +153,33 @@ namespace Spooker
             Width += horizontalValue * 2;
             Height += verticalValue * 2;
         }
+
+		public static Rectangle Intersect(Rectangle rectangle1, Rectangle rectangle2)
+		{
+			if (rectangle1.Intersects(rectangle2))
+			{
+				var rightSide = Math.Min(rectangle1.X + rectangle1.Width, rectangle2.X + rectangle2.Width);
+				var leftSide = Math.Max(rectangle1.X, rectangle2.X);
+				var topSide = Math.Max(rectangle1.Y, rectangle2.Y);
+				var bottomSide = Math.Min(rectangle1.Y + rectangle1.Height, rectangle2.Y + rectangle2.Height);
+				return new Rectangle(leftSide, topSide, rightSide - leftSide, bottomSide - topSide);
+			}
+			else
+			{
+				return Rectangle.Empty;
+			}
+		}
+
+		public bool Intersects(Rectangle rectangle2)
+		{
+			if (Equals(rectangle2))
+				return true;
+
+			return rectangle2.Left < Right &&
+				Left < rectangle2.Right &&
+				rectangle2.Top < Bottom &&
+				Top < rectangle2.Bottom;
+		}
 
         public bool Equals(Rectangle other)
 		{

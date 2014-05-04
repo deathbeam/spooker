@@ -1,0 +1,1829 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Spooker</name>
+    </assembly>
+    <members>
+        <member name="T:Spooker.Graphics.SpriteEffects">
+            <summary>
+            Enum of flags containing the effects that can be applied
+            to a sprite when rendering it.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.SpriteEffects.None">
+            <summary>No effects specified.</summary>
+        </member>
+        <member name="F:Spooker.Graphics.SpriteEffects.FlipHorizontally">
+            <summary>Flips the sprite horizontally before rendering.</summary>
+        </member>
+        <member name="F:Spooker.Graphics.SpriteEffects.FlipVertically">
+            <summary>Flips the sprite vertically before rendering.</summary>
+        </member>
+        <member name="F:Spooker.Graphics.SpriteEffects.FlipVerticalHorizontal">
+            <summary>Flips the both vertically and horizontally before rendering.</summary>
+        </member>
+        <member name="T:Spooker.Graphics.ScaleEffectMultiplier">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.ScaleEffectMultiplier.Get(Spooker.Graphics.SpriteEffects)">
+            <summary>
+            
+            </summary>
+            <param name="effects"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Spooker.Time.Clock">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Spooker.EntityList">
+            <summary>
+            Used for automated managing various classes with implemented
+            drawable, updateable and loadable interfaces.
+            </summary>
+        </member>
+        <member name="T:Spooker.Graphics.IDrawable">
+            <summary>
+            Class with this interface implemented can be drawn with
+            spritebatch.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.IDrawable.Draw(Spooker.Graphics.SpriteBatch,Spooker.Graphics.SpriteEffects)">
+            <summary>
+            Component uses this for drawing itself
+            </summary>
+            <param name="spriteBatch">Sprite batch.</param>
+            <param name="effects">Effects.</param>
+        </member>
+        <member name="T:Spooker.Time.IUpdateable">
+            <summary>
+            Interface used for updateable objects
+            </summary>
+        </member>
+        <member name="M:Spooker.Time.IUpdateable.Update(Spooker.Time.GameTime)">
+            <summary>
+            Component uses this for updating itself.
+            </summary>
+            <param name="gameTime">Provides snapshot of timing values.</param>
+        </member>
+        <member name="T:Spooker.Content.ILoadable">
+            <summary>
+            Interface used for loadable objects
+            </summary>
+        </member>
+        <member name="M:Spooker.Content.ILoadable.LoadContent(Spooker.Content.ContentManager)">
+            <summary>
+            Component uses this for loading itself
+            </summary>
+        </member>
+        <member name="M:Spooker.EntityList.Add``1(``0)">
+            <summary>
+            Adds new entity to stack.
+            </summary>
+        </member>
+        <member name="M:Spooker.EntityList.Remove``1(``0)">
+            <summary>
+            Removes specified entity to stack.
+            </summary>
+        </member>
+        <member name="M:Spooker.EntityList.LoadContent(Spooker.Content.ContentManager)">
+            <summary>
+            Loads all loadable entities in stack.
+            </summary>
+        </member>
+        <member name="M:Spooker.EntityList.Update(Spooker.Time.GameTime)">
+            <summary>
+            Updates all updateable entities in stack.
+            </summary>
+        </member>
+        <member name="M:Spooker.EntityList.Draw(Spooker.Graphics.SpriteBatch,Spooker.Graphics.SpriteEffects)">
+            <summary>
+            Draws all drawable entities in stack.
+            </summary>
+        </member>
+        <member name="M:Spooker.EntityList.Dispose">
+            <summary>
+            Disposes all disposable entities in stack.
+            </summary>
+        </member>
+        <member name="T:Spooker.Audio.AudioManager">
+            <summary>
+            Can be used for managing, playing and loading of sounds
+            and music.
+            </summary>
+        </member>
+        <member name="F:Spooker.Audio.AudioManager.SoundDirectory">
+            <summary>Directory from where will audio manager load sounds.</summary>
+        </member>
+        <member name="F:Spooker.Audio.AudioManager.SoundExtension">
+            <summary>Extension of sounds what will audio manager load and play.</summary>
+        </member>
+        <member name="M:Spooker.Audio.AudioManager.LoadContent(Spooker.Content.ContentManager)">
+            <summary>
+            Loads audio files from specified audio folder to cache.
+            </summary>
+        </member>
+        <member name="M:Spooker.Audio.AudioManager.PlayMusic(System.String)">
+            <summary>
+            Loads and plays music from specified music path.
+            </summary>
+        </member>
+        <member name="M:Spooker.Audio.AudioManager.StopMusic">
+            <summary>
+            Stops current music.
+            </summary>
+        </member>
+        <member name="M:Spooker.Audio.AudioManager.PauseMusic">
+            <summary>
+            Pause current music.
+            </summary>
+        </member>
+        <member name="M:Spooker.Audio.AudioManager.ResumeMusic">
+            <summary>
+            Resumes current paused music.
+            </summary>
+        </member>
+        <member name="M:Spooker.Audio.AudioManager.PlaySound(System.String)">
+            <summary>
+            Plays sound stored in sound cache once.
+            </summary>
+        </member>
+        <member name="M:Spooker.Audio.AudioManager.PlaySound(System.String,System.Boolean)">
+            <summary>
+            Play sound stored in sound cache once or repeated.
+            </summary>
+        </member>
+        <member name="M:Spooker.Audio.AudioManager.StopSounds">
+            <summary>
+            Stops all sounds
+            </summary>
+        </member>
+        <member name="M:Spooker.Audio.AudioManager.GetSound(System.String)">
+            <summary>
+            Returns sound from sound cache.
+            </summary>
+        </member>
+        <member name="M:Spooker.Audio.AudioManager.Dispose">
+            <summary>
+            Disposes this instance of audio manager class.
+            </summary>
+        </member>
+        <member name="T:Spooker.Time.GameTime">
+            <summary>
+            Provides snapshot of timing values.
+            </summary>
+        </member>
+        <member name="F:Spooker.Time.GameTime.ElapsedGameTime">
+            <summary>Returns how much time has passed since last update</summary>
+        </member>
+        <member name="F:Spooker.Time.GameTime.TotalGameTime">
+            <summary>Returns how much time has passed since starting game</summary>
+        </member>
+        <member name="T:Spooker.Content.ContentManager">
+            <summary>
+            Provides simple way of loading game content such as
+            textures, fonts, shaders and more.
+            </summary>
+        </member>
+        <member name="F:Spooker.Content.ContentManager.Directory">
+            <summary>Directory, from what will content providers load data.</summary>
+        </member>
+        <member name="M:Spooker.Content.ContentManager.Get``1(System.String)">
+            <summary>
+            Loads file to content manager, or if file is already
+            loaded, returns file data.
+            </summary>
+        </member>
+        <member name="M:Spooker.Content.ContentManager.AddLoader(Spooker.Content.ContentProvider)">
+            <summary>
+            Adds new loader type to content manager loaders stack.
+            </summary>
+        </member>
+        <member name="M:Spooker.Content.ContentManager.AddLoaders(System.Collections.Generic.List{Spooker.Content.ContentProvider})">
+            <summary>
+            Adds new loaders to content manager loaders stack.
+            </summary>
+        </member>
+        <member name="M:Spooker.Content.ContentManager.Update(Spooker.Time.GameTime)">
+            <summary>
+            Component uses this for updating itself
+            </summary>
+        </member>
+        <member name="M:Spooker.Content.ContentManager.Dispose">
+            <summary>
+            Disposes this intance of Content Manager.
+            </summary>
+        </member>
+        <member name="T:Spooker.Content.ContentProvider">
+            <summary>
+            Used for storing game data such as textures, fonts and
+            shaders. Stores only one type of data, depends on settings.
+            </summary>
+        </member>
+        <member name="F:Spooker.Content.ContentProvider.Extension">
+            <summary>File extension of loaded game data.</summary>
+        </member>
+        <member name="F:Spooker.Content.ContentProvider.Folder">
+            <summary>Folder containing loaded game data.</summary>
+        </member>
+        <member name="F:Spooker.Content.ContentProvider.Load">
+            <summary>Function used to load data for this content provider.</summary>
+        </member>
+        <member name="F:Spooker.Content.ContentProvider.Reuse">
+            <summary>Value that determines if content provider will store data to cache.</summary>
+        </member>
+        <member name="F:Spooker.Content.ContentProvider.Type">
+            <summary>Type of game data what content provider manages.</summary>
+        </member>
+        <member name="F:Spooker.Content.ContentProvider.TTL">
+            <summary>Duration, after what will be each not re-used asset cleared from cache.</summary>
+        </member>
+        <member name="M:Spooker.Content.ContentProvider.#ctor(System.Type,System.Boolean)">
+            <summary>
+            Creates new instance of Content Provider class with
+            passing multiple arguments.
+            </summary>
+        </member>
+        <member name="M:Spooker.Content.ContentProvider.Update(System.Single)">
+            <summary>
+            Component uses this for updating itself
+            </summary>
+        </member>
+        <member name="M:Spooker.Content.ContentProvider.Dispose">
+            <summary>
+            Disposes this instance of Content Provider class.
+            </summary>
+        </member>
+        <member name="M:Spooker.Content.ContentProvider.Get(System.String)">
+            <summary>
+            Loads game data to cache or if already loaded, returns
+            data from loader cache.
+            </summary>
+        </member>
+        <member name="P:Spooker.Content.ContentProvider.Default">
+            <summary>
+            Returns list of default loaders (texture, font and particle).
+            </summary>
+        </member>
+        <member name="T:Spooker.GameStates.State">
+            <summary>
+            Abstract class used for handling game input, drawing and
+            updating for one scene.
+            </summary>
+        </member>
+        <member name="T:Spooker.Core.GameComponent">
+            <summary>
+            Abstract class what will enable you to use all Game 
+            functions in derived classes.
+            </summary>
+        </member>
+        <member name="F:Spooker.Core.GameComponent.Game">
+            <summary>Heart of Spooker. All important operations are done here.</summary>
+        </member>
+        <member name="M:Spooker.Core.GameComponent.#ctor(Spooker.Core.GameWindow)">
+            <summary>
+            Creates new instance of GameComponent class.
+            </summary>
+            <param name="game">Parent game window.</param>
+        </member>
+        <member name="P:Spooker.Core.GameComponent.GraphicsDevice">
+            <summary>Core rendering device what controls everything drawn to screen.</summary>
+        </member>
+        <member name="P:Spooker.Core.GameComponent.Audio">
+            <summary>Can play various audio files.</summary>
+        </member>
+        <member name="P:Spooker.Core.GameComponent.GameInput">
+            <summary>Handles user input from keyboard and mouse.</summary>
+        </member>
+        <member name="P:Spooker.Core.GameComponent.StateFactory">
+            <summary>Manages all present game states.</summary>
+        </member>
+        <member name="M:Spooker.GameStates.State.#ctor(Spooker.Core.GameWindow)">
+            <summary>
+            Creates new instance of game state.
+            </summary>
+            ////////////////////////////////////////////////////////////
+        </member>
+        <member name="M:Spooker.GameStates.State.TextEntered(SFML.Window.TextEventArgs)">
+            <summary>
+            Called when user tries to enter text.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.State.MouseWheelMoved(SFML.Window.MouseWheelEventArgs)">
+            <summary>
+            Called when user tries to move with mouse wheel.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.State.MouseMoved(SFML.Window.MouseMoveEventArgs)">
+            <summary>
+            Called when user tries to move with mouse.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.State.MouseButtonPressed(SFML.Window.MouseButtonEventArgs)">
+            <summary>
+            Called when user presses mouse button.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.State.MouseButtonReleased(SFML.Window.MouseButtonEventArgs)">
+            <summary>
+            Called when user releases mouse button.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.State.KeyPressed(SFML.Window.KeyEventArgs)">
+            <summary>
+            Called when user presses keyboard key.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.State.KeyReleased(SFML.Window.KeyEventArgs)">
+            <summary>
+            Called when user releases keyboard key.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.State.Enter">
+            <summary>
+            Called when a state is added to game (pushed to stack).
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.State.Leave">
+            <summary>
+            Called when a state is removed from game (popped from stack).
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.State.LoadContent(Spooker.Content.ContentManager)">
+            <summary>
+            Called when a state is created.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.State.Update(Spooker.Time.GameTime)">
+            <summary>
+            Update is called once every time step. Game logic should
+            be handled here (input, movement...)
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.State.Draw(Spooker.Graphics.SpriteBatch,Spooker.Graphics.SpriteEffects)">
+            <summary>
+            Called once per frame. Avoid putting game logic in here.
+            </summary>
+        </member>
+        <member name="P:Spooker.GameStates.State.InactiveMode">
+            <summary>
+            Functions to call for this state when it is not the
+            active state.
+            </summary>
+        </member>
+        <member name="P:Spooker.GameStates.State.Components">
+            <summary>
+            Manages components of this game state.
+            </summary>
+        </member>
+        <member name="P:Spooker.GameStates.State.IsActive">
+            <summary>
+            Returns true if this State is at the top of the State stack.
+            </summary>
+        </member>
+        <member name="P:Spooker.GameStates.State.IsOverlay">
+            <summary>
+            Overlay states are active when on top of the stack.
+            The following non-overlay state will also be active.
+            </summary>
+        </member>
+        <member name="T:Spooker.Input.KeyboardManager">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Spooker.Input.KeyboardManager.#ctor">
+            <summary>
+            Creates new instance of KeyboardManager class.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.KeyboardManager.Update(Spooker.Time.GameTime)">
+            <summary>
+            
+            </summary>
+            <param name="gameTime"></param>
+        </member>
+        <member name="M:Spooker.Input.KeyboardManager.GetPressedKeys">
+            <summary>
+            Returns all the keyboard keys that were pressed in the current frame
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.KeyboardManager.GetLastFramePressedKeys">
+            <summary>
+            Returns all the keyboard keys that were pressed in the last frame
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.KeyboardManager.IsKeyReleased(SFML.Window.Keyboard.Key)">
+            <summary>
+            Checks if the specified key was down and is now up
+            </summary>
+            <param name="key">The desired keyboard key</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.KeyboardManager.IsKeyPressed(SFML.Window.Keyboard.Key)">
+            <summary>
+            Checks if the specified key was up and is now down
+            </summary>
+            <param name="key">The desired key</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.KeyboardManager.WasKeyUp(SFML.Window.Keyboard.Key)">
+            <summary>
+            Checks if the key was up(not pressed) on the last frame
+            </summary>
+            <param name="key">The desired key</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.KeyboardManager.WasKeyDown(SFML.Window.Keyboard.Key)">
+            <summary>
+            Checks if the key was down(pressed) on the last frame
+            </summary>
+            <param name="key">The desired key</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.KeyboardManager.IsKeyUp(SFML.Window.Keyboard.Key)">
+            <summary>
+            Checks if the key is up(not pressed)
+            </summary>
+            <param name="key">The desired key</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.KeyboardManager.IsKeyDown(SFML.Window.Keyboard.Key)">
+            <summary>
+            Checks if the key is down(pressed)
+            </summary>
+            <param name="key">The desired key</param>
+            <returns></returns>
+        </member>
+        <member name="T:Spooker.Input.MouseManager">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Spooker.Input.MouseManager.#ctor(SFML.Graphics.RenderWindow)">
+            <summary>
+            Creates new instance of MouseManager class.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.MouseManager.Update(Spooker.Time.GameTime)">
+            <summary>
+            
+            </summary>
+            <param name="gameTime"></param>
+        </member>
+        <member name="M:Spooker.Input.MouseManager.MouseWheelMoved(SFML.Window.MouseWheelEventArgs)">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:Spooker.Input.MouseManager.IsKeyReleased(SFML.Window.Mouse.Button)">
+            <summary>
+            Checks if the specified key was down and is now up
+            </summary>
+            <param name="button">The desired mouse button</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.MouseManager.IsKeyPressed(SFML.Window.Mouse.Button)">
+            <summary>
+            Checks if the specified key was up and is now down
+            </summary>
+            <param name="button">The desired mouse button</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.MouseManager.WasKeyUp(SFML.Window.Mouse.Button)">
+            <summary>
+            Checks if the key was up(not pressed) on the last frame
+            </summary>
+            <param name="button">The desired mouse button</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.MouseManager.WasKeyDown(SFML.Window.Mouse.Button)">
+            <summary>
+            Checks if the key was down(pressed) on the last frame
+            </summary>
+            <param name="button">The desired mouse button</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.MouseManager.IsKeyUp(SFML.Window.Mouse.Button)">
+            <summary>
+            Checks if the key is up(not pressed)
+            </summary>
+            <param name="button">The desired mouse button</param>
+            <returns></returns>
+        </member>
+        <member name="M:Spooker.Input.MouseManager.IsKeyDown(SFML.Window.Mouse.Button)">
+            <summary>
+            Checks if the key is down(pressed)
+            </summary>
+            <param name="button">The desired mouse button</param>
+            <returns></returns>
+        </member>
+        <member name="T:Spooker.GameStates.UpdateMode">
+            <summary>
+            Flags that determine the enabled functionality of a state.
+            </summary>
+        </member>
+        <member name="F:Spooker.GameStates.UpdateMode.None">
+            <summary>Do not processes inactive state at all.</summary>
+        </member>
+        <member name="F:Spooker.GameStates.UpdateMode.Input">
+            <summary>Processes input (keyboard, mouse) for inactive state.</summary>
+        </member>
+        <member name="F:Spooker.GameStates.UpdateMode.Update">
+            <summary>Processes game logic updates for inactive state.</summary>
+        </member>
+        <member name="F:Spooker.GameStates.UpdateMode.Draw">
+            <summary>Draws inactive state.</summary>
+        </member>
+        <member name="F:Spooker.GameStates.UpdateMode.Background">
+            <summary>Draws and processes game logic updates for inactive state.</summary>
+        </member>
+        <member name="F:Spooker.GameStates.UpdateMode.All">
+            <summary>Draws and processes game logic updates and input for inactive state.</summary>
+        </member>
+        <member name="T:Spooker.Graphics.Camera">
+            <summary>
+            Camera can be used for controlling drawbale or/and
+            updateable area of game screen
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Camera.Follow">
+            <summary>
+            This is used for following specified followable object.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Camera.Size">
+            <summary>
+            Size of camera visible area
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Camera.#ctor(Spooker.Rectangle)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Spooker.Graphics.Camera"/> class.
+            </summary>
+            <param name="rectangle">Rectangle.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Camera.Update(Spooker.Time.GameTime)">
+            <summary>
+            Component uses this for updating itself.
+            </summary>
+            <param name="gameTime">Provides snapshot of timing values.</param>
+        </member>
+        <member name="P:Spooker.Graphics.Camera.Zoom">
+            <summary>
+            Gets or sets the zoom of this camera.
+            </summary>
+            <value>The zoom.</value>
+        </member>
+        <member name="P:Spooker.Graphics.Camera.Position">
+            <summary>
+            Gets or sets the position.
+            </summary>
+            <value>The position.</value>
+        </member>
+        <member name="P:Spooker.Graphics.Camera.Default">
+            <summary>
+            Returns new instance of Camera class with default settings.
+            </summary>
+            <value>The default.</value>
+        </member>
+        <member name="M:Spooker.Graphics.Camera.IFollowable.FollowPosition">
+            <summary>
+            Follows the position.
+            </summary>
+            <returns>The position.</returns>
+        </member>
+        <member name="T:Spooker.Network.AgentRole">
+            <summary>
+            Agent role.
+            </summary>
+        </member>
+        <member name="T:Spooker.Network.NetworkAgent">
+            <summary>
+            Network agent.
+            </summary>
+        </member>
+        <member name="F:Spooker.Network.NetworkAgent.PacketManager">
+            <summary>
+            The packet manager.
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.NetworkAgent.#ctor(Spooker.Network.AgentRole,System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Spooker.Network.NetworkAgent"/> class.
+            Note: Client and server tag must be the same.
+            </summary>
+            <param name="role">Role.</param>
+            <param name="tag">Tag.</param>
+            <param name="port">Port.</param>
+        </member>
+        <member name="M:Spooker.Network.NetworkAgent.Connect(System.String)">
+            <summary>
+            Connects to a server. Throws an exception if you attempt
+            to call Connect as a Server.
+            </summary>
+            <param name="ip">Ip.</param>
+        </member>
+        <member name="M:Spooker.Network.NetworkAgent.Shutdown">
+            <summary>
+            Shutdown this instance.
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.NetworkAgent.SendMessage(Lidgren.Network.NetConnection)">
+            <summary>
+            Sends off _outgoingMessage and then clears it for the
+            next send. Defaults to UnreliableSequenced for fast
+            transfer which guarantees that older messages won't be
+            processed after new messages.
+            </summary>
+            <param name="recipient">Recipient.</param>
+        </member>
+        <member name="M:Spooker.Network.NetworkAgent.SendMessage(Lidgren.Network.NetConnection,System.Boolean)">
+            <summary>
+            Sends off _outgoingMessage and then clears it for the
+            next send. Defaults to UnreliableSequenced for fast
+            transfer which guarantees that older messages won't be
+            processed after new messages. If IsGuaranteed is true it
+            uses ReliableSequenced which is safer but much slower.
+            </summary>
+            <param name="recipient">Recipient.</param>
+            <param name="isGuaranteed">If set to <c>true</c> is guaranteed.</param>
+        </member>
+        <member name="M:Spooker.Network.NetworkAgent.Update(Spooker.Time.GameTime)">
+            <summary>
+            Component uses this for updating itself.
+            </summary>
+            <param name="gameTime">Provides snapshot of timing values.</param>
+        </member>
+        <member name="M:Spooker.Network.NetworkAgent.Write(Spooker.Network.PacketWriter)">
+            <summary>
+            Write the specified writer.
+            </summary>
+            <param name="writer">Writer.</param>
+        </member>
+        <member name="P:Spooker.Network.NetworkAgent.Connections">
+            <summary>
+            Gets the connections.
+            </summary>
+            <value>The connections.</value>
+        </member>
+        <member name="T:Spooker.Network.Packet">
+            <summary>
+            Packet.
+            </summary>
+        </member>
+        <member name="F:Spooker.Network.Packet.Writer">
+            <summary>
+            The writer used for writing data for this packet.
+            </summary>
+        </member>
+        <member name="F:Spooker.Network.Packet.Reader">
+            <summary>
+            The reader used for reading data from received message.
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.Packet.#ctor(Spooker.Network.NetworkAgent)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Spooker.Network.Packet"/> class.
+            </summary>
+            <param name="parent">Parent.</param>
+        </member>
+        <member name="M:Spooker.Network.Packet.Send(Lidgren.Network.NetConnection)">
+            <summary>
+            Send the packet to specified connection.
+            </summary>
+            <param name="connection">Connection.</param>
+        </member>
+        <member name="M:Spooker.Network.Packet.Execute">
+            <summary>
+            Execute this packet.
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.Packet.HandleData(Lidgren.Network.NetIncomingMessage)">
+            <summary>
+            Handles the data.
+            </summary>
+            <param name="data">Data.</param>
+        </member>
+        <member name="P:Spooker.Network.Packet.ID">
+            <summary>
+            Gets the ID of this packet.
+            </summary>
+            <value>The ID.</value>
+        </member>
+        <member name="T:Spooker.Network.PacketManager">
+            <summary>
+            Packet manager.
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.PacketManager.AddPacket(System.Int32,Spooker.Network.Packet)">
+            <summary>
+            Adds the packet.
+            </summary>
+            <returns>The packet.</returns>
+            <param name="id">Identifier.</param>
+            <param name="packet">Packet.</param>
+        </member>
+        <member name="M:Spooker.Network.PacketManager.GetPacket(System.Int32)">
+            <summary>
+            Gets the packet.
+            </summary>
+            <returns>The packet.</returns>
+            <param name="id">Identifier.</param>
+        </member>
+        <member name="T:Spooker.Graphics.SpriteSortMode">
+            <summary>
+            Sorting options to use when rendering.
+            </summary>
+        </member>
+        <member name="T:Spooker.Graphics.SpriteBlendMode">
+            <summary>
+            Blending options to use when rendering.
+            </summary>
+        </member>
+        <member name="T:Spooker.Graphics.SpriteBatch">
+            <summary>
+            Provides optimized drawing of sprites
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.SpriteBatch.Max">
+            <summary>
+            Returns or sets maximal possible number of verticles at
+            once in this vertex batch. Max capacity is always divided
+            by 4 (becouse of 4 verticle corners).
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.SpriteBatch.#ctor(SFML.Graphics.RenderTarget)">
+            <summary>
+            Creates new instance of SpriteBatch class.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.SpriteBatch.#ctor(SFML.Graphics.RenderTarget,System.Int32)">
+            <summary>
+            Creates new instance of SpriteBatch class.
+            </summary>
+            <param name="graphicsDevice"></param>
+            <param name="capacity">Maximal number of vertices in
+            this vertex batch.</param>
+        </member>
+        <member name="M:Spooker.Graphics.SpriteBatch.Begin">
+            <summary>
+            Begins this sprite batch, so we can draw sprites after.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.SpriteBatch.Begin(Spooker.Graphics.SpriteBlendMode)">
+            <summary>
+            Begins this sprite batch, so we can draw sprites after.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.SpriteBatch.Begin(Spooker.Graphics.SpriteBlendMode,Spooker.Graphics.SpriteSortMode)">
+            <summary>
+            Begins this sprite batch, so we can draw sprites after.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.SpriteBatch.Begin(Spooker.Graphics.SpriteBlendMode,Spooker.Graphics.SpriteSortMode,Spooker.Matrix)">
+            <summary>
+            Begins this sprite batch, so we can draw sprites after.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.SpriteBatch.End">
+            <summary>
+            Ends this vertex batch, so we can not draw any more
+            sprites.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.SpriteBatch.Dispose">
+            <summary>
+            Disposes this instance of SpriteBatch class.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.SpriteBatch.Draw(Spooker.Graphics.IDrawable,Spooker.Graphics.SpriteEffects)">
+            <summary>
+            Draws IDrawable using this spritebatch
+            </summary>
+        </member>
+        <member name="P:Spooker.Graphics.SpriteBatch.Count">
+            <summary>
+            Returns count of all vertices in this vertex batch.
+            </summary>
+        </member>
+        <member name="T:Spooker.Graphics.Color">
+            <summary>
+            Class that represents a color with red, green, blue, and 
+            alpha channels.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Color.#ctor">
+            <summary>
+            Create a empty color.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Color.#ctor(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Create a new color.
+            </summary>
+            <param name="r">Red, 0 to 1.</param>
+            <param name="g">Green, 0 to 1.</param>
+            <param name="b">Blue, 0 to 1.</param>
+            <param name="a">Alpha, 0 to 1.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Color.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            Create a new color.
+            </summary>
+            <param name="r">Red, 0 to 1.</param>
+            <param name="g">Green, 0 to 1.</param>
+            <param name="b">Blue, 0 to 1.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Color.#ctor(Spooker.Graphics.Color)">
+            <summary>
+            Create a color by copying the RGBA from another color.
+            </summary>
+            <param name="copy">The color to copy.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Color.#ctor(System.String)">
+            <summary>
+            Create a new color from a string.  Formats are "RGB", "RGBA", "RRGGBB", and "RRGGBBAA".
+            </summary>
+            <param name="hex">A string with a hex representation of each channel.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Color.#ctor(System.UInt32)">
+            <summary>
+            Create a new color from a hex number.  Formats are 0xRGB, 0xRRGGBB, 0xRGBA, 0xRRGGBBAA.
+            </summary>
+            <param name="hex">A hex number representing a color.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Color.FromBytes(System.Byte,System.Byte,System.Byte,System.Byte)">
+            <summary>
+            Create a new color using bytes from 0 to 255.
+            </summary>
+            <param name="r">Red bytes 0 to 255.</param>
+            <param name="g">Green bytes 0 to 255.</param>
+            <param name="b">Blue bytes 0 to 255.</param>
+            <param name="a">Alpha bytes 0 to 255.</param>
+            <returns>A new color.</returns>
+        </member>
+        <member name="M:Spooker.Graphics.Color.FromHSV(System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            Create a new color from HSV values.
+            </summary>
+            <param name="h">Hue, 0 to 360.</param>
+            <param name="s">Saturation, 0 to 1.</param>
+            <param name="v">Value, 0 to 1.</param>
+            <param name="a">Alpha, 0 to 1.</param>
+            <returns>A new RGBA color.</returns>
+        </member>
+        <member name="P:Spooker.Graphics.Color.R">
+            <summary>Red</summary>
+        </member>
+        <member name="P:Spooker.Graphics.Color.G">
+            <summary>Green</summary>
+        </member>
+        <member name="P:Spooker.Graphics.Color.B">
+            <summary>Blue</summary>
+        </member>
+        <member name="P:Spooker.Graphics.Color.A">
+            <summary>Alpha</summary>
+        </member>
+        <member name="P:Spooker.Graphics.Color.ByteR">
+            <summary>The bytes for Red.</summary>
+        </member>
+        <member name="P:Spooker.Graphics.Color.ByteG">
+            <summary>The bytes for Green.</summary>
+        </member>
+        <member name="P:Spooker.Graphics.Color.ByteB">
+            <summary>The bytes for Blue.</summary>
+        </member>
+        <member name="P:Spooker.Graphics.Color.ByteA">
+            <summary>The bytes for Alpha.</summary>
+        </member>
+        <member name="P:Spooker.Graphics.Texture.Pixels">
+            <summary>The array of pixels in the texture in bytes.</summary>
+        </member>
+        <member name="T:Spooker.Core.GameSettings">
+            <summary>
+            Class used for storing all game settings (is used when
+            creating instance of game window).
+            </summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.Icon">
+            <summary>Relative path to icon file what will be used as icon for game window.</summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.ContentDirectory">
+            <summary>Root directory of contet manager</summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.SoundDirectory">
+            <summary>Directory in root directory of content manager,from what will audio cache sounds</summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.SoundExtension">
+            <summary>Extension of sounds to cache</summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.TimeStep">
+            <summary>Determines how fast will be update rate of game (in miliseconds).</summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.TimeStepCap">
+            <summary>Determines cap of timestep (in miliseconds).</summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.ClearColor">
+            <summary>Sets default background color of empty rendering window</summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.Title">
+            <summary>Title of game window</summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.Style">
+            <summary>Style of game window borders.</summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.VerticalSync">
+            <summary>Sets, if game will wait for vertical sync or not.</summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.FramerateLimit">
+            <summary>Determines how fast will be frame rate of game.</summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.MajorVersion">
+            <summary>Sets major version of game.</summary>
+        </member>
+        <member name="F:Spooker.Core.GameSettings.MinorVersion">
+            <summary>Sets minor version of game.</summary>
+        </member>
+        <member name="M:Spooker.Core.GameSettings.#ctor">
+            <summary>
+            Creates new instance of GameSettings class using default
+            parameters
+            </summary>
+        </member>
+        <member name="M:Spooker.Core.GameSettings.#ctor(System.String)">
+            <summary>
+            Creates new instance of GameSettings using parameters
+            loaded from settings file.
+            </summary>
+        </member>
+        <member name="M:Spooker.Core.GameSettings.#ctor(System.IO.Stream)">
+            <summary>
+            Creates new instance of GameSettings using parameters
+            loaded from settings file.
+            </summary>
+        </member>
+        <member name="P:Spooker.Core.GameSettings.Width">
+            <summary>Specifies width of game window(in pixels)</summary>
+        </member>
+        <member name="P:Spooker.Core.GameSettings.Height">
+            <summary>Specifies height of game window(in pixels)</summary>
+        </member>
+        <member name="P:Spooker.Core.GameSettings.AntialiasingLevel">
+            <summary>Specifies antialiasing level of game window</summary>
+        </member>
+        <member name="P:Spooker.Core.GameSettings.DepthBits">
+            <summary>Specifies depth bits of game window</summary>
+        </member>
+        <member name="P:Spooker.Core.GameSettings.StencilBits">
+            <summary>Specifies stencil bits of game window</summary>
+        </member>
+        <member name="P:Spooker.Core.GameSettings.BitsPerPixel">
+            <summary>Specifies bits per pixel of game window</summary>
+        </member>
+        <member name="T:Spooker.Core.GameWindow">
+            <summary>
+            Very extended implementation of RenderWindow with many
+            usefull components like Audio, Spritebatch, Input and so.
+            </summary>
+        </member>
+        <member name="F:Spooker.Core.GameWindow.Content">
+            <summary>Manages various game content (audio, textures, fonts....).</summary>
+        </member>
+        <member name="F:Spooker.Core.GameWindow.Audio">
+            <summary>Can play various audio files.</summary>
+        </member>
+        <member name="F:Spooker.Core.GameWindow.GameInput">
+            <summary>Handles user input from keyboard and mouse.</summary>
+        </member>
+        <member name="F:Spooker.Core.GameWindow.StateFactory">
+            <summary>Manages all present game states.</summary>
+        </member>
+        <member name="F:Spooker.Core.GameWindow.GraphicsDevice">
+            <summary>Core rendering device what controls everything drawn to screen.</summary>
+        </member>
+        <member name="F:Spooker.Core.GameWindow.Components">
+            <summary>Manages components of this game window instance.</summary>
+        </member>
+        <member name="M:Spooker.Core.GameWindow.#ctor(Spooker.Core.GameSettings)">
+            <summary>
+            Creates new instance of GameWindow class.
+            </summary>
+            <param name="gameSettings">Settings from what will game
+            window constructs</param>
+        </member>
+        <member name="M:Spooker.Core.GameWindow.Run">
+            <summary>
+            Starts main loop of game window
+            </summary>
+        </member>
+        <member name="M:Spooker.Core.GameWindow.LoadContent(Spooker.Content.ContentManager)">
+            <summary>
+            Called when a state is created.
+            </summary>
+        </member>
+        <member name="M:Spooker.Core.GameWindow.Draw(Spooker.Graphics.SpriteBatch,Spooker.Graphics.SpriteEffects)">
+            <summary>
+            Draws all drawable members of this GameWindow class.
+            </summary>
+        </member>
+        <member name="M:Spooker.Core.GameWindow.Update(Spooker.Time.GameTime)">
+            <summary>
+            Updates this instance of GameWindow class.
+            </summary>
+        </member>
+        <member name="M:Spooker.Core.GameWindow.Dispose">
+            <summary>
+            Closes game screen and disposes all components.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Animations.Animation.Duration">
+            <summary>Defines for how long will be one frame drawn</summary>
+        </member>
+        <member name="T:Spooker.Graphics.Animations.AnimatedSprite">
+            <summary>
+            Simple method of drawing and updating animated sprite
+            using frame animations.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Animations.AnimatedSprite.Update(Spooker.Time.GameTime)">
+            <summary>
+            Allows the game component to update itself.
+            </summary>
+            <param name="gameTime">Provides a snapshot of timing values.
+            </param>
+        </member>
+        <member name="T:Spooker.Graphics.Particles.Particle">
+            <summary>
+            particles are the little bits that will make up an effect. each effect will
+            be comprised of many of these particles. They have basic physical properties,
+            such as position, velocity, acceleration, and rotation. They'll be drawn as
+            sprites, all layered on top of one another, and will be very pretty.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.Particle.Position">
+            <summary>Position of particle</summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.Particle.Velocity">
+            <summary>Velocity of particle</summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.Particle.Acceleration">
+            <summary>Acceleration of particle</summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.Particle.Lifetime">
+            <summary>How long this particle will "live"</summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.Particle.TimeSinceStart">
+            <summary>How long it has been since initialize was called</summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.Particle.Scale">
+            <summary>the scale of this particle</summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.Particle.Rotation">
+            <summary>its rotation, in radians</summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.Particle.RotationSpeed">
+            <summary>how fast does it rotate?</summary>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.Particle.Initialize(Spooker.Vector2,Spooker.Vector2,Spooker.Vector2,System.Single,System.Single,System.Single)">
+            <summary>
+            initialize is called by ParticleSystem to set up the particle, and prepares
+            the particle for use.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.Particle.Update(System.Single)">
+            <summary>
+            Update is called by the ParticleSystem on every frame. This is where the
+            particle's position and that kind of thing get updated.
+            </summary>
+            <param name="dt"></param>
+        </member>
+        <member name="P:Spooker.Graphics.Particles.Particle.Active">
+            <summary>
+            is this particle still alive? once TimeSinceStart becomes greater than
+            Lifetime, the particle should no longer be drawn or updated.
+            </summary>
+        </member>
+        <member name="T:Spooker.Graphics.Particles.ParticleEmitter">
+            <summary>
+            Helper for objects that want to leave particles behind them as they
+            move around the world. This emitter implementation solves two related
+            problems:
+            
+            If an object wants to create particles very slowly, less than once per
+            frame, it can be a pain to keep track of which updates ought to create
+            a new particle versus which should not.
+            
+            If an object is moving quickly and is creating many particles per frame,
+            it will look ugly if these particles are all bunched up together. Much
+            better if they can be spread out along a line between where the object
+            is now and where it was on the previous frame. This is particularly
+            important for leaving trails behind fast moving objects such as rockets.
+            
+            This emitter class keeps track of a moving object, remembering its
+            previous position so it can calculate the velocity of the object. It
+            works out the perfect locations for creating particles at any frequency
+            you specify, regardless of whether this is faster or slower than the
+            game update rate.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleEmitter.#ctor(Spooker.Graphics.Particles.ParticleSystem,System.Single,Spooker.Vector2)">
+            <summary>
+            Constructs a new particle emitter object.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleEmitter.Update(Spooker.Time.GameTime,Spooker.Vector2)">
+            <summary>
+            Updates the emitter, creating the appropriate number of particles
+            in the appropriate positions.
+            </summary>
+        </member>
+        <member name="P:Spooker.Graphics.Particles.ParticleEmitter.Position">
+            <summary>
+            Gets the location of the emitter. To change locations, pass a new value
+            in to Update.
+            </summary>
+        </member>
+        <member name="T:Spooker.Graphics.Particles.AccelerationMode">
+            <summary>
+            Used to specify the method of acceleration for a particle system.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.AccelerationMode.None">
+            <summary>
+            The particle system does not use acceleration.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.AccelerationMode.Scalar">
+            <summary>
+            The particle system computes the acceleration by using the
+            MinAccelerationScale and MaxAccelerationScale values to compute a random
+            scalar value which is then multiplied by the direction of the particles.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.AccelerationMode.EndVelocity">
+            <summary>
+            The particle system computes the acceleration by using the EndVelocity
+            value and solving the equation vt = v0 + (a0 * t) for a0. See
+            ParticleSystem.cs for more details.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.AccelerationMode.Vector">
+            <summary>
+            The particle system computes the acceleration by using the
+            MinAccelerationVector and MaxAccelerationVector values to compute a random
+            vector value which is used as the acceleration of the particles.
+            </summary>
+        </member>
+        <member name="T:Spooker.Graphics.Particles.ParticleSettings">
+            <summary>
+            Settings class describes all the tweakable options used
+            to control the appearance of a particle system. Many of the
+            settings are marked with an attribute that makes them optional
+            so that XML files can be simpler if they wish to use the default
+            values.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MinNumParticles">
+            <summary>
+            Sets the minimum range of particles used for each "effect" when the particle system
+            is used.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MaxNumParticles">
+            <summary>
+            Sets the maximum range of particles used for each "effect" when the particle system
+            is used.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.TextureFilename">
+            <summary> Name of the texture used by this particle system.</summary>  
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MinDirectionAngle">
+            <summary> 
+            MinDirectionAngle and MaxDirectionAngle are used to control the possible
+            directions of motion for the particles. We use degrees instead of radians
+            for the settings to make it easier to construct the XML. The ParticleSystem
+            will convert these to radians as it needs.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MaxDirectionAngle">
+            <summary> 
+            MinDirectionAngle and MaxDirectionAngle are used to control the possible
+            directions of motion for the particles. We use degrees instead of radians
+            for the settings to make it easier to construct the XML. The ParticleSystem
+            will convert these to radians as it needs.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MinInitialSpeed">
+            <summary> 
+            MinInitialSpeed and MaxInitialSpeed are used to control the initial speed
+            of the particles.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MaxInitialSpeed">
+            <summary> 
+            MinInitialSpeed and MaxInitialSpeed are used to control the initial speed
+            of the particles.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.AccelerationMode">
+            <summary> Sets the mode for computing the acceleration of the particles.</summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.EndVelocity">
+            <summary>
+            Controls how the particle velocity will change over their lifetime. If set
+            to 1, particles will keep going at the same speed as when they were created.
+            If set to 0, particles will come to a complete stop right before they die.
+            Values greater than 1 make the particles speed up over time. This field is
+            used when using the AccelerationMode.EndVelocity mode.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MinAccelerationScale">
+            <summary>
+            Controls the minimum acceleration for the particle when using the
+            AccelerationMode.Scalar mode.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MaxAccelerationScale">
+            <summary>
+            Controls the maximum acceleration for the particle when using the
+            AccelerationMode.Scalar mode.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MinAccelerationVector">
+            <summary>
+            Controls the minimum acceleration for the particle when using the
+            AccelerationMode.Vector mode.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MaxAccelerationVector">
+            <summary>
+            Controls the maximum acceleration for the particle when using the
+            AccelerationMode.Vector mode.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.EmitterVelocitySensitivity">
+            <summary>
+            Controls how much particles are influenced by the velocity of the object
+            which created them. AddParticles takes in a Vector2 which is the base velocity
+            for the particles being created. That velocity is first multiplied by this
+            EmitterVelocitySensitivity to determine how much the particles are actually
+            affected by that velocity.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MinRotationSpeed">
+            <summary>
+            Range of values controlling how fast the particles rotate. Again, these
+            values should be in degrees for easier XML authoring.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MaxRotationSpeed">
+            <summary>
+            Range of values controlling how fast the particles rotate. Again, these
+            values should be in degrees for easier XML authoring.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MinLifetime">
+            <summary>
+            Range of values controlling how long a particle will last.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MaxLifetime">
+            <summary>
+            Range of values controlling how long a particle will last.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MinSize">
+            <summary>
+            Range of values controlling how big the particles are
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.MaxSize">
+            <summary>
+            Range of values controlling how big the particles are
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.Gravity">
+            <summary>
+            Controls the gravity applied to the particles. This can pull particles down
+            to simulate gravity, up for effects like smoke, or any other direction.   
+            </summary>     
+        </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.BlendMode">
+            <summary>
+            Alpha blending settings. Our default gives us a BlendState equivalent to
+            BlendState.AlphaBlend which is suitable for many particle effects.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleSettings.#ctor">
+            <summary>
+            Creates new instance of ParticleSettings class
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleSettings.#ctor(System.String)">
+            <summary>
+            Creates new instance of ParticleSettings class from file
+            </summary>
+            <param name="filename"></param>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleSettings.#ctor(System.IO.Stream)">
+            <summary>
+            Creates new instance of ParticleSettings class from file
+            </summary>
+            <param name="stream"></param>
+        </member>
+        <member name="T:Spooker.Graphics.Particles.ParticleSystem">
+            <summary>
+            Particle system.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleSystem.#ctor(Spooker.Core.GameWindow,Spooker.Graphics.Particles.ParticleSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Spooker.Graphics.Particles.ParticleSystem"/> class.
+            </summary>
+            <param name="game">The host for this particle system.</param>
+            <param name="settings">Settings used for this particle system.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleSystem.#ctor(Spooker.Core.GameWindow,Spooker.Graphics.Particles.ParticleSettings,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Spooker.Graphics.Particles.ParticleSystem"/> class.
+            </summary>
+            <param name="game">The host for this particle system.</param>
+            <param name="settings">Settings used for this particle system.</param>
+            <param name="initialParticleCount">The initial number of particles this
+            system expects to use. The system will grow as needed, however setting
+            this value to be as close as possible will reduce allocations.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleSystem.PickRandomDirection">
+            <summary>
+            PickRandomDirection is used by AddParticle to decide which direction
+            particles will move. 
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleSystem.AddParticles(Spooker.Vector2,Spooker.Vector2)">
+            <summary>
+            AddParticles's job is to add an effect somewhere on the screen. If there 
+            aren't enough particles in the freeParticles queue, it will use as many as 
+            it can. This means that if there not enough particles available, calling
+            AddParticles will have no effect.
+            </summary>
+            <param name="where">Where the particle effect should be created</param>
+            <param name="velocity">A base velocity for all particles. This is weighted 
+            by the EmitterVelocitySensitivity specified in the settings for the 
+            particle system.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleSystem.InitializeParticle(Spooker.Graphics.Particles.Particle,Spooker.Vector2,Spooker.Vector2)">
+            <summary>
+            InitializeParticle randomizes some properties for a particle, then
+            calls initialize on it. It can be overriden by subclasses if they 
+            want to modify the way particles are created. For example, 
+            SmokePlumeParticleSystem overrides this function make all particles
+            accelerate to the right, simulating wind.
+            </summary>
+            <param name="p">the particle to initialize</param>
+            <param name="where">the position on the screen that the particle should be
+            </param>
+            <param name="velocity">The base velocity that the particle should have</param>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleSystem.Update(Spooker.Time.GameTime)">
+            <summary>
+            overriden from DrawableGameComponent, Update will update all of the active
+            particles.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleSystem.Draw(Spooker.Graphics.SpriteBatch,Spooker.Graphics.SpriteEffects)">
+            <summary>
+            overriden from DrawableGameComponent, Draw will use ParticleSampleGame's 
+            sprite batch to render all of the active particles.
+            </summary>
+        </member>
+        <member name="P:Spooker.Graphics.Particles.ParticleSystem.FreeParticleCount">
+            <summary>
+            returns the number of particles that are available for a new effect.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Lights.LightEngine.AmbientColor">
+            <summary>
+            The color of the ambient.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.Lights.LightEngine.#ctor(Spooker.Graphics.Camera,Spooker.Graphics.Texture)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Spooker.Graphics.Lights.LightEngine"/> class.
+            </summary>
+            <param name="camera">Camera.</param>
+            <param name="texture">Texture.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Lights.LightEngine.Add(Spooker.Graphics.Lights.Light)">
+            <summary>
+            Add the specified light.
+            </summary>
+            <param name="light">Light.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Lights.LightEngine.Remove(Spooker.Graphics.Lights.Light)">
+            <summary>
+            Remove the specified light.
+            </summary>
+            <param name="light">Light.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Lights.LightEngine.SetTexture(Spooker.Graphics.Texture)">
+            <summary>
+            Sets the texture.
+            </summary>
+            <param name="texture">Texture.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Lights.LightEngine.Draw(SFML.Graphics.RenderTarget,SFML.Graphics.RenderStates)">
+            <summary>
+            Draw to the specified graphicsDevice and states.
+            </summary>
+            <param name="graphicsDevice">Graphics device.</param>
+            <param name="states">States.</param>
+        </member>
+        <member name="T:Spooker.GameStates.StateFactory">
+            <summary>
+            State factory.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateFactory.#ctor(SFML.Graphics.RenderWindow)">
+            <summary>
+            Creates new instance of StateFactory class.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateFactory.Draw(Spooker.Graphics.SpriteBatch,Spooker.Graphics.SpriteEffects)">
+            <summary>
+            Draws this instance of StateFactory class.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateFactory.Update(Spooker.Time.GameTime)">
+            <summary>
+            Updates this instance of StateFactory class.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateFactory.SetState(Spooker.GameStates.State)">
+            <summary>
+            Pops all states off the stack and pushes one onto it.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateFactory.PushState(Spooker.GameStates.State)">
+            <summary>
+            Pushes a state onto the state stack.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateFactory.PopState">
+            <summary>
+            Pops a state off the state stack.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateFactory.IsActive(Spooker.GameStates.State)">
+            <summary>
+            Checks if specified state is active.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateFactory.Dispose">
+            <summary>
+            Disposes this instance of StateFactory class.
+            </summary>
+        </member>
+        <member name="T:Spooker.Graphics.TiledMap.Layer">
+            <summary>
+            Human-understandable implementation of layer loaded with
+            TiledSharp.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.TiledMap.Layer.Name">
+            <summary>Name of this layer</summary>
+        </member>
+        <member name="F:Spooker.Graphics.TiledMap.Layer.Color">
+            <summary>Color of this layer</summary>
+        </member>
+        <member name="F:Spooker.Graphics.TiledMap.Layer.Visible">
+            <summary>Determines if layer will be drawn or not</summary>
+        </member>
+        <member name="F:Spooker.Graphics.TiledMap.Layer.Properties">
+            <summary>Properties of this layer</summary>
+        </member>
+        <member name="M:Spooker.Graphics.TiledMap.Layer.#ctor(TiledSharp.TmxLayer,Spooker.Vector2,System.Collections.Generic.Dictionary{System.Int32,System.Collections.Generic.KeyValuePair{Spooker.Rectangle,Spooker.Graphics.Texture}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Spooker.Graphics.TiledMap.Layer"/> class.
+            </summary>
+            <param name="layer">Layer.</param>
+            <param name="tileSize">Tile size.</param>
+            <param name="gidDict">Gid dict.</param>
+        </member>
+        <member name="T:Spooker.Graphics.TiledMap.Map">
+            <summary>
+            Human-understandable implementation of maps loaded with
+            TiledSharp.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.TiledMap.Map.Physics">
+            <summary>Handles collisions of this map.</summary>
+        </member>
+        <member name="F:Spooker.Graphics.TiledMap.Map.Layers">
+            <summary>Layers of this map.</summary>
+        </member>
+        <member name="F:Spooker.Graphics.TiledMap.Map.Width">
+            <summary>Width of map (in tiles).</summary>
+        </member>
+        <member name="F:Spooker.Graphics.TiledMap.Map.Height">
+            <summary>Height of map (in tiles).</summary>
+        </member>
+        <member name="F:Spooker.Graphics.TiledMap.Map.TileSize">
+            <summary>Width and height of one tile (in pixels)</summary>
+        </member>
+        <member name="F:Spooker.Graphics.TiledMap.Map.Objects">
+            <summary>List of all objects in this map</summary>
+        </member>
+        <member name="F:Spooker.Graphics.TiledMap.Map.Properties">
+            <summary>Properties of this map</summary>
+        </member>
+        <member name="M:Spooker.Graphics.TiledMap.Map.#ctor(Spooker.Graphics.Camera,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Spooker.Graphics.TiledMap.Map"/> class.
+            </summary>
+            <param name="camera">Camera.</param>
+            <param name="filename">Filename.</param>
+        </member>
+        <member name="M:Spooker.Graphics.TiledMap.Map.Draw(Spooker.Graphics.SpriteBatch,Spooker.Graphics.SpriteEffects)">
+            <summary>
+            Component uses this for drawing itself
+            </summary>
+            <param name="spriteBatch">Sprite batch.</param>
+            <param name="effects">Effects.</param>
+        </member>
+        <member name="M:Spooker.Graphics.TiledMap.Map.Draw(System.String,Spooker.Graphics.SpriteBatch,Spooker.Graphics.SpriteEffects)">
+            <summary>
+            Draw the layer specified by its name.
+            </summary>
+            <param name="spriteBatch">Sprite batch.</param>
+            <param name="name">Name.</param>
+            <param name="effects">Effects.</param>
+        </member>
+        <member name="M:Spooker.Graphics.TiledMap.Map.Draw(System.Int32,Spooker.Graphics.SpriteBatch,Spooker.Graphics.SpriteEffects)">
+            <summary>
+            Draw the layer specified by its index.
+            </summary>
+            <param name="spriteBatch">Sprite batch.</param>
+            <param name="index">Index.</param>
+            <param name="effects">Effects.</param>
+        </member>
+        <member name="M:Spooker.Graphics.TiledMap.Map.Update(Spooker.Time.GameTime)">
+            <summary>
+            Component uses this for updating itself.
+            </summary>
+            <param name="gameTime">Provides snapshot of timing values.</param>
+        </member>
+        <member name="P:Spooker.Graphics.TiledMap.Map.Bounds">
+            <summary>
+            Gets the bounds of this map (in pixels).
+            </summary>
+            <value>The bounds.</value>
+        </member>
+        <member name="T:Spooker.Graphics.TiledMap.Tile">
+            <summary>
+            Human-understandable implementation of tile loaded with
+            TiledSharp.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.TiledMap.Tile.#ctor(TiledSharp.TmxLayerTile,Spooker.Vector2,Spooker.Rectangle,Spooker.Graphics.Texture)">
+            <summary>
+            Creates new instance of Tile class
+            </summary>
+            <param name="tile">Base tile loaded with TiledSharp</param>
+            <param name="tileSize">Size of one tile (in pixels)</param>
+            <param name="tileRect">Positions of tiles on tileSheet</param>
+            <param name="tileSheet">Tilesheet textures</param>
+        </member>
+        <member name="T:Spooker.Graphics.TiledMap.Object">
+            <summary>
+            Human-understandable implementation of objects loaded with
+            TiledSharp.
+            </summary>
+        </member>
+        <member name="M:Spooker.Graphics.TiledMap.Object.Draw(Spooker.Graphics.SpriteBatch,Spooker.Graphics.SpriteEffects)">
+            <summary>
+            Component uses this for drawing itself
+            </summary>
+            <param name="spriteBatch">Sprite batch.</param>
+            <param name="effects">Effects.</param>
+        </member>
+        <member name="M:Spooker.Graphics.TiledMap.Object.Update(Spooker.Time.GameTime)">
+            <summary>
+            Component uses this for updating itself.
+            </summary>
+            <param name="gameTime">Provides snapshot of timing values.</param>
+        </member>
+        <member name="F:Spooker.Graphics.Text.Styles.Regular">
+            <summary>Regular characters, no style</summary>
+        </member>
+        <member name="F:Spooker.Graphics.Text.Styles.Bold">
+            <summary> Characters are bold</summary>
+        </member>
+        <member name="F:Spooker.Graphics.Text.Styles.Italic">
+            <summary>Characters are in italic</summary>
+        </member>
+        <member name="F:Spooker.Graphics.Text.Styles.Underlined">
+            <summary>Characters are underlined</summary>
+        </member>
+        <member name="T:Spooker.GameStates.StateGUI">
+            <summary>
+            Abstract class used for handling game input, drawing
+            and updating for one scene with additional GUI component.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateGUI.#ctor(Spooker.Core.GameWindow,System.String,System.String,System.Int32)">
+            <summary>
+            Creates new instance of game state with GUI component.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateGUI.TextEntered(SFML.Window.TextEventArgs)">
+            <summary>
+            Called when user tries to enter text.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateGUI.MouseWheelMoved(SFML.Window.MouseWheelEventArgs)">
+            <summary>
+            Called when user tries to move with mouse wheel.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateGUI.MouseMoved(SFML.Window.MouseMoveEventArgs)">
+            <summary>
+            Called when user tries to move with mouse.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateGUI.MouseButtonPressed(SFML.Window.MouseButtonEventArgs)">
+            <summary>
+            Called when user presses mouse button.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateGUI.MouseButtonReleased(SFML.Window.MouseButtonEventArgs)">
+            <summary>
+            Called when user releases mouse button.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateGUI.KeyPressed(SFML.Window.KeyEventArgs)">
+            <summary>
+            Called when user presses keyboard key.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateGUI.KeyReleased(SFML.Window.KeyEventArgs)">
+            <summary>
+            Called when user releases keyboard key.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateGUI.Enter">
+            <summary>
+            Called when a state is added to game (pushed to stack).
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateGUI.Leave">
+            <summary>
+            Called when a state is removed from game (popped from stack).
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateGUI.LoadGUI(Gwen.Control.Canvas)">
+            <summary>
+            Called after loading of GUI instance, use this for 
+            initializing GUI objects
+            </summary>
+        </member>
+        <member name="T:Spooker.Time.GameSpan">
+            <summary>
+            Contains game time span.
+            </summary>
+        </member>
+        <member name="M:Spooker.Time.GameSpan.FromTicks(System.Int64)">
+            <summary>
+            Froms the ticks.
+            </summary>
+            <returns>The ticks.</returns>
+            <param name="ticks">Ticks.</param>
+        </member>
+        <member name="M:Spooker.Time.GameSpan.FromMilliseconds(System.Int64)">
+            <summary>
+            Froms the milliseconds.
+            </summary>
+            <returns>The milliseconds.</returns>
+            <param name="milliseconds">Milliseconds.</param>
+        </member>
+        <member name="M:Spooker.Time.GameSpan.FromSeconds(System.Double)">
+            <summary>
+            Froms the seconds.
+            </summary>
+            <returns>The seconds.</returns>
+            <param name="seconds">Seconds.</param>
+        </member>
+        <member name="M:Spooker.Time.GameSpan.FromMinutes(System.Single)">
+            <summary>
+            Froms the minutes.
+            </summary>
+            <returns>The minutes.</returns>
+            <param name="minutes">Minutes.</param>
+        </member>
+        <member name="P:Spooker.Time.GameSpan.Ticks">
+            <summary>
+            Gets or sets the ticks.
+            </summary>
+            <value>The ticks.</value>
+        </member>
+        <member name="P:Spooker.Time.GameSpan.Milliseconds">
+            <summary>
+            Gets or sets the milliseconds.
+            </summary>
+            <value>The milliseconds.</value>
+        </member>
+        <member name="P:Spooker.Time.GameSpan.Seconds">
+            <summary>
+            Gets or sets the seconds.
+            </summary>
+            <value>The seconds.</value>
+        </member>
+        <member name="P:Spooker.Time.GameSpan.Minutes">
+            <summary>
+            Gets or sets the minutes.
+            </summary>
+            <value>The minutes.</value>
+        </member>
+        <member name="P:Spooker.Time.GameSpan.Frequency">
+            <summary>
+            Gets the frequency.
+            </summary>
+            <value>The frequency.</value>
+        </member>
+        <member name="P:Spooker.Time.GameSpan.Zero">
+            <summary>
+            Gets the zero.
+            </summary>
+            <value>The zero.</value>
+        </member>
+        <member name="T:Spooker.Graphics.Animations.AnimType">
+            <summary>
+            Defines how an <see cref="T:Spooker.Graphics.Animations.Animation"/> animates.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Animations.AnimType.None">
+            <summary>
+            <see cref="T:Spooker.Graphics.Animations.Animation"/> that will not animate.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Animations.AnimType.LoopOnce">
+            <summary>
+            <see cref="T:Spooker.Graphics.Animations.Animation"/> will loop once then change to <see cref="F:Spooker.Graphics.Animations.AnimType.None"/> back on the first frame.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Animations.AnimType.Loop">
+            <summary>
+            <see cref="T:Spooker.Graphics.Animations.Animation"/> will loop forever.
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.PacketWriter.WriteAllFields(System.Object)">
+            <summary>
+            Writes all public and private declared instance fields of the object in alphabetical order using reflection
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.PacketWriter.WriteAllFields(System.Object,System.Reflection.BindingFlags)">
+            <summary>
+            Writes all fields with specified binding in alphabetical order using reflection
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.PacketWriter.WriteAllProperties(System.Object)">
+            <summary>
+            Writes all public and private declared instance properties of the object in alphabetical order using reflection
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.PacketWriter.WriteAllProperties(System.Object,System.Reflection.BindingFlags)">
+            <summary>
+            Writes all properties with specified binding in alphabetical order using reflection
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.PacketReader.ReadAllFields(System.Object)">
+            <summary>
+            Reads all public and private declared instance fields of the object in alphabetical order using reflection
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.PacketReader.ReadAllFields(System.Object,System.Reflection.BindingFlags)">
+            <summary>
+            Reads all fields with the specified binding of the object in alphabetical order using reflection
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.PacketReader.ReadAllProperties(System.Object)">
+            <summary>
+            Reads all public and private declared instance fields of the object in alphabetical order using reflection
+            </summary>
+        </member>
+        <member name="M:Spooker.Network.PacketReader.ReadAllProperties(System.Object,System.Reflection.BindingFlags)">
+            <summary>
+            Reads all fields with the specified binding of the object in alphabetical order using reflection
+            </summary>
+        </member>
+    </members>
+</doc>

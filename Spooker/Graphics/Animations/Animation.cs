@@ -41,7 +41,7 @@ namespace Spooker.Graphics.Animations
 			_frames.Remove (frame);
 		}
 
-		public Rectangle GetNextFrame()
+		internal Rectangle GetNextFrame()
 		{
 			if (_animType == AnimType.None)
 				return _frames [0];

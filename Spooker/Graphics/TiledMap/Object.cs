@@ -9,7 +9,9 @@
 //-----------------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Spooker.Physics;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics;
+using Spooker.Time;
 
 namespace Spooker.Graphics.TiledMap
 {
@@ -19,43 +21,44 @@ namespace Spooker.Graphics.TiledMap
 	/// TiledSharp.
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public class Object : IDrawable, ICollidable
+	public class Object : IDrawable, IUpdateable
 	{
 		public string Name;
 		public string Type;
 		public ObjectType ObjectType;
 		public Vector2 Position;
 		public Vector2 Size;
+		public Body Shape;
 		public Dictionary<string, string> Properties;
-		public ICollidable Shape;
-		public Texture Texture;
-		public Rectangle SourceRect;
 
+		/// <summary>
+		/// Component uses this for drawing itself
+		/// </summary>
+		/// <param name="spriteBatch">Sprite batch.</param>
+		/// <param name="effects">Effects.</param>
 		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
-			if (ObjectType == ObjectType.Graphic)
-				spriteBatch.Draw(Texture, Position, SourceRect,
-					Color.White, Vector2.One, Vector2.Zero, 0f, effects);
+			if (!(Shape.UserData is Sprite))
+				return;
+
+			var sprite = Shape.UserData as Sprite;
+			spriteBatch.Draw(sprite, effects);
 		}
 
-		public bool Intersects(Line line)
+		/// <summary>
+		/// Component uses this for updating itself.
+		/// </summary>
+		/// <param name="gameTime">Provides snapshot of timing values.</param>
+		public void Update(GameTime gameTime)
 		{
-			return Shape.Intersects (line);
-		}
+			if (Shape.IsStatic || !(Shape.UserData is Sprite))
+				return;
 
-		public bool Intersects(Rectangle rectangle)
-		{
-			return Shape.Intersects (rectangle);
-		}
-
-		public bool Intersects(Circle circle)
-		{
-			return Shape.Intersects (circle);
-		}
-
-		public bool Intersects(Polygon polygon)
-		{
-			return Shape.Intersects (polygon);
+			var sprite = Shape.UserData as Sprite;
+			sprite.Position = new Vector2 (
+				ConvertUnits.ToDisplayUnits (Shape.Position.X),
+				ConvertUnits.ToDisplayUnits (Shape.Position.Y));
+			Shape.UserData = sprite;
 		}
 	}
 }

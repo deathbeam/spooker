@@ -10,12 +10,13 @@
     <RootNamespace>Spooker</RootNamespace>
     <AssemblyName>Spooker</AssemblyName>
     <ReleaseVersion>1.4</ReleaseVersion>
+    <Description>Fully free and open source game library, what will help game developers in making their own games faster.</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Build\Debug</OutputPath>
+    <OutputPath>..\Build\</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -31,13 +32,13 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <OutputPath>..\Build\Release</OutputPath>
+    <OutputPath>..\Build\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>x86</PlatformTarget>
-    <DocumentationFile>..\Build\Release\Spooker.xml</DocumentationFile>
+    <DocumentationFile>..\Build\Spooker.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
@@ -72,6 +73,10 @@
       <HintPath>..\Lib\TiledSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="FarseerPhysics">
+      <HintPath>..\Lib\FarseerPhysics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,13 +105,6 @@
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="Graphics\Texture.cs" />
-    <Compile Include="Circle.cs" />
-    <Compile Include="Line.cs" />
-    <Compile Include="Polygon.cs" />
-    <Compile Include="Physics\LineCollider.cs" />
-    <Compile Include="Physics\PolygonCollider.cs" />
-    <Compile Include="Physics\RectCollider.cs" />
-    <Compile Include="Physics\CircleCollider.cs" />
     <Compile Include="Core\GameComponent.cs" />
     <Compile Include="Core\GameSettings.cs" />
     <Compile Include="Core\GameWindow.cs" />
@@ -118,18 +116,14 @@
     <Compile Include="Graphics\Particles\ParticleSystem.cs" />
     <Compile Include="Input\InputAction.cs" />
     <Compile Include="Input\GameInput.cs" />
+	<Compile Include="Input\ActionNodes.cs" />
     <Compile Include="Graphics\Lights\LightEngine.cs" />
     <Compile Include="GameStates\StateFactory.cs" />
-    <Compile Include="Input\ActionNodes.cs" />
-    <Compile Include="Physics\SpriteCollider.cs" />
     <Compile Include="Graphics\TiledMap\Layer.cs" />
     <Compile Include="Graphics\TiledMap\Map.cs" />
     <Compile Include="Graphics\TiledMap\Tile.cs" />
     <Compile Include="Graphics\TiledMap\Object.cs" />
     <Compile Include="Graphics\TiledMap\ObjectType.cs" />
-    <Compile Include="Physics\ICollidable.cs" />
-    <Compile Include="Ellipse.cs" />
-    <Compile Include="Physics\EllipseCollider.cs" />
     <Compile Include="Graphics\Font.cs" />
     <Compile Include="Graphics\Text.cs" />
     <Compile Include="GameStates\StateGUI.cs" />
@@ -139,6 +133,9 @@
     <Compile Include="Time\GameSpan.cs" />
     <Compile Include="Graphics\Animations\AnimType.cs" />
     <Compile Include="Matrix.cs" />
+    <Compile Include="Network\PacketWriter.cs" />
+    <Compile Include="Network\PacketReader.cs" />
+    <Compile Include="Network\NetUtility.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -151,7 +148,6 @@
     <Folder Include="Graphics\Lights\" />
     <Folder Include="Input\" />
     <Folder Include="Network\" />
-    <Folder Include="Physics\" />
     <Folder Include="Time\" />
   </ItemGroup>
 </Project>

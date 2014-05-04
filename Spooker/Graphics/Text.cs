@@ -78,11 +78,9 @@ namespace Spooker.Graphics
 							_displayedString += '\0';
 
 					var extents = new Point (0, Font.LineSpacing (CharacterSize));
-					var prev = '\0';
 
 					foreach (var cur in DisplayedString)
 					{
-						prev = cur;
 						if (cur == '\n' || cur == '\v') continue;
 						extents.X += Font.Glyph(CharacterSize, cur, false).Advance;
 					}

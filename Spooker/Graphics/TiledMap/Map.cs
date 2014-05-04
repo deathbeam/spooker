@@ -10,6 +10,12 @@
 
 using System.Collections.Generic;
 using TiledSharp;
+using FarseerPhysics;
+using FarseerPhysics.Common;
+using FarseerPhysics.Common.Decomposition;
+using FarseerPhysics.Dynamics;
+using FarseerPhysics.Factories;
+using Spooker.Time;
 
 namespace Spooker.Graphics.TiledMap
 {
@@ -19,9 +25,12 @@ namespace Spooker.Graphics.TiledMap
 	/// TiledSharp.
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public class Map : IDrawable
+	public class Map : IDrawable, IUpdateable
     {
 		private readonly Camera _camera;
+
+		/// <summary>Handles collisions of this map.</summary>
+		public World Physics;
 
 		/// <summary>Layers of this map.</summary>
 		public List<Layer> Layers;
@@ -57,28 +66,47 @@ namespace Spooker.Graphics.TiledMap
 		/// <param name="filename">Filename.</param>
 		public Map(Camera camera, string filename)
         {
-		    _camera = camera;
-
 			var map = new TmxMap(filename);
 			Properties = map.Properties;
             Width = map.Width;
             Height = map.Height;
 			TileSize = new Vector2 (map.TileWidth, map.TileHeight);
 
+			// Load camera
+			_camera = camera;
+
+			// Initialize grid dictionary
 			var gidDict = ConvertGidDict (map.Tilesets);
 
-			// Load objects
-			Objects = ConvertObjects(map.ObjectGroups, gidDict);
-
-            // Load layers
+			// Load layers
 			Layers = new List<Layer>();
 			foreach (var layer in map.Layers)
 				Layers.Add(new Layer(layer, TileSize, gidDict));
+
+			// Load physics
+			ConvertUnits.SetDisplayUnitToSimUnitRatio (64f);
+			Physics = new World (Microsoft.Xna.Framework.Vector2.Zero); // No gravity
+
+			BodyFactory.CreateEdge (Physics,
+				ConvertUnits.ToSimUnits (Microsoft.Xna.Framework.Vector2.Zero),
+				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 (0, (float)Bounds.Height)));
+			BodyFactory.CreateEdge (Physics,
+				ConvertUnits.ToSimUnits (Microsoft.Xna.Framework.Vector2.Zero),
+				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 ((float)Bounds.Width, 0)));
+
+			BodyFactory.CreateEdge (Physics,
+				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 (0, (float)Bounds.Height)),
+				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 ((float)Bounds.Width, (float)Bounds.Height)));
+
+			BodyFactory.CreateEdge (Physics,
+				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 ((float)Bounds.Width, 0)),
+				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 ((float)Bounds.Width, (float)Bounds.Height)));
+
+			Objects = ConvertObjects(map.ObjectGroups, gidDict);
         }
 
 		/// <summary>
-		/// Component uses this for drawing itself (spriteBatch is started and ended in this sub,
-		/// so do not put this into already started spriteBatch.
+		/// Component uses this for drawing itself
 		/// </summary>
 		/// <param name="spriteBatch">Sprite batch.</param>
 		/// <param name="effects">Effects.</param>
@@ -112,6 +140,18 @@ namespace Spooker.Graphics.TiledMap
 			Layers[index].Draw (spriteBatch, effects);
 		}
 
+		/// <summary>
+		/// Component uses this for updating itself.
+		/// </summary>
+		/// <param name="gameTime">Provides snapshot of timing values.</param>
+		public void Update(GameTime gameTime)
+		{
+			Physics.Step ((float)gameTime.ElapsedGameTime.Seconds);
+
+			foreach (var o in Objects)
+				o.Update (gameTime);
+		}
+
 		private Dictionary<int, KeyValuePair<Rectangle, Texture>> ConvertGidDict(IEnumerable<TmxTileset> tilesets)
 		{
 			var gidDict = new Dictionary<int, KeyValuePair<Rectangle, Texture>>();
@@ -119,6 +159,7 @@ namespace Spooker.Graphics.TiledMap
 			foreach (var ts in tilesets)
 			{
 				var sheet = new Texture(ts.Image.Source);
+				sheet.Smooth = false;
 
 				// Loop hoisting
 				var wStart = ts.Margin;
@@ -164,60 +205,86 @@ namespace Spooker.Graphics.TiledMap
 
 					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Basic)
 					{
+						if (o.Width == 0 || o.Height == 0)
+							continue;
+
+						obj.Shape = BodyFactory.CreateRectangle (Physics,
+							ConvertUnits.ToSimUnits(o.Width),
+							ConvertUnits.ToSimUnits(o.Height), 1f);
+						obj.Shape.Position = new Microsoft.Xna.Framework.Vector2 (
+							ConvertUnits.ToSimUnits(o.X),
+							ConvertUnits.ToSimUnits(o.Y));
+
 						obj.ObjectType = ObjectType.Rectangle;
-						obj.Shape = new Rectangle (o.X, o.Y, o.Width, o.Height);
-					}
-
-					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Ellipse)
-					{
-						obj.ObjectType = ObjectType.Ellipse;
-						obj.Shape = new Circle (new Vector2 (o.X + o.Width / 2, o.Y + o.Height / 2), o.Width /2);
-					}
-
-					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polyline)
-					{
-						var lines = new List<Line> ();
-						for (int i = 0; i < o.Points.Count - 1; i++)
-							lines.Add(new Line(
-								o.Points[i].Item1 + o.X,
-								o.Points[i].Item2 + o.Y,
-								o.Points[i + 1].Item1 + o.X,
-								o.Points[i + 1].Item2 + o.Y));
-
-						obj.ObjectType = ObjectType.Polyline;
-						obj.Shape = new Polygon (lines);
-					}
-
-					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polygon)
-					{
-						var lines = new List<Line> ();
-						for (var i = 0; i < o.Points.Count; i++)
-					    {
-							if (i == (o.Points.Count - 1))
-								lines.Add(new Line(
-									o.Points[0].Item1 + o.X,
-									o.Points[0].Item2 + o.Y,
-									o.Points[i].Item1 + o.X,
-									o.Points[i].Item2 + o.Y));
-							else
-								lines.Add(new Line(
-									o.Points[i].Item1 + o.X,
-									o.Points[i].Item2 + o.Y,
-									o.Points[i + 1].Item1 + o.X,
-									o.Points[i + 1].Item2 + o.Y));
-					    }
-
-						obj.ObjectType = ObjectType.Polygon;
-						obj.Shape = new Polygon (lines);
 					}
 
 					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Tile)
 					{
-						obj.ObjectType = ObjectType.Graphic;
-						obj.Shape = new Rectangle (o.X, o.Y - o.Height, o.Width, o.Height);
-						obj.Texture = gidDict [o.Tile.Gid].Value;
-						obj.SourceRect = gidDict [o.Tile.Gid].Key;
+						if (o.Width == 0 || o.Height == 0)
+							continue;
+
 						obj.Position.Y -= o.Height;
+						var sprite = new Sprite (gidDict [o.Tile.Gid].Value) {
+							Position = obj.Position,
+							SourceRect = gidDict [o.Tile.Gid].Key,
+							Origin = gidDict [o.Tile.Gid].Key.Size /2
+						};
+
+						obj.Shape = BodyFactory.CreateRectangle (Physics,
+							ConvertUnits.ToSimUnits(o.Width),
+							ConvertUnits.ToSimUnits(o.Height), 1f, sprite);
+						obj.Shape.Position = new Microsoft.Xna.Framework.Vector2 (
+							ConvertUnits.ToSimUnits(o.X), 
+							ConvertUnits.ToSimUnits(o.Y - o.Height));
+
+						obj.ObjectType = ObjectType.Graphic;
+					}
+
+					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Ellipse)
+					{
+						obj.Shape = BodyFactory.CreateEllipse (Physics,
+							ConvertUnits.ToSimUnits (o.Width / 2),
+							ConvertUnits.ToSimUnits (o.Height / 2),
+							0, 1f);
+						obj.Shape.Position = new Microsoft.Xna.Framework.Vector2 (
+							ConvertUnits.ToSimUnits(o.X),
+							ConvertUnits.ToSimUnits(o.Y));
+
+						obj.ObjectType = ObjectType.Ellipse;
+					}
+
+					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polyline ||
+						o.ObjectType == TmxObjectGroup.TmxObjectType.Polygon)
+					{
+						var vert = new Vertices ();
+
+						foreach (var point in o.Points)
+							vert.Add (new Microsoft.Xna.Framework.Vector2 (
+								ConvertUnits.ToSimUnits(point.Item1), 
+								ConvertUnits.ToSimUnits(point.Item2)));
+
+						if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polyline) {
+							obj.ObjectType = ObjectType.Polyline;
+							obj.Shape = BodyFactory.CreateChainShape (Physics, vert, new Microsoft.Xna.Framework.Vector2 (
+								ConvertUnits.ToSimUnits (o.X),
+								ConvertUnits.ToSimUnits (o.Y)));
+						} else {
+							obj.ObjectType = ObjectType.Polygon;
+							var verts = Triangulate.ConvexPartition (vert, TriangulationAlgorithm.Bayazit);
+							obj.Shape = BodyFactory.CreateCompoundPolygon (Physics, verts, 1f, new Microsoft.Xna.Framework.Vector2 (
+								ConvertUnits.ToSimUnits (o.X),
+								ConvertUnits.ToSimUnits (o.Y)));
+						}
+					}
+
+					if (o.Type == "Dynamic") {
+						if (o.Properties.ContainsKey ("LinearDamping"))
+							obj.Shape.LinearDamping = float.Parse (o.Properties ["LinearDamping"]);
+						obj.Shape.BodyType = BodyType.Dynamic;
+						obj.Shape.IsStatic = false;
+					} else {
+						obj.Shape.BodyType = BodyType.Static;
+						obj.Shape.IsStatic = true;
 					}
 
 					objList.Add (obj);

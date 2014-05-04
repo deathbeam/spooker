@@ -16,12 +16,18 @@ using Spooker.Time;
 
 namespace Spooker.Network
 {
+	/// <summary>
+	/// Agent role.
+	/// </summary>
 	public enum AgentRole : byte
 	{
 		Client,
 		Server
 	}
 
+	/// <summary>
+	/// Network agent.
+	/// </summary>
 	public class NetworkAgent : IUpdateable
 	{
 		private readonly NetPeer _peer;
@@ -33,18 +39,15 @@ namespace Spooker.Network
 		public event ConnectEvent OnConnect;
 		public event ConnectEvent OnDisconnect;
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Manages (adds or removes) packets to packet manager stack.
+		/// The packet manager.
 		/// </summary>
-		////////////////////////////////////////////////////////////
-		public PacketManager Packets;
+		public PacketManager PacketManager;
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Return list of all connections connected to this peer.
+		/// Gets the connections.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <value>The connections.</value>
 		public List<NetConnection> Connections
 		{
 			get
@@ -53,12 +56,13 @@ namespace Spooker.Network
 			}
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Customize appIdentifier. Note: Client and server
-		/// appIdentifier must be the same.
+		/// Initializes a new instance of the <see cref="Spooker.Network.NetworkAgent"/> class.
+		/// Note: Client and server tag must be the same.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="role">Role.</param>
+		/// <param name="tag">Tag.</param>
+		/// <param name="port">Port.</param>
 		public NetworkAgent(AgentRole role, string tag, int port = 14242)
 		{
 		    _role = role;
@@ -79,18 +83,17 @@ namespace Spooker.Network
 				_peer = new NetClient(config);
 			}
 
-			Packets = new PacketManager ();
+			PacketManager = new PacketManager ();
 
 			_peer.Start();
 			_outgoingMessage = _peer.CreateMessage();
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Connects to a server. Throws an exception if you attempt
 		/// to call Connect as a Server.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="ip">Ip.</param>
 		public void Connect(string ip)
 		{
 			if (_role == AgentRole.Client)
@@ -103,31 +106,26 @@ namespace Spooker.Network
 			}
 		} 
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Closes the NetPeer
+		/// Shutdown this instance.
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public void Shutdown()
 		{
 			_peer.Shutdown("Closing connection.");
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Sends off _outgoingMessage and then clears it for the
 		/// next send. Defaults to UnreliableSequenced for fast
 		/// transfer which guarantees that older messages won't be
-		/// processed after new messages. If IsGuaranteed is true it
-		/// uses ReliableSequenced which is safer but much slower.
+		/// processed after new messages.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="recipient">Recipient.</param>
 		public void SendMessage(NetConnection recipient)
 		{
 			SendMessage(recipient, false);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Sends off _outgoingMessage and then clears it for the
 		/// next send. Defaults to UnreliableSequenced for fast
@@ -135,7 +133,8 @@ namespace Spooker.Network
 		/// processed after new messages. If IsGuaranteed is true it
 		/// uses ReliableSequenced which is safer but much slower.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="recipient">Recipient.</param>
+		/// <param name="isGuaranteed">If set to <c>true</c> is guaranteed.</param>
 		public void SendMessage(NetConnection recipient, bool isGuaranteed)
 		{
 			NetDeliveryMethod method = isGuaranteed ? NetDeliveryMethod.ReliableOrdered : NetDeliveryMethod.UnreliableSequenced;
@@ -143,14 +142,10 @@ namespace Spooker.Network
 			_outgoingMessage = _peer.CreateMessage();
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Reads every message in the queue and processes a list of
-		/// data messages. Other message types just write a Console
-		/// note. This should be called every update by the Game
-		/// Screen.
+		/// Component uses this for updating itself.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="gameTime">Provides snapshot of timing values.</param>
 		public void Update(GameTime gameTime)
 		{
 			NetIncomingMessage incomingMessage;
@@ -177,16 +172,18 @@ namespace Spooker.Network
 
 					if (status == NetConnectionStatus.Disconnected)
 					{
-						OnDisconnect.Invoke(incomingMessage);
+						if (OnDisconnect != null)
+							OnDisconnect.Invoke (incomingMessage);
 					}
 
 					if (status == NetConnectionStatus.Connected)
 					{
-						OnConnect.Invoke(incomingMessage);
+						if (OnConnect != null)
+							OnConnect.Invoke (incomingMessage);
 					}
 					break;
 				case NetIncomingMessageType.Data:
-					var packet = Packets.GetPacket (incomingMessage.ReadInt32 ());
+					var packet = PacketManager.GetPacket (incomingMessage.ReadInt32 ());
 					packet.HandleData (incomingMessage);
 					break;
 				}
@@ -199,84 +196,13 @@ namespace Spooker.Network
 			}
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Write string to message
+		/// Write the specified writer.
 		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void WriteMessage(string message)
+		/// <param name="writer">Writer.</param>
+		public void Write(PacketWriter writer)
 		{
-			_outgoingMessage.Write(message);
-		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Write bool to message
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void WriteMessage(bool message)
-		{
-			_outgoingMessage.Write(message);
-		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Write byte to message
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void WriteMessage(byte message)
-		{
-			_outgoingMessage.Write(message);
-		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Write short to message
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void WriteMessage(short message)
-		{
-			_outgoingMessage.Write(message);
-		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Write int to message
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void WriteMessage(int message)
-		{
-			_outgoingMessage.Write(message);
-		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Write long to message
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void WriteMessage(long message)
-		{
-			_outgoingMessage.Write(message);
-		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Write float to message
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void WriteMessage(float message)
-		{
-			_outgoingMessage.Write(message);
-		}
-
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Write double to message
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void WriteMessage(double message)
-		{
-			_outgoingMessage.Write(message);
+			_outgoingMessage.Write(writer.Data);
 		}
 	}
 }
