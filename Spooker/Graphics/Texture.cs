@@ -12,6 +12,9 @@ using System.IO;
 
 namespace Spooker.Graphics
 {
+	/// <summary>
+	/// Texture.
+	/// </summary>
 	public class Texture
 	{
 		#region Private fields
@@ -24,18 +27,29 @@ namespace Spooker.Graphics
 
 		#region Properties
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Spooker.Graphics.Texture"/> is smooth.
+		/// </summary>
+		/// <value><c>true</c> if smooth; otherwise, <c>false</c>.</value>
 		public bool Smooth
 		{
 			get { return _texture.Smooth; }
 			set { _texture.Smooth = value; }
 		}
 
+		/// <summary>
+		/// Gets the size.
+		/// </summary>
+		/// <value>The size.</value>
 		public Vector2 Size
 		{
 			get { return new Vector2(_texture.Size.X, _texture.Size.Y); }
 		}
 
-		/// <summary>The array of pixels in the texture in bytes.</summary>
+		/// <summary>
+		/// Gets or sets the array of pixels in the texture in bytes.
+		/// </summary>
+		/// <value>The pixels.</value>
 		public byte[] Pixels {
 			get { CreateImage(); return _image.Pixels; }
 			set { _image = new SFML.Graphics.Image((uint)Size.X, (uint)Size.Y, value); Update(); }
@@ -59,22 +73,38 @@ namespace Spooker.Graphics
 
 		#region Constructors/Destructors
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Texture"/> class.
+		/// </summary>
+		/// <param name="copy">Copy.</param>
 		public Texture (Texture copy)
 		{
 			_texture = new SFML.Graphics.Texture (copy._texture);
 
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Texture"/> class.
+		/// </summary>
+		/// <param name="filename">Filename.</param>
 		public Texture (string filename)
 			: this(new FileStream(filename, FileMode.Open))
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Texture"/> class.
+		/// </summary>
+		/// <param name="stream">Stream.</param>
 		public Texture (Stream stream)
 		{
 			_texture = new SFML.Graphics.Texture (stream);
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Texture"/> class.
+		/// </summary>
+		/// <param name="pixels">Pixels.</param>
 		public Texture (Color[,] pixels)
 		{
 
@@ -89,6 +119,10 @@ namespace Spooker.Graphics
 			_texture = new SFML.Graphics.Texture (new SFML.Graphics.Image (pix));
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Texture"/> class.
+		/// </summary>
+		/// <param name="size">Size.</param>
 		public Texture (Vector2 size)
 		{
 			_texture = new SFML.Graphics.Texture (
@@ -96,6 +130,11 @@ namespace Spooker.Graphics
 					(uint)size.Y);
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Texture"/> class.
+		/// </summary>
+		/// <param name="size">Size.</param>
+		/// <param name="color">Color.</param>
 		public Texture (Vector2 size, Color color)
 		{
 			_texture = new SFML.Graphics.Texture (
@@ -105,6 +144,11 @@ namespace Spooker.Graphics
 					color.ToSfml()));
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Texture"/> class.
+		/// </summary>
+		/// <param name="size">Size.</param>
+		/// <param name="pixels">Pixels.</param>
 		public Texture (Vector2 size, byte[] pixels)
 		{
 			_texture = new SFML.Graphics.Texture (
@@ -118,6 +162,12 @@ namespace Spooker.Graphics
 
 		#region Functions
 
+		/// <summary>
+		/// Gets the pixel.
+		/// </summary>
+		/// <returns>The pixel.</returns>
+		/// <param name="x">The x coordinate.</param>
+		/// <param name="y">The y coordinate.</param>
 		public Color GetPixel(int x, int y)
 		{
 			CreateImage();
@@ -125,6 +175,12 @@ namespace Spooker.Graphics
 			return new Color(_image.GetPixel((uint)x, (uint)y));
 		}
 
+		/// <summary>
+		/// Sets the pixel.
+		/// </summary>
+		/// <param name="x">The x coordinate.</param>
+		/// <param name="y">The y coordinate.</param>
+		/// <param name="color">Color.</param>
 		public void SetPixel(int x, int y, Color color)
 		{
 			CreateImage();
@@ -135,6 +191,14 @@ namespace Spooker.Graphics
 			_needsUpdate = true;
 		}
 
+		/// <summary>
+		/// Copies the pixels.
+		/// </summary>
+		/// <param name="from">From.</param>
+		/// <param name="fromX">From x.</param>
+		/// <param name="fromY">From y.</param>
+		/// <param name="toX">To x.</param>
+		/// <param name="toY">To y.</param>
 		public void CopyPixels(Texture from, int fromX, int fromY, int toX, int toY)
 		{
 			CreateImage();
@@ -150,6 +214,10 @@ namespace Spooker.Graphics
 					(int)from.Size.Y));
 		}
 
+		/// <summary>
+		/// Saves to file.
+		/// </summary>
+		/// <param name="path">Path.</param>
 		public void SaveToFile(string path)
 		{
 			CreateImage();
@@ -157,12 +225,18 @@ namespace Spooker.Graphics
 			_image.SaveToFile(path);
 		}
 
+		/// <summary>
+		/// Creates the image.
+		/// </summary>
 		public void CreateImage()
 		{
 			if (_image == null)
 				_image = _texture.CopyToImage();
 		}
 
+		/// <summary>
+		/// Update this instance.
+		/// </summary>
 		public void Update()
 		{
 			if (_needsUpdate)

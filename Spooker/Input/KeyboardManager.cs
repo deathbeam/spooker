@@ -17,7 +17,7 @@ using Spooker.Time;
 namespace Spooker.Input
 {
 	/// <summary>
-	/// 
+	/// Keyboard manager.
 	/// </summary>
 	public class KeyboardManager : IUpdateable
     {
@@ -25,10 +25,9 @@ namespace Spooker.Input
 		private readonly Dictionary<Keyboard.Key, bool> _previousKeyStates = new Dictionary<Keyboard.Key, bool>();
 		private readonly IEnumerable<Keyboard.Key> _keysEnum = Enum.GetValues(typeof(Keyboard.Key)).Cast<Keyboard.Key>();
 		
-	    /// <summary>
-	    /// Creates new instance of KeyboardManager class.
-	    /// </summary>
-	    /// <returns></returns>
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Input.KeyboardManager"/> class.
+		/// </summary>
 	    public KeyboardManager()
 		{
 			foreach(Keyboard.Key key in _keysEnum)
@@ -39,9 +38,9 @@ namespace Spooker.Input
 		}
 
 		/// <summary>
-		/// 
+		/// Component uses this for updating itself.
 		/// </summary>
-		/// <param name="gameTime"></param>
+		/// <param name="gameTime">Provides snapshot of timing values.</param>
 		public void Update(GameTime gameTime)
         {
 			_previousKeyStates.Clear();

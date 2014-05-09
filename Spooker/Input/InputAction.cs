@@ -11,12 +11,32 @@ namespace Spooker.Input
 		private readonly List<ActionNode> _triggers;
 
 		public string Name;
-		
+
+		/// <summary>
+		/// Occurs when action is pressed.
+		/// </summary>
 		public event Action OnPress;
+
+		/// <summary>
+		/// Occurs when action is released.
+		/// </summary>
 		public event Action OnRelease;
+
+		/// <summary>
+		/// Occurs when action is held.
+		/// </summary>
 		public event Action OnHold;
+
+		/// <summary>
+		/// Occurs when action is idle.
+		/// </summary>
 		public event Action OnIdle;
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Input.InputAction"/> class.
+		/// </summary>
+		/// <param name="parent">Parent.</param>
+		/// <param name="name">Name.</param>
 		public InputAction (GameInput parent, string name)
 		{
 			Name = name;
@@ -24,18 +44,29 @@ namespace Spooker.Input
 			_parent = parent;
 		}
 
+		/// <summary>
+		/// Add the specified key.
+		/// </summary>
+		/// <param name="key">Key.</param>
 		public void Add(Keyboard.Key key)
 		{
 			_triggers.Add (
 				new KeyNode (key));
 		}
 
+		/// <summary>
+		/// Add the specified button.
+		/// </summary>
+		/// <param name="button">Button.</param>
 		public void Add(Mouse.Button button)
 		{
 			_triggers.Add (
 				new MouseNode (button));
 		}
 
+		/// <summary>
+		/// Trigger this instance.
+		/// </summary>
 		public void Trigger()
 		{
 			if (IsDown() && OnHold != null)
@@ -48,21 +79,37 @@ namespace Spooker.Input
 				OnRelease ();
 		}
 
+		/// <summary>
+		/// Determines whether this instance is pressed.
+		/// </summary>
+		/// <returns><c>true</c> if this instance is pressed; otherwise, <c>false</c>.</returns>
 		public bool IsPressed()
 		{
 		    return _triggers.Any(trigger => trigger.IsPressed(_parent));
 		}
 
+		/// <summary>
+		/// Determines whether this instance is released.
+		/// </summary>
+		/// <returns><c>true</c> if this instance is released; otherwise, <c>false</c>.</returns>
 	    public bool IsReleased()
 	    {
 	        return _triggers.Any(trigger => trigger.IsReleased(_parent));
 	    }
 
+		/// <summary>
+		/// Determines whether this instance is down.
+		/// </summary>
+		/// <returns><c>true</c> if this instance is down; otherwise, <c>false</c>.</returns>
 	    public bool IsDown()
 	    {
 	        return _triggers.Any(trigger => trigger.IsDown(_parent));
 	    }
 
+		/// <summary>
+		/// Determines whether this instance is up.
+		/// </summary>
+		/// <returns><c>true</c> if this instance is up; otherwise, <c>false</c>.</returns>
 	    public bool IsUp()
 	    {
 	        return _triggers.Any(trigger => trigger.IsUp(_parent));

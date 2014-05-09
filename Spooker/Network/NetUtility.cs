@@ -17,10 +17,7 @@ namespace Spooker.Network
 	{
 		internal static void SortMembersList(MemberInfo[] list)
 		{
-			int h, j;
-			MemberInfo tmp;
-
-			h = 1;
+		    int h = 1;
 			while (h * 3 + 1 <= list.Length)
 				h = 3 * h + 1;
 
@@ -28,8 +25,8 @@ namespace Spooker.Network
 			{
 				for (int i = h - 1; i < list.Length; i++)
 				{
-					tmp = list[i];
-					j = i;
+					MemberInfo tmp = list[i];
+					int j = i;
 					while (true)
 					{
 						if (j >= h)

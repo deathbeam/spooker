@@ -8,27 +8,25 @@
 // License: MIT
 //-----------------------------------------------------------------------------
 
-using System;
-
 namespace Spooker.Graphics.Animations
 {
 	/// <summary>
-	/// Defines how an <see cref="Animation"/> animates.
+	/// Defines how an <see cref="Spooker.Graphics.Animations.Animation"/> animates.
 	/// </summary>
 	public enum AnimType : byte
 	{
 		/// <summary>
-		/// <see cref="Animation"/> that will not animate.
+		/// <see cref="Spooker.Graphics.Animations.Animation"/> that will not animate.
 		/// </summary>
 		None,
 
 		/// <summary>
-		/// <see cref="Animation"/> will loop once then change to <see cref="AnimType.None"/> back on the first frame.
+		/// <see cref="Spooker.Graphics.Animations.Animation"/> will loop once then change to <see cref="AnimType.None"/> back on the first frame.
 		/// </summary>
 		LoopOnce,
 
 		/// <summary>
-		/// <see cref="Animation"/> will loop forever.
+		/// <see cref="Spooker.Graphics.Animations.Animation"/> will loop forever.
 		/// </summary>
 		Loop
 	}

@@ -12,6 +12,9 @@ using System;
 
 namespace Spooker.Graphics
 {
+	/// <summary>
+	/// Text.
+	/// </summary>
 	public class Text : Transformable, IDrawable
 	{
 		[Flags]

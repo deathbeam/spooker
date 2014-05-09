@@ -32,12 +32,11 @@ namespace Spooker.Audio
 		
 		/// <summary>Extension of sounds what will audio manager load and play.</summary>
 		public string SoundExtension;
-		
-		////////////////////////////////////////////////////////////
+
 		/// <summary>
-		/// Loads audio files from specified audio folder to cache.
+		/// Component uses this for loading itself
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="content">Content.</param>
 		public void LoadContent(ContentManager content)
 		{
 			if (!Directory.Exists(SoundDirectory)) return;
@@ -53,11 +52,10 @@ namespace Spooker.Audio
 					new SoundBuffer(file.FullName));
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Loads and plays music from specified music path.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="musicName">Music name.</param>
 		public void PlayMusic(string musicName)
 		{
 			if(_currentMusic != null) _currentMusic.Dispose();
@@ -65,11 +63,9 @@ namespace Spooker.Audio
 			_currentMusic.Play();
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Stops current music.
+		/// Stops the music.
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public void StopMusic()
 		{
 			if (_currentMusic == null)
@@ -77,11 +73,9 @@ namespace Spooker.Audio
 			_currentMusic.Dispose ();
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Pause current music.
+		/// Pauses the music.
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public void PauseMusic()
 		{
 			if (_currentMusic == null)
@@ -89,11 +83,9 @@ namespace Spooker.Audio
 			_currentMusic.Pause();
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Resumes current paused music.
+		/// Resumes the music.
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public void ResumeMusic()
 		{
 			if (_currentMusic == null)
@@ -101,33 +93,20 @@ namespace Spooker.Audio
 			_currentMusic.Play();
 		}
 
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Plays sound stored in sound cache once.
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void PlaySound(string soundName)
-		{
-			var sound = new Sound(_sounds[soundName]) {Loop = false};
-		    sound.Play();
-		}
-
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Play sound stored in sound cache once or repeated.
 		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void PlaySound(string soundName, bool repeat)
+		/// <param name="soundName">Sound name.</param>
+		/// <param name="repeat">If set to <c>true</c> repeat.</param>
+		public void PlaySound(string soundName, bool repeat = false)
 		{
 			var sound = new Sound(_sounds[soundName]) {Loop = repeat};
 		    sound.Play();
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Stops all sounds
+		/// Stops the sounds.
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public void StopSounds()
 		{
 			//TODO: Actually stop all sounds, not only dispose them...
@@ -135,21 +114,24 @@ namespace Spooker.Audio
 				sound.Dispose ();
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Returns sound from sound cache.
+		/// Gets the sound from sound cache.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <returns>The sound.</returns>
+		/// <param name="soundName">Sound name.</param>
 		public Sound GetSound(string soundName)
 		{
 			return new Sound(_sounds[soundName]);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Disposes this instance of audio manager class.
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <filterpriority>2</filterpriority>
+		/// <remarks>Call <see cref="Dispose"/> when you are finished using the <see cref="Spooker.Audio.AudioManager"/>. The
+		/// <see cref="Dispose"/> method leaves the <see cref="Spooker.Audio.AudioManager"/> in an unusable state. After
+		/// calling <see cref="Dispose"/>, you must release all references to the <see cref="Spooker.Audio.AudioManager"/> so
+		/// the garbage collector can reclaim the memory that the <see cref="Spooker.Audio.AudioManager"/> was occupying.</remarks>
 		public void Dispose()
 		{
 			StopMusic ();

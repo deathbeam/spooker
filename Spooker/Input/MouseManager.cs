@@ -17,41 +17,68 @@ using Spooker.Time;
 namespace Spooker.Input
 {
 	/// <summary>
-	/// 
+	/// Mouse manager.
 	/// </summary>
-	public class MouseManager : IUpdateable
+	public class MouseManager : ITargetable, IUpdateable
 	{
 		private readonly Dictionary<Mouse.Button, bool> _buttonStates = new Dictionary<Mouse.Button, bool>();
 		private readonly Dictionary<Mouse.Button, bool> _previousButtonStates = new Dictionary<Mouse.Button, bool>();
 		private readonly IEnumerable<Mouse.Button> _buttonEnum = Enum.GetValues(typeof(Mouse.Button)).Cast<Mouse.Button>();
 		private readonly SFML.Graphics.RenderWindow _graphicsDevice;
-		
+
+		/// <summary>
+		/// Occurs when mouse wheel scrolls.
+		/// </summary>
 		public event Action<MouseWheelEventArgs> OnWheelScroll;
+
+		/// <summary>
+		/// Occurs when mouse wheel scrolls up.
+		/// </summary>
 		public event Action<MouseWheelEventArgs> OnWheelScrollUp;
+
+		/// <summary>
+		/// Occurs when mouse wheel scrolls down.
+		/// </summary>
 		public event Action<MouseWheelEventArgs> OnWheelScrollDown;
+
+		/// <summary>
+		/// The scroll wheel delta.
+		/// </summary>
 		public int ScrollWheelDelta;
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Spooker.Input.MouseManager"/> scroll wheel moved.
+		/// </summary>
+		/// <value><c>true</c> if scroll wheel moved; otherwise, <c>false</c>.</value>
 		public bool ScrollWheelMoved
 		{
 			get { return (ScrollWheelDelta != 0); }
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the global position.
+		/// </summary>
+		/// <value>The global position.</value>
 		public Vector2 GlobalPosition
 		{
 			get { return new Vector2(Mouse.GetPosition().X, Mouse.GetPosition().Y); }
 			set { Mouse.SetPosition(new Vector2i((int)value.X, (int)value.Y)); }
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the local position.
+		/// </summary>
+		/// <value>The local position.</value>
 		public Vector2 LocalPosition
 		{
 			get { return new Vector2 (Mouse.GetPosition (_graphicsDevice).X,Mouse.GetPosition (_graphicsDevice).Y); }
 			set { Mouse.SetPosition(new Vector2i((int)value.X, (int)value.Y), _graphicsDevice); }
 		}
 
-	    /// <summary>
-	    /// Creates new instance of MouseManager class.
-	    /// </summary>
-	    /// <returns></returns>
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Input.MouseManager"/> class.
+		/// </summary>
+		/// <param name="graphicsDevice">Graphics device.</param>
 		public MouseManager(SFML.Graphics.RenderWindow graphicsDevice)
 		{
 
@@ -65,9 +92,18 @@ namespace Spooker.Input
 		}
 
 		/// <summary>
-		/// 
+		/// Targets the position.
 		/// </summary>
-		/// <param name="gameTime"></param>
+		/// <returns>The position.</returns>
+		public Vector2 TargetPosition()
+		{
+			return LocalPosition;
+		}
+
+		/// <summary>
+		/// Component uses this for updating itself.
+		/// </summary>
+		/// <param name="gameTime">Provides snapshot of timing values.</param>
 		public void Update(GameTime gameTime)
 		{
 			ScrollWheelDelta = 0;
@@ -84,11 +120,7 @@ namespace Spooker.Input
 				_buttonStates.Add(button, Mouse.IsButtonPressed(button));
 			}
 		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="args"></param>
+		
 		private void MouseWheelMoved(MouseWheelEventArgs args)
 		{
 			ScrollWheelDelta = args.Delta;

@@ -12,12 +12,10 @@ using System;
 
 namespace Spooker.Graphics
 {
-	////////////////////////////////////////////////////////////
 	/// <summary>
 	/// Class that represents a color with red, green, blue, and 
 	/// alpha channels.
 	/// </summary>
-	////////////////////////////////////////////////////////////
 	[Serializable]
 	public class Color
 	{
@@ -107,14 +105,28 @@ namespace Spooker.Graphics
 		#region Constructors
 
 		/// <summary>
-		/// Create a empty color.
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Color"/> class.
 		/// </summary>
 		public Color()
 		{
 		}
 
 		/// <summary>
-		/// Create a new color.
+		/// Create a color by copying the RGBA from another color.
+		/// </summary>
+		/// <param name="copy">The color to copy.</param>
+		public Color(Color copy) : this(copy.R, copy.G, copy.B, copy.A) { }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Color"/> class.
+		/// </summary>
+		/// <param name="r">Red, 0 to 1.</param>
+		/// <param name="g">Green, 0 to 1.</param>
+		/// <param name="b">Blue, 0 to 1.</param>
+		public Color(float r, float g, float b) : this(r, g, b, 1f) { }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Color"/> class.
 		/// </summary>
 		/// <param name="r">Red, 0 to 1.</param>
 		/// <param name="g">Green, 0 to 1.</param>
@@ -128,25 +140,11 @@ namespace Spooker.Graphics
 			A = a;
 		}
 
-        /// <summary>
-        /// Create a new color.
-        /// </summary>
-        /// <param name="r">Red, 0 to 1.</param>
-        /// <param name="g">Green, 0 to 1.</param>
-        /// <param name="b">Blue, 0 to 1.</param>
-        public Color(float r, float g, float b)
-        {
-            R = r;
-            G = g;
-            B = b;
-			A = 1f;
-        }
-
 		/// <summary>
-		/// Create a color by copying the RGBA from another color.
+		/// Create a new color from a hex number.  Formats are 0xRGB, 0xRRGGBB, 0xRGBA, 0xRRGGBBAA.
 		/// </summary>
-		/// <param name="copy">The color to copy.</param>
-		public Color(Color copy) : this(copy.R, copy.G, copy.B, copy.A) { }
+		/// <param name="hex">A hex number representing a color.</param>
+		public Color(UInt32 hex) : this(hex.ToString("X")) { }
 
 		/// <summary>
 		/// Create a new color from a string.  Formats are "RGB", "RGBA", "RRGGBB", and "RRGGBBAA".
@@ -188,12 +186,6 @@ namespace Spooker.Graphics
 			B = MathHelper.ScaleClamp(blue, 0, 255, 0, 1);
 			A = MathHelper.ScaleClamp(alpha, 0, 255, 0, 1);
 		}
-
-		/// <summary>
-		/// Create a new color from a hex number.  Formats are 0xRGB, 0xRRGGBB, 0xRGBA, 0xRRGGBBAA.
-		/// </summary>
-		/// <param name="hex">A hex number representing a color.</param>
-		public Color(UInt32 hex) : this(hex.ToString("X")) { }
 
 		/// <summary>
 		/// Create a new color using bytes from 0 to 255.

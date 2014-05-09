@@ -10,7 +10,6 @@
 
 using SFML.Graphics;
 using Spooker.Audio;
-using Spooker.Content;
 using Spooker.Input;
 using Spooker.GameStates;
 
@@ -51,12 +50,10 @@ namespace Spooker.Core
 			get { return Game.StateFactory; }
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of GameComponent class.
+		/// Initializes a new instance of the <see cref="Spooker.Core.GameComponent"/> class.
 		/// </summary>
-		/// <param name="game">Parent game window.</param>
-		////////////////////////////////////////////////////////////
+		/// <param name="game">Game.</param>
 		protected GameComponent(GameWindow game)
 		{
 			Game = game;

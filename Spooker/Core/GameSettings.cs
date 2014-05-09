@@ -112,33 +112,26 @@ namespace Spooker.Core
 		public uint MinorVersion;
 		#endregion
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of GameSettings class using default
-		/// parameters
+		/// Initializes a new instance of the <see cref="Spooker.Core.GameSettings"/> class.
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public GameSettings()
 		{
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of GameSettings using parameters
-		/// loaded from settings file.
+		/// Initializes a new instance of the <see cref="Spooker.Core.GameSettings"/> class.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="filename">Filename.</param>
 		public GameSettings(string filename)
 			: this(new FileStream(filename, FileMode.Open))
 		{
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of GameSettings using parameters
-		/// loaded from settings file.
+		/// Initializes a new instance of the <see cref="Spooker.Core.GameSettings"/> class.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="stream">Stream.</param>
 		public GameSettings(Stream stream)
 		{
 			var reader = new StreamReader (stream);

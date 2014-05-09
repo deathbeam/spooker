@@ -19,11 +19,11 @@ namespace Spooker.Network
 {
 	public class PacketWriter : BinaryWriter
 	{
-		private static Dictionary<Type, MethodInfo> _writeMethods;
+		private static readonly Dictionary<Type, MethodInfo> WriteMethods;
 
 		static PacketWriter()
 		{
-			_writeMethods = new Dictionary<Type, MethodInfo>();
+			WriteMethods = new Dictionary<Type, MethodInfo>();
 			var methods = typeof(PacketWriter).GetMethods(BindingFlags.Instance | BindingFlags.Public);
 			foreach (var mi in methods)
 			{
@@ -31,7 +31,7 @@ namespace Spooker.Network
 				{
 					var pis = mi.GetParameters();
 					if (pis.Length == 1)
-						_writeMethods[pis[0].ParameterType] = mi;
+						WriteMethods[pis[0].ParameterType] = mi;
 				}
 			}
 		}
@@ -48,7 +48,7 @@ namespace Spooker.Network
 		public int Position
 		{ 
 			get { return (int)BaseStream.Position; }
-			set { if (BaseStream.Position != value) BaseStream.Position = value; } 
+			set {BaseStream.Position = value; } 
 		}
 
 		internal byte[] Data
@@ -58,7 +58,7 @@ namespace Spooker.Network
 
 		internal void Reset() 
 		{
-			var stream = (MemoryStream)this.BaseStream;
+			var stream = (MemoryStream)BaseStream;
 			stream.SetLength(0);
 			stream.Position = 0;
 
@@ -97,24 +97,24 @@ namespace Spooker.Network
 			Write (value.Height);
 		}
 
-		public void Write (Matrix Value)
+		public void Write (Matrix value)
 		{
-			Write (Value.M11);
-			Write (Value.M12);
-			Write (Value.M13);
-			Write (Value.M14);
-			Write (Value.M21);
-			Write (Value.M22);
-			Write (Value.M23);
-			Write (Value.M24);
-			Write (Value.M31);
-			Write (Value.M32);
-			Write (Value.M33);
-			Write (Value.M34);
-			Write (Value.M41);
-			Write (Value.M42);
-			Write (Value.M43);
-			Write (Value.M44);
+			Write (value.M11);
+			Write (value.M12);
+			Write (value.M13);
+			Write (value.M14);
+			Write (value.M21);
+			Write (value.M22);
+			Write (value.M23);
+			Write (value.M24);
+			Write (value.M31);
+			Write (value.M32);
+			Write (value.M33);
+			Write (value.M34);
+			Write (value.M41);
+			Write (value.M42);
+			Write (value.M43);
+			Write (value.M44);
 		}
 
 		/// <summary>
@@ -130,8 +130,7 @@ namespace Spooker.Network
 		/// </summary>
 		public void WriteAllFields(object ob, BindingFlags flags)
 		{
-			if (ob == null)
-				return;
+			if (ob == null) return;
 			Type tp = ob.GetType();
 
 			FieldInfo[] fields = tp.GetFields(flags);
@@ -140,11 +139,9 @@ namespace Spooker.Network
 			foreach (FieldInfo fi in fields)
 			{
 				object value = fi.GetValue(ob);
-
-				// find the appropriate Write method
 				MethodInfo writeMethod;
-				if (_writeMethods.TryGetValue(fi.FieldType, out writeMethod))
-					writeMethod.Invoke(this, new object[] { value });
+				if (WriteMethods.TryGetValue(fi.FieldType, out writeMethod))
+					writeMethod.Invoke(this, new[] { value });
 				else
 					throw new NotImplementedException("Failed to find write method for type " + fi.FieldType);
 			}
@@ -163,8 +160,7 @@ namespace Spooker.Network
 		/// </summary>
 		public void WriteAllProperties(object ob, BindingFlags flags)
 		{
-			if (ob == null)
-				return;
+			if (ob == null) return;
 			Type tp = ob.GetType();
 
 			PropertyInfo[] fields = tp.GetProperties(flags);
@@ -174,11 +170,9 @@ namespace Spooker.Network
 			{
 				MethodInfo getMethod = fi.GetGetMethod((flags & BindingFlags.NonPublic) == BindingFlags.NonPublic);
 				object value = getMethod.Invoke(ob, null);
-
-				// find the appropriate Write method
 				MethodInfo writeMethod;
-				if (_writeMethods.TryGetValue(fi.PropertyType, out writeMethod))
-					writeMethod.Invoke(this, new object[] { value });
+				if (WriteMethods.TryGetValue(fi.PropertyType, out writeMethod))
+					writeMethod.Invoke(this, new[] { value });
 			}
 		}
 	}

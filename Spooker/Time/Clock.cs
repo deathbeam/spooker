@@ -8,14 +8,13 @@
 // License: MIT
 //-----------------------------------------------------------------------------
 
-using System;
 using System.Diagnostics;
 
 namespace Spooker.Time
 {
-    /// <summary>
-    /// 
-    /// </summary>
+	/// <summary>
+	/// Clock.
+	/// </summary>
     public class Clock
     {
 		#region Private Fields
@@ -26,6 +25,10 @@ namespace Spooker.Time
 
         #region Properties
 
+		/// <summary>
+		/// Gets the elapsed time.
+		/// </summary>
+		/// <value>The elapsed time.</value>
 		public GameSpan ElapsedTime
         {
 			get { return GameSpan.FromTicks(_timer.ElapsedTicks); }
@@ -35,6 +38,9 @@ namespace Spooker.Time
 
         #region Functions
 
+		/// <summary>
+		/// Restart this instance.
+		/// </summary>
 		public GameSpan Restart()
         {
 			var tm = GameSpan.FromTicks(_timer.ElapsedTicks);

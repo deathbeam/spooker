@@ -29,7 +29,7 @@ namespace Spooker.Graphics.TiledMap
 		public Vector2 Position;
 		public Vector2 Size;
 		public Body Shape;
-		public Dictionary<string, string> Properties;
+		public PropertyDict Properties;
 
 		/// <summary>
 		/// Component uses this for drawing itself

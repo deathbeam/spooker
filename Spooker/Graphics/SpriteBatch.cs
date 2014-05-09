@@ -15,30 +15,8 @@ using SFML.Window;
 namespace Spooker.Graphics
 {
 	/// <summary>
-	/// Sorting options to use when rendering.
-	/// </summary>
-	public enum SpriteSortMode : byte
-	{
-		FrontToBack = 0,
-		BackToFront = 1
-	}
-
-	/// <summary>
-	/// Blending options to use when rendering.
-	/// </summary>
-	public enum SpriteBlendMode : byte
-	{
-		None = 0,
-		Alpha = 1,
-		Additive = 2,
-		Multiply = 3
-	}
-
-	////////////////////////////////////////////////////////////
-	/// <summary>
 	/// Provides optimized drawing of sprites
 	/// </summary>
-	////////////////////////////////////////////////////////////
 	public class SpriteBatch : IDisposable
 	{
 		#region Private fields
@@ -63,48 +41,41 @@ namespace Spooker.Graphics
 		#endregion
 
 		#region Public fields
-
-		////////////////////////////////////////////////////////////
+		
 		/// <summary>
 		/// Returns or sets maximal possible number of verticles at
 		/// once in this vertex batch. Max capacity is always divided
 		/// by 4 (becouse of 4 verticle corners).
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public int Max;
 
 		#endregion
 
 		#region Properties
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Returns count of all vertices in this vertex batch.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <value>The count.</value>
 		public int Count { get; private set; }
 
 		#endregion
 
 		#region Constructors
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of SpriteBatch class.
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.SpriteBatch"/> class.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="graphicsDevice">Graphics device.</param>
 		public SpriteBatch(SFML.Graphics.RenderTarget graphicsDevice)
 			: this(graphicsDevice, 40000)
 		{
 		}
 
-		////////////////////////////////////////////////////////////
-	    /// <summary>
-	    /// Creates new instance of SpriteBatch class.
-	    /// </summary>
-	    /// <param name="graphicsDevice"></param>
-	    /// <param name="capacity">Maximal number of vertices in
-	    /// this vertex batch.</param>
-	    ////////////////////////////////////////////////////////////
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.SpriteBatch"/> class.
+		/// </summary>
+		/// <param name="graphicsDevice">Graphics device.</param>
+		/// <param name="capacity">Maximal number of vertices in this vertex batch.</param>
 		public SpriteBatch(SFML.Graphics.RenderTarget graphicsDevice, int capacity)
 		{
 			_str = new SFML.Graphics.Text ();
@@ -116,41 +87,39 @@ namespace Spooker.Graphics
 
 		#region Public methods
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Begins this sprite batch, so we can draw sprites after.
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public void Begin()
 		{
 			Begin (SpriteBlendMode.Alpha);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Begins this sprite batch, so we can draw sprites after.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="blendMode">Blend mode.</param>
 		public void Begin(SpriteBlendMode blendMode)
 		{
 			Begin (blendMode, SpriteSortMode.FrontToBack);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Begins this sprite batch, so we can draw sprites after.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="blendMode">Blend mode.</param>
+		/// <param name="sortMode">Sort mode.</param>
 		public void Begin(SpriteBlendMode blendMode, SpriteSortMode sortMode)
 		{
 			Begin (blendMode, sortMode, Matrix.Identity);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Begins this sprite batch, so we can draw sprites after.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="blendMode">Blend mode.</param>
+		/// <param name="sortMode">Sort mode.</param>
+		/// <param name="transMatrix">Transformation matrix.</param>
 		public void Begin(SpriteBlendMode blendMode, SpriteSortMode sortMode, Matrix transMatrix)
 		{
 			if (_active) 
@@ -185,12 +154,10 @@ namespace Spooker.Graphics
 			_active = true;
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Ends this vertex batch, so we can not draw any more
 		/// sprites.
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public void End()
 		{
 			if (!_active) throw new Exception("Call Begin first.");
@@ -206,41 +173,28 @@ namespace Spooker.Graphics
 			_active = false;
 			Draw (_graphicsDevice, _states);
 		}
-		
-		private void Draw(SFML.Graphics.RenderTarget target, SFML.Graphics.RenderStates states)
-		{
-			if (_active) throw new Exception("Call End first.");
 
-			uint index = 0;
-			foreach (var item in _textures)
-			{
-				states.Texture = item.Texture;
-
-				target.Draw(_vertices, index, item.Count, SFML.Graphics.PrimitiveType.Quads, states);
-				index += item.Count;
-			}
-		}
-
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Disposes this instance of SpriteBatch class.
+		/// Draw the specified drawable using specified effects.
 		/// </summary>
-		////////////////////////////////////////////////////////////
-		public void Dispose()
-		{
-			_active = false;
-		}
-		
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Draws IDrawable using this spritebatch
-		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="drawable">Drawable.</param>
+		/// <param name="effects">Effects.</param>
 		public void Draw(IDrawable drawable, SpriteEffects effects = SpriteEffects.None)
 		{
 			drawable.Draw (this);
 		}
 
+		/// <summary>
+		/// Draw the specified texture with specified position, sourceRect, color, scale, origin, rotation and effects.
+		/// </summary>
+		/// <param name="texture">Texture.</param>
+		/// <param name="position">Position.</param>
+		/// <param name="sourceRect">Source rect.</param>
+		/// <param name="color">Color.</param>
+		/// <param name="scale">Scale.</param>
+		/// <param name="origin">Origin.</param>
+		/// <param name="rotation">Rotation.</param>
+		/// <param name="effects">Effects.</param>
 		public void Draw(Texture texture, Vector2 position, Rectangle sourceRect, Color color, Vector2 scale, Vector2 origin, float rotation, SpriteEffects effects = SpriteEffects.None)
 		{
 			if (!_active) throw new Exception("Call Begin first.");
@@ -251,6 +205,19 @@ namespace Spooker.Graphics
 			WriteQuad (texture.ToSfml (), position.ToSfml (), sourceRect.ToSfml (), color.ToSfml (), scale.ToSfml (), origin.ToSfml (), rotation);
 		}
 
+		/// <summary>
+		/// Draw the specified font with specified text, characterSize, position, color, scale, origin, rotation, style and effects.
+		/// </summary>
+		/// <param name="font">Font.</param>
+		/// <param name="text">Text.</param>
+		/// <param name="characterSize">Character size.</param>
+		/// <param name="position">Position.</param>
+		/// <param name="color">Color.</param>
+		/// <param name="scale">Scale.</param>
+		/// <param name="origin">Origin.</param>
+		/// <param name="rotation">Rotation.</param>
+		/// <param name="style">Style.</param>
+		/// <param name="effects">Effects.</param>
 		public void Draw(Font font, string text, int characterSize, Vector2 position, Color color, Vector2 scale, Vector2 origin, float rotation, Text.Styles style, SpriteEffects effects = SpriteEffects.None)
 		{
 			if (!_active) throw new Exception ("Call Begin first.");
@@ -270,9 +237,37 @@ namespace Spooker.Graphics
 
 			_graphicsDevice.Draw(_str, _states);
 		}
+
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
+		/// <filterpriority>2</filterpriority>
+		/// <remarks>Call <see cref="Dispose"/> when you are finished using the <see cref="Spooker.Graphics.SpriteBatch"/>. The
+		/// <see cref="Dispose"/> method leaves the <see cref="Spooker.Graphics.SpriteBatch"/> in an unusable state. After
+		/// calling <see cref="Dispose"/>, you must release all references to the <see cref="Spooker.Graphics.SpriteBatch"/>
+		/// so the garbage collector can reclaim the memory that the <see cref="Spooker.Graphics.SpriteBatch"/> was occupying.</remarks>
+		public void Dispose()
+		{
+			_active = false;
+		}
+
 		#endregion
 
 		#region Private methods
+
+		private void Draw(SFML.Graphics.RenderTarget target, SFML.Graphics.RenderStates states)
+		{
+			if (_active) throw new Exception("Call End first.");
+
+			uint index = 0;
+			foreach (var item in _textures)
+			{
+				states.Texture = item.Texture;
+
+				target.Draw(_vertices, index, item.Count, SFML.Graphics.PrimitiveType.Quads, states);
+				index += item.Count;
+			}
+		}
 
 		private void Enqueue()
 		{

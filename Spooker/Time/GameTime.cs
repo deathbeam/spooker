@@ -8,9 +8,6 @@
 // License: MIT
 //-----------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics;
-
 namespace Spooker.Time
 {
 	////////////////////////////////////////////////////////////
@@ -32,10 +29,18 @@ namespace Spooker.Time
 
         #region Contructors/Destructors
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Time.GameTime"/> class.
+		/// </summary>
 		public GameTime()
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Time.GameTime"/> class.
+		/// </summary>
+		/// <param name="elapsed">Elapsed time.</param>
+		/// <param name="total">Total time.</param>
 		public GameTime(GameSpan elapsed, GameSpan total)
         {
 			ElapsedGameTime = elapsed;
@@ -46,6 +51,10 @@ namespace Spooker.Time
 
         #region Functions
 
+		/// <summary>
+		/// Update the specified updateable.
+		/// </summary>
+		/// <param name="updateable">Updateable.</param>
 		public void Update(IUpdateable updateable)
 		{
 			updateable.Update (this);

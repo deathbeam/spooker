@@ -13,14 +13,17 @@ using SFML.Graphics;
 
 namespace Spooker.Graphics.Lights
 {
+	/// <summary>
+	/// Light engine.
+	/// </summary>
 	public class LightEngine : Drawable
 	{
 		private readonly List<Light> _lights;
         private readonly Camera _camera;
 		private readonly RenderStates _drawStates;
 		private readonly SpriteBatch _spriteBatch;
-		private RenderTexture _lightTexture;
-		private SFML.Graphics.Sprite _drawSprite;
+		private readonly RenderTexture _lightTexture;
+		private readonly SFML.Graphics.Sprite _drawSprite;
 		private Sprite _lightSprite;
 
 		/// <summary>

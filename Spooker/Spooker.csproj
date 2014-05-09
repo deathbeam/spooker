@@ -116,7 +116,6 @@
     <Compile Include="Graphics\Particles\ParticleSystem.cs" />
     <Compile Include="Input\InputAction.cs" />
     <Compile Include="Input\GameInput.cs" />
-	<Compile Include="Input\ActionNodes.cs" />
     <Compile Include="Graphics\Lights\LightEngine.cs" />
     <Compile Include="GameStates\StateFactory.cs" />
     <Compile Include="Graphics\TiledMap\Layer.cs" />
@@ -135,19 +134,13 @@
     <Compile Include="Matrix.cs" />
     <Compile Include="Network\PacketWriter.cs" />
     <Compile Include="Network\PacketReader.cs" />
+    <Compile Include="Input\ActionNodes.cs" />
     <Compile Include="Network\NetUtility.cs" />
+    <Compile Include="ITargetable.cs" />
+    <Compile Include="PropertyDict.cs" />
+    <Compile Include="Graphics\SpriteBlendMode.cs" />
+    <Compile Include="Graphics\SpriteSortMode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Audio\" />
-    <Folder Include="Content\" />
-    <Folder Include="Core\" />
-    <Folder Include="GameStates\" />
-    <Folder Include="Graphics\" />
-    <Folder Include="Graphics\Animations\" />
-    <Folder Include="Graphics\Lights\" />
-    <Folder Include="Input\" />
-    <Folder Include="Network\" />
-    <Folder Include="Time\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

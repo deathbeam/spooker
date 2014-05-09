@@ -156,7 +156,7 @@ namespace Spooker
 
 		public static Rectangle Intersect(Rectangle rectangle1, Rectangle rectangle2)
 		{
-			if (rectangle1.Intersects(rectangle2))
+		    if (rectangle1.Intersects(rectangle2))
 			{
 				var rightSide = Math.Min(rectangle1.X + rectangle1.Width, rectangle2.X + rectangle2.Width);
 				var leftSide = Math.Max(rectangle1.X, rectangle2.X);
@@ -164,21 +164,18 @@ namespace Spooker
 				var bottomSide = Math.Min(rectangle1.Y + rectangle1.Height, rectangle2.Y + rectangle2.Height);
 				return new Rectangle(leftSide, topSide, rightSide - leftSide, bottomSide - topSide);
 			}
-			else
-			{
-				return Rectangle.Empty;
-			}
+		    return Empty;
 		}
 
-		public bool Intersects(Rectangle rectangle2)
+	    public bool Intersects(Rectangle rectangle)
 		{
-			if (Equals(rectangle2))
+			if (Equals(rectangle))
 				return true;
 
-			return rectangle2.Left < Right &&
-				Left < rectangle2.Right &&
-				rectangle2.Top < Bottom &&
-				Top < rectangle2.Bottom;
+			return rectangle.Left < Right &&
+				Left < rectangle.Right &&
+				rectangle.Top < Bottom &&
+				Top < rectangle.Bottom;
 		}
 
         public bool Equals(Rectangle other)

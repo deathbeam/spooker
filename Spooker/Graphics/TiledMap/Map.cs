@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Map.cs
 //
 // Spooker Open Source Game Framework
@@ -8,7 +8,9 @@
 // License: MIT
 //-----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using TiledSharp;
 using FarseerPhysics;
 using FarseerPhysics.Common;
@@ -27,8 +29,6 @@ namespace Spooker.Graphics.TiledMap
 	////////////////////////////////////////////////////////////
 	public class Map : IDrawable, IUpdateable
     {
-		private readonly Camera _camera;
-
 		/// <summary>Handles collisions of this map.</summary>
 		public World Physics;
 
@@ -62,18 +62,14 @@ namespace Spooker.Graphics.TiledMap
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Spooker.Graphics.TiledMap.Map"/> class.
 		/// </summary>
-		/// <param name="camera">Camera.</param>
 		/// <param name="filename">Filename.</param>
-		public Map(Camera camera, string filename)
+		public Map(string filename)
         {
 			var map = new TmxMap(filename);
 			Properties = map.Properties;
             Width = map.Width;
             Height = map.Height;
 			TileSize = new Vector2 (map.TileWidth, map.TileHeight);
-
-			// Load camera
-			_camera = camera;
 
 			// Initialize grid dictionary
 			var gidDict = ConvertGidDict (map.Tilesets);
@@ -89,18 +85,18 @@ namespace Spooker.Graphics.TiledMap
 
 			BodyFactory.CreateEdge (Physics,
 				ConvertUnits.ToSimUnits (Microsoft.Xna.Framework.Vector2.Zero),
-				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 (0, (float)Bounds.Height)));
+				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 (0, Bounds.Height)));
 			BodyFactory.CreateEdge (Physics,
 				ConvertUnits.ToSimUnits (Microsoft.Xna.Framework.Vector2.Zero),
-				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 ((float)Bounds.Width, 0)));
+				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 (Bounds.Width, 0)));
 
 			BodyFactory.CreateEdge (Physics,
-				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 (0, (float)Bounds.Height)),
-				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 ((float)Bounds.Width, (float)Bounds.Height)));
+				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 (0, Bounds.Height)),
+				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 (Bounds.Width, Bounds.Height)));
 
 			BodyFactory.CreateEdge (Physics,
-				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 ((float)Bounds.Width, 0)),
-				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 ((float)Bounds.Width, (float)Bounds.Height)));
+				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 (Bounds.Width, 0)),
+				ConvertUnits.ToSimUnits (new Microsoft.Xna.Framework.Vector2 (Bounds.Width, Bounds.Height)));
 
 			Objects = ConvertObjects(map.ObjectGroups, gidDict);
         }
@@ -112,10 +108,8 @@ namespace Spooker.Graphics.TiledMap
 		/// <param name="effects">Effects.</param>
 		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
-			spriteBatch.Begin (SpriteBlendMode.Alpha, SpriteSortMode.FrontToBack, _camera.Transform);
 			foreach (var layer in Layers)
 				layer.Draw(spriteBatch, effects);
-			spriteBatch.End ();
 		}
 
 		/// <summary>
@@ -159,7 +153,6 @@ namespace Spooker.Graphics.TiledMap
 			foreach (var ts in tilesets)
 			{
 				var sheet = new Texture(ts.Image.Source);
-				sheet.Smooth = false;
 
 				// Loop hoisting
 				var wStart = ts.Margin;
@@ -194,61 +187,44 @@ namespace Spooker.Graphics.TiledMap
 			{
 				foreach (var o in objectGroup.Objects)
 				{
-					var obj = new Object ()
+					var obj = new Object
 					{
 					    Name = o.Name,
 					    Type = o.Type,
 					    Position = new Vector2(o.X, o.Y),
 					    Size = new Vector2(o.Width, o.Height),
-					    Properties = o.Properties
+						Properties = new PropertyDict(o.Properties)
 					};
 
-					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Basic)
+					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Basic ||
+						o.ObjectType == TmxObjectGroup.TmxObjectType.Tile)
 					{
-						if (o.Width == 0 || o.Height == 0)
-							continue;
+						if (obj.Size.X == 0 || obj.Size.Y == 0) continue;
 
 						obj.Shape = BodyFactory.CreateRectangle (Physics,
-							ConvertUnits.ToSimUnits(o.Width),
-							ConvertUnits.ToSimUnits(o.Height), 1f);
-						obj.Shape.Position = new Microsoft.Xna.Framework.Vector2 (
-							ConvertUnits.ToSimUnits(o.X),
-							ConvertUnits.ToSimUnits(o.Y));
+							ConvertUnits.ToSimUnits(obj.Size.X),
+							ConvertUnits.ToSimUnits(obj.Size.Y), 1f);
 
-						obj.ObjectType = ObjectType.Rectangle;
-					}
+						obj.Position += obj.Size / 2;
 
-					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Tile)
-					{
-						if (o.Width == 0 || o.Height == 0)
-							continue;
-
-						obj.Position.Y -= o.Height;
-						var sprite = new Sprite (gidDict [o.Tile.Gid].Value) {
-							Position = obj.Position,
-							SourceRect = gidDict [o.Tile.Gid].Key,
-							Origin = gidDict [o.Tile.Gid].Key.Size /2
-						};
-
-						obj.Shape = BodyFactory.CreateRectangle (Physics,
-							ConvertUnits.ToSimUnits(o.Width),
-							ConvertUnits.ToSimUnits(o.Height), 1f, sprite);
-						obj.Shape.Position = new Microsoft.Xna.Framework.Vector2 (
-							ConvertUnits.ToSimUnits(o.X), 
-							ConvertUnits.ToSimUnits(o.Y - o.Height));
-
-						obj.ObjectType = ObjectType.Graphic;
+						if (o.ObjectType == TmxObjectGroup.TmxObjectType.Tile) {
+							obj.Position.Y -= o.Height;
+							obj.Shape.UserData = new Sprite (gidDict [o.Tile.Gid].Value) {
+								Position = obj.Position,
+								SourceRect = gidDict [o.Tile.Gid].Key,
+								Origin = obj.Size /2
+							};
+							obj.ObjectType = ObjectType.Graphic;
+						} else
+							obj.ObjectType = ObjectType.Rectangle;
 					}
 
 					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Ellipse)
 					{
 						obj.Shape = BodyFactory.CreateEllipse (Physics,
-							ConvertUnits.ToSimUnits (o.Width / 2),
-							ConvertUnits.ToSimUnits (o.Height / 2),
+							ConvertUnits.ToSimUnits (obj.Size.X / 2),
+							ConvertUnits.ToSimUnits (obj.Size.Y / 2),
 							0, 1f);
-						obj.Shape.Position = new Microsoft.Xna.Framework.Vector2 (
-							ConvertUnits.ToSimUnits(o.X),
-							ConvertUnits.ToSimUnits(o.Y));
 
 						obj.ObjectType = ObjectType.Ellipse;
 					}
@@ -257,31 +233,26 @@ namespace Spooker.Graphics.TiledMap
 						o.ObjectType == TmxObjectGroup.TmxObjectType.Polygon)
 					{
 						var vert = new Vertices ();
+					    vert.AddRange(o.Points.Select(point => new Microsoft.Xna.Framework.Vector2(ConvertUnits.ToSimUnits(point.Item1), ConvertUnits.ToSimUnits(point.Item2))));
 
-						foreach (var point in o.Points)
-							vert.Add (new Microsoft.Xna.Framework.Vector2 (
-								ConvertUnits.ToSimUnits(point.Item1), 
-								ConvertUnits.ToSimUnits(point.Item2)));
-
-						if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polyline) {
+					    if (o.ObjectType == TmxObjectGroup.TmxObjectType.Polyline) {
 							obj.ObjectType = ObjectType.Polyline;
-							obj.Shape = BodyFactory.CreateChainShape (Physics, vert, new Microsoft.Xna.Framework.Vector2 (
-								ConvertUnits.ToSimUnits (o.X),
-								ConvertUnits.ToSimUnits (o.Y)));
+							obj.Shape = BodyFactory.CreateChainShape (Physics, vert);
 						} else {
 							obj.ObjectType = ObjectType.Polygon;
 							var verts = Triangulate.ConvexPartition (vert, TriangulationAlgorithm.Bayazit);
-							obj.Shape = BodyFactory.CreateCompoundPolygon (Physics, verts, 1f, new Microsoft.Xna.Framework.Vector2 (
-								ConvertUnits.ToSimUnits (o.X),
-								ConvertUnits.ToSimUnits (o.Y)));
+							obj.Shape = BodyFactory.CreateCompoundPolygon (Physics, verts, 1f);
 						}
 					}
 
-					if (o.Type == "Dynamic") {
-						if (o.Properties.ContainsKey ("LinearDamping"))
-							obj.Shape.LinearDamping = float.Parse (o.Properties ["LinearDamping"]);
+					obj.Shape.Position = new Microsoft.Xna.Framework.Vector2 (
+						ConvertUnits.ToSimUnits(obj.Position.X),
+						ConvertUnits.ToSimUnits(obj.Position.Y));
+
+					if (objectGroup.Name.Contains("Dynamic")) {
 						obj.Shape.BodyType = BodyType.Dynamic;
 						obj.Shape.IsStatic = false;
+						obj.Shape.LinearDamping = 1f;
 					} else {
 						obj.Shape.BodyType = BodyType.Static;
 						obj.Shape.IsStatic = true;

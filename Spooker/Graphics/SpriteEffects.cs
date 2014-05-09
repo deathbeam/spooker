@@ -12,12 +12,10 @@ using System;
 
 namespace Spooker.Graphics
 {
-	////////////////////////////////////////////////////////////
 	/// <summary>
 	/// Enum of flags containing the effects that can be applied
 	/// to a sprite when rendering it.
 	/// </summary>
-	////////////////////////////////////////////////////////////
 	[Flags]
 	public enum SpriteEffects : byte
 	{

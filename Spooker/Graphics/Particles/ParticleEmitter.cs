@@ -54,12 +54,13 @@ namespace Spooker.Graphics.Particles
 		/// <summary>
 		/// Constructs a new particle emitter object.
 		/// </summary>
-		public ParticleEmitter(ParticleSystem particleSystem, float particlesPerSecond, Vector2 initialPosition)
+		public ParticleEmitter(
+			ParticleSystem particleSystem,
+			float particlesPerSecond,
+			Vector2 initialPosition)
 		{
 			_particleSystem = particleSystem;
-
 			_timeBetweenParticles = 1.0f / particlesPerSecond;
-
 			_position = initialPosition;
 		}
 
@@ -68,15 +69,18 @@ namespace Spooker.Graphics.Particles
 		/// Updates the emitter, creating the appropriate number of particles
 		/// in the appropriate positions.
 		/// </summary>
-		public void Update(GameTime gameTime, Vector2 newPosition)
+		public void Update(GameTime gameTime, Vector2 newPosition, Camera camera)
 		{
 			// Work out how much time has passed since the previous update.
 			var elapsedTime = (float)gameTime.ElapsedGameTime.Seconds;
 
 			if (elapsedTime > 0)
 			{
+				var pos = camera.Transform.TransformPoint(_position);
+				var newPos = camera.Transform.TransformPoint(newPosition);
+
 				// Work out how fast we are moving.
-				Vector2 velocity = (newPosition - _position) / elapsedTime;
+				Vector2 velocity = (newPos - pos) / elapsedTime;
 
 				// If we had any time left over that we didn't use during the
 				// previous update, add that to the current elapsed time.
@@ -96,7 +100,7 @@ namespace Spooker.Graphics.Particles
 					// creation frequency, or game update rate.
 					float mu = currentTime / elapsedTime;
 
-					Vector2 particlePosition = Vector2.Lerp(_position, newPosition, mu);
+					var particlePosition = Vector2.Lerp(pos, newPos, mu);
 
 					// Create the particle.
 					_particleSystem.AddParticles(particlePosition, velocity);

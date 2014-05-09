@@ -11,7 +11,6 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
-using SFML.Graphics;
 
 namespace Spooker.Graphics.Particles
 {

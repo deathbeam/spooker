@@ -13,12 +13,10 @@ using Spooker.Time;
 
 namespace Spooker.Graphics.Animations
 {
-	////////////////////////////////////////////////////////////
 	/// <summary>
 	/// Simple method of drawing and updating animated sprite
 	/// using frame animations.
 	/// </summary>
-	////////////////////////////////////////////////////////////
 	public class AnimatedSprite : Sprite, IUpdateable
 	{
 		#region Variables
@@ -32,6 +30,10 @@ namespace Spooker.Graphics.Animations
 
 		#region Properties
 
+		/// <summary>
+		/// Gets the <see cref="Spooker.Graphics.Animations.Animation"/> with the specified name.
+		/// </summary>
+		/// <param name="name">Name.</param>
 		public Animation this[string name]
 		{
 			get
@@ -44,6 +46,10 @@ namespace Spooker.Graphics.Animations
 
 		#region Constructors/Destructors
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Animations.AnimatedSprite"/> class.
+		/// </summary>
+		/// <param name="texture">Texture.</param>
 		public AnimatedSprite (Texture texture) : base(texture)
 		{
 			_animations = new List<Animation> ();
@@ -53,11 +59,20 @@ namespace Spooker.Graphics.Animations
 
 		#region Functions
 
+		/// <summary>
+		/// Add animation with the specified name and animType.
+		/// </summary>
+		/// <param name="name">Name.</param>
+		/// <param name="animType">Animation type.</param>
 		public void Add(string name, AnimType animType)
 		{
 			_animations.Add (new Animation(name, animType));
 		}
 
+		/// <summary>
+		/// Play the specified animation.
+		/// </summary>
+		/// <param name="name">Name.</param>
 		public void Play(string name)
 		{
 			var anim = this [name];
@@ -70,28 +85,34 @@ namespace Spooker.Graphics.Animations
 			_timeSinceStart = 0;
 		}
 
+		/// <summary>
+		/// Pause this instance.
+		/// </summary>
 		public void Pause()
 		{
 			_pause = true;
 		}
 
+		/// <summary>
+		/// Resume this instance.
+		/// </summary>
 		public void Resume()
 		{
 			_pause = false;
 		}
 
+		/// <summary>
+		/// Stop this instance.
+		/// </summary>
 		public void Stop()
 		{
 			_currentAnim = null;
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Allows the game component to update itself.
 		/// </summary>
-		/// <param name="gameTime">Provides a snapshot of timing values.
-		/// </param>
-		////////////////////////////////////////////////////////////
+		/// <param name="gameTime">Provides snapshot of timing values.</param>
 		public void Update(GameTime gameTime)
 		{
 			// do not update if animation is paused

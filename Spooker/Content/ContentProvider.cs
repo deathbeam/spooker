@@ -57,11 +57,10 @@ namespace Spooker.Content
 		/// <summary>Duration, after what will be each not re-used asset cleared from cache.</summary>
 		public TimeSpan TTL = TimeSpan.Zero;
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Returns list of default loaders (texture, font and particle).
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <value>The default.</value>
 		public static List<ContentProvider> Default
 		{ 
 			get 
@@ -93,12 +92,11 @@ namespace Spooker.Content
 			}
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of Content Provider class with
-		/// passing multiple arguments.
+		/// Initializes a new instance of the <see cref="Spooker.Content.ContentProvider"/> class.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="type">Type.</param>
+		/// <param name="reuse">If set to <c>true</c> reuse.</param>
 		public ContentProvider(Type type, bool reuse = true)
 		{
 			Type = type;
@@ -106,11 +104,10 @@ namespace Spooker.Content
 			TTL = TimeSpan.Zero;
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Component uses this for updating itself
+		/// Update the component based on specified delta time.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="dt">Delta time.</param>
 		public void Update(float dt)
 		{
 			if (TTL == TimeSpan.Zero)
@@ -126,11 +123,16 @@ namespace Spooker.Content
 					_assets[i] = null;
 			}
 		}
-		////////////////////////////////////////////////////////////
+
 		/// <summary>
-		/// Disposes this instance of Content Provider class.
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <filterpriority>2</filterpriority>
+		/// <remarks>Call <see cref="Dispose"/> when you are finished using the <see cref="Spooker.Content.ContentProvider"/>. The
+		/// <see cref="Dispose"/> method leaves the <see cref="Spooker.Content.ContentProvider"/> in an unusable state. After
+		/// calling <see cref="Dispose"/>, you must release all references to the
+		/// <see cref="Spooker.Content.ContentProvider"/> so the garbage collector can reclaim the memory that the
+		/// <see cref="Spooker.Content.ContentProvider"/> was occupying.</remarks>
         public void Dispose()
         {
             if (!Type.IsAssignableFrom(typeof (IDisposable))) return;
@@ -141,12 +143,10 @@ namespace Spooker.Content
             }
         }
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Loads game data to cache or if already loaded, returns
-		/// data from loader cache.
+		/// Loads game data to cache or if already loaded, returns data from loader cache.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="name">Name.</param>
         public virtual object Get(string name)
         {
 			var asset = FindAsset (name);

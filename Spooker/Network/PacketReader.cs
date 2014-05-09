@@ -19,11 +19,11 @@ namespace Spooker.Network
 {
 	public class PacketReader : BinaryReader
 	{
-		private static Dictionary<Type, MethodInfo> _readMethods;
+		private static readonly Dictionary<Type, MethodInfo> ReadMethods;
 
 		static PacketReader()
 		{
-			_readMethods = new Dictionary<Type, MethodInfo>();
+			ReadMethods = new Dictionary<Type, MethodInfo>();
 			var methods = typeof(PacketReader).GetMethods(BindingFlags.Instance | BindingFlags.Public);
 			foreach (var mi in methods)
 			{
@@ -31,14 +31,14 @@ namespace Spooker.Network
 				{
 					var pis = mi.GetParameters();
 					if (pis.Length == 1)
-						_readMethods[pis[0].ParameterType] = mi;
+						ReadMethods[pis[0].ParameterType] = mi;
 				}
 			}
 		}
 
 		public PacketReader() : this(0) { }
 
-		public PacketReader(int capacity) : base(new MemoryStream(0)) { }
+        public PacketReader(int capacity) : base(new MemoryStream(capacity)) { }
 
 		public int Length
 		{ 
@@ -48,7 +48,7 @@ namespace Spooker.Network
 		public int Position
 		{ 
 			get { return (int)BaseStream.Position; }
-			set { if (BaseStream.Position != value) BaseStream.Position = value; } 
+			set { BaseStream.Position = value; } 
 		}
 
 		internal byte[] Data
@@ -71,60 +71,31 @@ namespace Spooker.Network
 
 		public Color ReadColor()
 		{
-			var value = new Color();
-			value.A = ReadSingle ();
-			value.R = ReadSingle();
-			value.G = ReadSingle();
-			value.B = ReadSingle();
-			return value;
+			return new Color(ReadSingle (), ReadSingle (), ReadSingle (), ReadSingle ());
 		}
 
 		public Point ReadPoint()
 		{
-			var value = new Point();
-			value.X = ReadInt32 ();
-			value.Y = ReadInt32();
-			return value;
+			return new Point(ReadInt32 (), ReadInt32());
 		}
 
 		public Vector2 ReadVector2()
 		{
-			var value = new Vector2();
-			value.X = ReadSingle ();
-			value.Y = ReadSingle();
-			return value;
+			return new Vector2(ReadSingle (), ReadSingle ());
 		}
 
 		public Rectangle ReadRectangle()
 		{
-			var value = new Rectangle();
-			value.X = ReadInt32 ();
-			value.Y = ReadInt32 ();
-			value.Width = ReadInt32 ();
-			value.Height = ReadInt32 ();
-			return value;
+            return new Rectangle(ReadInt32(), ReadInt32(), ReadInt32(), ReadInt32());
 		}
 
 		public Matrix ReadMatrix()
 		{
-			var value = new Matrix();
-			value.M11 = ReadSingle();
-			value.M12 = ReadSingle();
-			value.M13 = ReadSingle();
-			value.M14 = ReadSingle();
-			value.M21 = ReadSingle();
-			value.M22 = ReadSingle();
-			value.M23 = ReadSingle();
-			value.M24 = ReadSingle();
-			value.M31 = ReadSingle();
-			value.M32 = ReadSingle();
-			value.M33 = ReadSingle();
-			value.M34 = ReadSingle();
-			value.M41 = ReadSingle();
-			value.M42 = ReadSingle();
-			value.M43 = ReadSingle();
-			value.M44 = ReadSingle();
-			return value;
+            return new Matrix(
+                ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle(),
+                ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle(),
+                ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle(),
+                ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle());
 		}
 
 		/// <summary>
@@ -140,8 +111,7 @@ namespace Spooker.Network
 		/// </summary>
 		public void ReadAllFields(object target, BindingFlags flags)
 		{
-			if (target == null)
-				return;
+			if (target == null) return;
 			Type tp = target.GetType();
 
 			FieldInfo[] fields = tp.GetFields(flags);
@@ -149,16 +119,10 @@ namespace Spooker.Network
 
 			foreach (FieldInfo fi in fields)
 			{
-				object value;
-
-				// find read method
 				MethodInfo readMethod;
-				if (_readMethods.TryGetValue(fi.FieldType, out readMethod))
+				if (ReadMethods.TryGetValue(fi.FieldType, out readMethod))
 				{
-					// read value
-					value = readMethod.Invoke(this, null);
-
-					// set the value
+				    object value = readMethod.Invoke(this, null);
 					fi.SetValue(target, value);
 				}
 			}
@@ -177,29 +141,20 @@ namespace Spooker.Network
 		/// </summary>
 		public void ReadAllProperties(object target, BindingFlags flags)
 		{
-			if (target == null)
-				throw new ArgumentNullException("target");
+			if (target == null) throw new ArgumentNullException("target");
 
-			if (target == null)
-				return;
 			Type tp = target.GetType();
 
 			PropertyInfo[] fields = tp.GetProperties(flags);
 			NetUtility.SortMembersList(fields);
 			foreach (PropertyInfo fi in fields)
 			{
-				object value;
-
-				// find read method
 				MethodInfo readMethod;
-				if (_readMethods.TryGetValue(fi.PropertyType, out readMethod))
+				if (ReadMethods.TryGetValue(fi.PropertyType, out readMethod))
 				{
-					// read value
-					value = readMethod.Invoke(this, null);
-
-					// set the value
+					object value = readMethod.Invoke(this, null);
 					MethodInfo setMethod = fi.GetSetMethod((flags & BindingFlags.NonPublic) == BindingFlags.NonPublic);
-					setMethod.Invoke(target, new object[] { value });
+					setMethod.Invoke(target, new[] { value });
 				}
 			}
 		}

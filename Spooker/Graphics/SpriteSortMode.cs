@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// IDrawable.cs
+// SpriteSortMode.cs
 //
 // Spooker Open Source Game Framework
 // Copyright (C) Indie Armory. All rights reserved.
@@ -11,16 +11,11 @@
 namespace Spooker.Graphics
 {
 	/// <summary>
-	/// Class with this interface implemented can be drawn with
-	/// spritebatch.
+	/// Sorting options to use when rendering.
 	/// </summary>
-	public interface IDrawable
+	public enum SpriteSortMode : byte
 	{
-		/// <summary>
-		/// Component uses this for drawing itself
-		/// </summary>
-		/// <param name="spriteBatch">Sprite batch.</param>
-		/// <param name="effects">Effects.</param>
-		void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None);
+		FrontToBack = 0,
+		BackToFront = 1
 	}
 }

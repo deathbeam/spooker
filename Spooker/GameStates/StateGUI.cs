@@ -14,7 +14,6 @@ using Gwen.Skin;
 using Gwen.Renderer;
 using SFML.Window;
 using Spooker.Core;
-using Spooker.Graphics;
 
 namespace Spooker.GameStates
 {
@@ -29,14 +28,17 @@ namespace Spooker.GameStates
 		#region Variables
 		private readonly Canvas _gamegui;
 		private readonly GuiInput _ginput;
+		private bool _isLoaded = false;
 		#endregion
 
 		#region Constructors and Destructors
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of game state with GUI component.
+		/// Initializes a new instance of the <see cref="Spooker.GameStates.StateGUI"/> class.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="game">Game.</param>
+		/// <param name="guiImagePath">GUI image path.</param>
+		/// <param name="fontName">Font name.</param>
+		/// <param name="fontSize">Font size.</param>
 		protected StateGUI(GameWindow game, string guiImagePath, string fontName, int fontSize): base(game)
 		{
 			// create GWEN renderer
@@ -65,108 +67,88 @@ namespace Spooker.GameStates
 		#endregion
 
 		#region Input bindings
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Called when user tries to enter text.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="e">Text event arguments.</param>
 		public override void TextEntered(TextEventArgs e)
 		{
 			_ginput.ProcessMessage(e);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Called when user tries to move with mouse wheel.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="e">Mouse wheel event arguments.</param>
 		public override void MouseWheelMoved(MouseWheelEventArgs e)
 		{
 			_ginput.ProcessMessage(e);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Called when user tries to move with mouse.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="e">Mouse move event arguments.</param>
 		public override void MouseMoved(MouseMoveEventArgs e)
 		{
 			_ginput.ProcessMessage(e);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Called when user presses mouse button.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="e">Mouse button event arguments.</param>
 		public override void MouseButtonPressed(MouseButtonEventArgs e)
 		{
 			_ginput.ProcessMessage(new SfmlMouseButtonEventArgs(e, true));
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Called when user releases mouse button.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="e">Mouse button event arguments.</param>
 		public override void MouseButtonReleased(MouseButtonEventArgs e)
 		{
 			_ginput.ProcessMessage(new SfmlMouseButtonEventArgs(e, false));
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Called when user presses keyboard key.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="e">Key event arguments.</param>
 		public override void KeyPressed(KeyEventArgs e)
 		{
 			_ginput.ProcessMessage(new SfmlKeyEventArgs(e, true));
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Called when user releases keyboard key.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="e">Key event arguments.</param>
 		public override void KeyReleased(KeyEventArgs e)
 		{
 			_ginput.ProcessMessage(new SfmlKeyEventArgs(e, false));
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Called when a state is added to game (pushed to stack).
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public override void Enter()
 		{
 			base.Enter ();
-			LoadGUI (_gamegui);
-		}
-		////////////////////////////////////////////////////////////
-		/// <summary>
-		/// Called when a state is removed from game (popped from stack).
-		/// </summary>
-		////////////////////////////////////////////////////////////
-		public override void Leave()
-		{
-			base.Leave ();
 
-			// Clear all loaded GUI components from GUI manager.
-			// Yes, it is okay to clear all, we will load another
-			// when we will add another state to game.
-			Gwen.GuiManager.Clear ();
+			if (!_isLoaded)
+			{
+				LoadGUI (_gamegui);
+				_isLoaded = true;
+			}
 		}
 
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Called after loading of GUI instance, use this for 
-		/// initializing GUI objects
+		/// Loads the GUI of this game state.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="gameGUI">Game GUI.</param>
 		public virtual void LoadGUI(Canvas gameGUI) { }
 
 		#endregion

@@ -27,8 +27,15 @@ namespace Spooker.Core
 	////////////////////////////////////////////////////////////
 	public abstract class GameWindow : IDrawable, IUpdateable, IDisposable, ILoadable
 	{
-		/// <summary>Manages various game content (audio, textures, fonts....).</summary>
+		private readonly SpriteBatch _spriteBatch;
+		private readonly GameTime _gameTime;
+		private readonly GameSpan _timeStep;
+		private readonly GameSpan _timeStepCap;
+		private readonly Color _clearColor = Color.Black;
 		internal ContentManager Content;
+
+		/// <summary>Manages components of this game window instance.</summary>
+		protected EntityList Components;
 
 		/// <summary>Can play various audio files.</summary>
 		public AudioManager Audio;
@@ -42,22 +49,10 @@ namespace Spooker.Core
 		/// <summary>Core rendering device what controls everything drawn to screen.</summary>
 		public SFML.Graphics.RenderWindow GraphicsDevice;
 
-		/// <summary>Manages components of this game window instance.</summary>
-		protected EntityList Components;
-		
-		private readonly SpriteBatch _spriteBatch;
-		private readonly GameTime _gameTime;
-		private readonly GameSpan _timeStep;
-		private readonly GameSpan _timeStepCap;
-		private readonly Color _clearColor = Color.Black;
-
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of GameWindow class.
+		/// Initializes a new instance of the <see cref="Spooker.Core.GameWindow"/> class.
 		/// </summary>
-		/// <param name="gameSettings">Settings from what will game
-		/// window constructs</param>
-		////////////////////////////////////////////////////////////
+		/// <param name="gameSettings">Game settings.</param>
 		protected GameWindow (GameSettings gameSettings)
 		{
             //Load game settings for renderwindow
@@ -98,17 +93,15 @@ namespace Spooker.Core
 
 			//Workaround for not closing game window correctly
 			GraphicsDevice.Closed += (sender, e) => Dispose();
-
-			LoadContent (Content);
 		}
-
-		////////////////////////////////////////////////////////////
+		
 		/// <summary>
 		/// Starts main loop of game window
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public void Run()
 		{
+			LoadContent (Content);
+
 			var frameClock = new Clock();
 			var accumulator = GameSpan.Zero;
 
@@ -137,32 +130,30 @@ namespace Spooker.Core
 			}
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Called when a state is created.
+		/// Component uses this for loading itself
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="content">Content.</param>
 		public virtual void LoadContent(ContentManager content)
 		{
 			Audio.LoadContent (content);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Draws all drawable members of this GameWindow class.
+		/// Component uses this for drawing itself
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="spriteBatch">Sprite batch.</param>
+		/// <param name="effects">Effects.</param>
 		public virtual void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
 			StateFactory.Draw (spriteBatch);
 			Components.Draw (spriteBatch);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Updates this instance of GameWindow class.
+		/// Component uses this for updating itself.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="gameTime">Provides snapshot of timing values.</param>
 		public virtual void Update(GameTime gameTime)
 		{
 			Content.Update (gameTime);
@@ -171,11 +162,14 @@ namespace Spooker.Core
 			Components.Update (gameTime);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Closes game screen and disposes all components.
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <filterpriority>2</filterpriority>
+		/// <remarks>Call <see cref="Dispose"/> when you are finished using the <see cref="Spooker.Core.GameWindow"/>. The
+		/// <see cref="Dispose"/> method leaves the <see cref="Spooker.Core.GameWindow"/> in an unusable state. After calling
+		/// <see cref="Dispose"/>, you must release all references to the <see cref="Spooker.Core.GameWindow"/> so the garbage
+		/// collector can reclaim the memory that the <see cref="Spooker.Core.GameWindow"/> was occupying.</remarks>
 		public virtual void Dispose()
 		{
 			Audio.Dispose ();

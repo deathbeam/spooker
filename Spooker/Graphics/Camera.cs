@@ -12,27 +12,16 @@ using Spooker.Time;
 
 namespace Spooker.Graphics
 {
-	////////////////////////////////////////////////////////////
 	/// <summary>
 	/// Camera can be used for controlling drawbale or/and
 	/// updateable area of game screen
 	/// </summary>
-	////////////////////////////////////////////////////////////
 	public class Camera : Transformable, IUpdateable
 	{
-		public interface IFollowable
-		{
-			/// <summary>
-			/// Follows the position.
-			/// </summary>
-			/// <returns>The position.</returns>
-			Vector2 FollowPosition();
-		}
-
 		/// <summary>
-		/// This is used for following specified followable object.
+		/// This is used for following specified targetable object.
 		/// </summary>
-		public IFollowable Follow;
+		public ITargetable Follow;
 
 		/// <summary>
 		/// Size of camera visible area
@@ -57,18 +46,6 @@ namespace Spooker.Graphics
 		{
 			get { return Origin; }
 			set { Origin = value; }
-		}
-
-		private new Vector2 Origin
-		{
-			get { return base.Origin; }
-			set { base.Origin = value; }
-		}
-
-		private new Vector2 Scale
-		{
-			get { return base.Scale; }
-			set { base.Scale = value; }
 		}
 
 		/// <summary>
@@ -103,7 +80,7 @@ namespace Spooker.Graphics
 			Scale = new Vector2 ((float)MathHelper.Clamp (Scale.X, 0.01, 10), (float)MathHelper.Clamp (Scale.Y, 0.01, 10));
 
 			if (Follow != null)
-				Position = Follow.FollowPosition ();
+				Position = Follow.TargetPosition ();
 		}
 	}
 }

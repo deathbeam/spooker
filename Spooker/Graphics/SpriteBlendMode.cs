@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------------
-// IDrawable.cs
+// SpriteBlendMode.cs
 //
 // Spooker Open Source Game Framework
 // Copyright (C) Indie Armory. All rights reserved.
@@ -11,16 +11,13 @@
 namespace Spooker.Graphics
 {
 	/// <summary>
-	/// Class with this interface implemented can be drawn with
-	/// spritebatch.
+	/// Blending options to use when rendering.
 	/// </summary>
-	public interface IDrawable
+	public enum SpriteBlendMode : byte
 	{
-		/// <summary>
-		/// Component uses this for drawing itself
-		/// </summary>
-		/// <param name="spriteBatch">Sprite batch.</param>
-		/// <param name="effects">Effects.</param>
-		void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None);
+		None = 0,
+		Alpha = 1,
+		Additive = 2,
+		Multiply = 3
 	}
 }

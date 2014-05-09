@@ -15,8 +15,9 @@ Linux and even Mac.
 * Smart resource and component management.
 * Simple game state managers.
 * Easy-to-use audio controller.
-* Advanced (but simple) networking using Lidgren.Network.
+* Advanced networking using Lidgren.Network.
 * The easiest frame animation and game input management.
+* Very advanced and realistic physics (thanks to Farseer Physics).
 
 Please, consider watching us on GitHub to be updated with latest releases.
 You can use this library in any project freely. Share it with your friends.

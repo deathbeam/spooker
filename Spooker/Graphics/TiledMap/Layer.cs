@@ -19,10 +19,9 @@ namespace Spooker.Graphics.TiledMap
 	/// TiledSharp.
 	/// </summary>
 	////////////////////////////////////////////////////////////
-    public class Layer
+	public class Layer : IDrawable
     {
 		private readonly List<Tile> _tiles;
-		private readonly Vector2 _tileSize;
 
         /// <summary>Name of this layer</summary>
 		public string Name;
@@ -49,7 +48,6 @@ namespace Spooker.Graphics.TiledMap
             Visible = layer.Visible;
 			Color = new Color (1f, 1f, 1f, (float)layer.Opacity);
 
-			_tileSize = tileSize;
 			_tiles = new List<Tile>();
 
 			foreach (TmxLayerTile t in layer.Tiles)
@@ -61,7 +59,12 @@ namespace Spooker.Graphics.TiledMap
 			}
         }
 
-		internal void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
+		/// <summary>
+		/// Component uses this for drawing itself
+		/// </summary>
+		/// <param name="spriteBatch">Sprite batch.</param>
+		/// <param name="effects">Effects.</param>
+		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
 			if (!Visible || Color.A == 0)
 				return;

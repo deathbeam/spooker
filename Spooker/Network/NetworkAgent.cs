@@ -35,8 +35,19 @@ namespace Spooker.Network
 		private NetOutgoingMessage _outgoingMessage;
 	    private readonly int _port;
 
+		/// <summary>
+		/// Occurs when client connects or disconnects.
+		/// </summary>
 		public delegate void ConnectEvent (NetIncomingMessage data);
+
+		/// <summary>
+		/// Occurs when client connects.
+		/// </summary>
 		public event ConnectEvent OnConnect;
+
+		/// <summary>
+		/// Occurs when client disconnects.
+		/// </summary>
 		public event ConnectEvent OnDisconnect;
 
 		/// <summary>

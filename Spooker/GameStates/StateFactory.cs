@@ -22,11 +22,10 @@ namespace Spooker.GameStates
 	{
 		private readonly List<State> _stateStack = new List<State> ();
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Creates new instance of StateFactory class.
+		/// Initializes a new instance of the <see cref="Spooker.GameStates.StateFactory"/> class.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="graphicsDevice">Graphics device.</param>
 		public StateFactory (SFML.Graphics.RenderWindow graphicsDevice)
 		{
 			graphicsDevice.MouseWheelMoved += (sender, e) =>
@@ -72,11 +71,11 @@ namespace Spooker.GameStates
 			};
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Draws this instance of StateFactory class.
+		/// Component uses this for drawing itself
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="spriteBatch">Sprite batch.</param>
+		/// <param name="effects">Effects.</param>
 		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
 			foreach (var state in _stateStack)
@@ -94,11 +93,10 @@ namespace Spooker.GameStates
 			}
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Updates this instance of StateFactory class.
+		/// Component uses this for updating itself.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="gameTime">Provides snapshot of timing values.</param>
 		public void Update(GameTime gameTime)
 		{
 			foreach (var state in _stateStack)
@@ -106,11 +104,10 @@ namespace Spooker.GameStates
 					state.Update (gameTime);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
 		/// Pops all states off the stack and pushes one onto it.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="state">State.</param>
 		public void SetState(State state)
 		{
 			foreach (var s in _stateStack)
@@ -120,22 +117,19 @@ namespace Spooker.GameStates
 			PushState(state);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Pushes a state onto the state stack.
+		/// Pushs the state on the state stack.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <param name="state">State.</param>
 		public void PushState(State state)
 		{
 			_stateStack.Add(state);
 			state.Enter();
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Pops a state off the state stack.
+		/// Pops the state off the state stack.
 		/// </summary>
-		////////////////////////////////////////////////////////////
 		public void PopState()
 		{
 			var last = _stateStack.Count - 1;
@@ -143,11 +137,11 @@ namespace Spooker.GameStates
 			_stateStack.RemoveAt(last);
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Checks if specified state is active.
+		/// Determines whether the specified state is active.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <returns><c>true</c> if the specified state is active; otherwise, <c>false</c>.</returns>
+		/// <param name="state">State.</param>
 		public bool IsActive(State state)
 		{
 			if (state.IsOverlay)
@@ -156,11 +150,15 @@ namespace Spooker.GameStates
 			return _stateStack.FindLast(s => !s.IsOverlay) == state;
 		}
 
-		////////////////////////////////////////////////////////////
 		/// <summary>
-		/// Disposes this instance of StateFactory class.
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		/// </summary>
-		////////////////////////////////////////////////////////////
+		/// <filterpriority>2</filterpriority>
+		/// <remarks>Call <see cref="Dispose"/> when you are finished using the <see cref="Spooker.GameStates.StateFactory"/>. The
+		/// <see cref="Dispose"/> method leaves the <see cref="Spooker.GameStates.StateFactory"/> in an unusable state. After
+		/// calling <see cref="Dispose"/>, you must release all references to the
+		/// <see cref="Spooker.GameStates.StateFactory"/> so the garbage collector can reclaim the memory that the
+		/// <see cref="Spooker.GameStates.StateFactory"/> was occupying.</remarks>
 		public void Dispose()
 		{
 			foreach (var state in _stateStack)

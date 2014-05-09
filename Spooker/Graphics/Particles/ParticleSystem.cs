@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using Spooker.Time;
 using Spooker.Core;
-using Spooker.Content;
 
 namespace Spooker.Graphics.Particles
 {
@@ -24,7 +23,7 @@ namespace Spooker.Graphics.Particles
 		#region Private fields
 
 		// the graphic this particle system will use.
-		private Sprite _sprite;
+		private readonly Sprite _sprite;
 
 		// the array of particles used by this system. these are reused, so that calling
 		// AddParticles will only cause allocations if we're trying to create more particles
@@ -40,7 +39,7 @@ namespace Spooker.Graphics.Particles
 		private readonly ParticleSettings _settings;
 
 		// the BlendState used when rendering the particles.
-		private SpriteBlendMode _blendState;
+		private readonly SpriteBlendMode _blendState;
 
 		#endregion
 
@@ -124,7 +123,7 @@ namespace Spooker.Graphics.Particles
 		{
 			// the number of particles we want for this effect is a random number
 			// somewhere between the two constants specified by the settings.
-			int numParticles = (int)MathHelper.Random(_settings.MinNumParticles, _settings.MaxNumParticles);
+			var numParticles = (int)MathHelper.Random(_settings.MinNumParticles, _settings.MaxNumParticles);
 
 			// create that many particles, if you can.
 			for (int i = 0; i < numParticles; i++)

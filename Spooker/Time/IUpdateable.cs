@@ -8,8 +8,6 @@
 // License: MIT
 //-----------------------------------------------------------------------------
 
-using Spooker.Time;
-
 namespace Spooker.Time
 {
 	////////////////////////////////////////////////////////////
@@ -20,7 +18,7 @@ namespace Spooker.Time
     public interface IUpdateable
     {
 		/// <summary>
-		/// Component uses this for updating itself.
+		/// Allows the game component to update itself.
 		/// </summary>
 		/// <param name="gameTime">Provides snapshot of timing values.</param>
 		void Update(GameTime gameTime);
