@@ -193,8 +193,12 @@ namespace Spooker.Graphics.TiledMap
 					    Type = o.Type,
 					    Position = new Vector2(o.X, o.Y),
 					    Size = new Vector2(o.Width, o.Height),
-						Properties = new PropertyDict(o.Properties)
+						Properties = o.Properties
 					};
+
+					if (o.Points != null)
+						foreach (var p in o.Points)
+							obj.Points.Add (new Point (p.Item1, p.Item2));
 
 					if (o.ObjectType == TmxObjectGroup.TmxObjectType.Basic ||
 						o.ObjectType == TmxObjectGroup.TmxObjectType.Tile)

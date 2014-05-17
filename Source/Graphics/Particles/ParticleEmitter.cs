@@ -52,8 +52,11 @@ namespace Spooker.Graphics.Particles
 		}
 
 		/// <summary>
-		/// Constructs a new particle emitter object.
+		/// Initializes a new instance of the <see cref="Spooker.Graphics.Particles.ParticleEmitter"/> class.
 		/// </summary>
+		/// <param name="particleSystem">Particle system.</param>
+		/// <param name="particlesPerSecond">Particles per second.</param>
+		/// <param name="initialPosition">Initial position.</param>
 		public ParticleEmitter(
 			ParticleSystem particleSystem,
 			float particlesPerSecond,
@@ -69,6 +72,9 @@ namespace Spooker.Graphics.Particles
 		/// Updates the emitter, creating the appropriate number of particles
 		/// in the appropriate positions.
 		/// </summary>
+		/// <param name="gameTime">Game time.</param>
+		/// <param name="newPosition">New position.</param>
+		/// <param name="camera">Camera.</param>
 		public void Update(GameTime gameTime, Vector2 newPosition, Camera camera)
 		{
 			// Work out how much time has passed since the previous update.

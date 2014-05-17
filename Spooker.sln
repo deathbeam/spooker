@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spooker", "Spooker\Spooker.csproj", "{CFA1A620-238E-4917-9831-B19B7F2C23B4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spooker", "Source\Spooker.csproj", "{CFA1A620-238E-4917-9831-B19B7F2C23B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

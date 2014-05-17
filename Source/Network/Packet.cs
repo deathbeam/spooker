@@ -39,10 +39,10 @@ namespace Spooker.Network
 		/// Initializes a new instance of the <see cref="Spooker.Network.Packet"/> class.
 		/// </summary>
 		/// <param name="parent">Parent.</param>
-		protected Packet (NetworkAgent parent)
+		protected Packet(NetworkAgent parent)
 		{
 			_parent = parent;
-			_parent.PacketManager.AddPacket (ID, this);
+			_parent.Packets.Add (ID, this);
 			Writer = new PacketWriter ();
 			Reader = new PacketReader ();
 		}

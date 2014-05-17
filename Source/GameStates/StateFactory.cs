@@ -128,13 +128,22 @@ namespace Spooker.GameStates
 		}
 
 		/// <summary>
-		/// Pops the state off the state stack.
+		/// Pops the last state off the state stack.
 		/// </summary>
 		public void PopState()
 		{
 			var last = _stateStack.Count - 1;
 			_stateStack[last].Leave();
 			_stateStack.RemoveAt(last);
+		}
+
+		/// <summary>
+		/// Pops the specified state off the state stack.
+		/// </summary>
+		public void PopState(State state)
+		{
+			state.Leave ();
+			_stateStack.Remove (state);
 		}
 
 		/// <summary>

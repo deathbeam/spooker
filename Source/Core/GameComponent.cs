@@ -12,6 +12,7 @@ using SFML.Graphics;
 using Spooker.Audio;
 using Spooker.Input;
 using Spooker.GameStates;
+using Spooker.Content;
 
 namespace Spooker.Core
 {
@@ -25,6 +26,12 @@ namespace Spooker.Core
 	{
 		/// <summary>Heart of Spooker. All important operations are done here.</summary>
         protected GameWindow Game;
+
+		/// <summary>Handles user input from keyboard and mouse.</summary>
+		protected ContentManager Content
+		{ 
+			get { return Game.Content; }
+		}
 
 		/// <summary>Core rendering device what controls everything drawn to screen.</summary>
 		protected RenderTarget GraphicsDevice

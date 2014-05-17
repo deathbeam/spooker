@@ -46,35 +46,35 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Gwen">
-      <HintPath>..\Lib\Gwen.dll</HintPath>
+      <HintPath>..\ThirdParty\Gwen.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Gwen.SFML">
-      <HintPath>..\Lib\Gwen.SFML.dll</HintPath>
+      <HintPath>..\ThirdParty\Gwen.SFML.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Lidgren.Network">
-      <HintPath>..\Lib\Lidgren.Network.dll</HintPath>
+      <HintPath>..\ThirdParty\Lidgren.Network.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="sfmlnet-audio-2">
-      <HintPath>..\Lib\sfmlnet-audio-2.dll</HintPath>
+      <HintPath>..\ThirdParty\sfmlnet-audio-2.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="sfmlnet-graphics-2">
-      <HintPath>..\Lib\sfmlnet-graphics-2.dll</HintPath>
+      <HintPath>..\ThirdParty\sfmlnet-graphics-2.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="sfmlnet-window-2">
-      <HintPath>..\Lib\sfmlnet-window-2.dll</HintPath>
+      <HintPath>..\ThirdParty\sfmlnet-window-2.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="TiledSharp">
-      <HintPath>..\Lib\TiledSharp.dll</HintPath>
+      <HintPath>..\ThirdParty\TiledSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="FarseerPhysics">
-      <HintPath>..\Lib\FarseerPhysics.dll</HintPath>
+      <HintPath>..\ThirdParty\FarseerPhysics.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -137,7 +137,6 @@
     <Compile Include="Input\ActionNodes.cs" />
     <Compile Include="Network\NetUtility.cs" />
     <Compile Include="ITargetable.cs" />
-    <Compile Include="PropertyDict.cs" />
     <Compile Include="Graphics\SpriteBlendMode.cs" />
     <Compile Include="Graphics\SpriteSortMode.cs" />
   </ItemGroup>

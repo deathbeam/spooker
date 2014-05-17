@@ -183,6 +183,11 @@ namespace Spooker.Graphics.Particles
 		public Vector2 Gravity = Vector2.Zero;
 
 		/// <summary>
+		/// When you are lazy to recolor particle texture, use this :)
+		/// </summary>     
+		public Color Color = Color.White;
+
+		/// <summary>
 		/// Alpha blending settings. Our default gives us a BlendState equivalent to
 		/// BlendState.AlphaBlend which is suitable for many particle effects.
 		/// </summary>
@@ -237,6 +242,7 @@ namespace Spooker.Graphics.Particles
 			MaxSize = temp.MaxSize;
 			Gravity = temp.Gravity;
 			BlendMode = temp.BlendMode;
+			Color = temp.Color;
 		}
 	}
 }

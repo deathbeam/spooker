@@ -24,8 +24,6 @@ namespace Spooker.GameStates
 	////////////////////////////////////////////////////////////
 	public abstract class State : GameComponent, IDrawable, IUpdateable, ILoadable
 	{
-		private bool _isLoaded;
-
 		#region Properties
 		/// <summary>
 		/// Gets or sets the functions to call for this state when it is not the
@@ -118,17 +116,11 @@ namespace Spooker.GameStates
 		/// <summary>
 		/// Called when a state is added to game (pushed to stack).
 		/// </summary>
-		public virtual void Enter()
-		{
-			if (!_isLoaded)
-			{
-				LoadContent (Game.Content);
-				_isLoaded = true;
-			}
-		}
+		public virtual void Enter() { }
 
 		/// <summary>
-		/// Called when a state is removed from game (popped from stack).
+		/// Tells the screen to go away. Unlike StateFactory.Remove, which
+		/// instantly kills the screen, this method also unloads all objects.
 		/// </summary>
 		public virtual void Leave()
 		{

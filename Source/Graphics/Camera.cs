@@ -82,5 +82,26 @@ namespace Spooker.Graphics
 			if (Follow != null)
 				Position = Follow.TargetPosition ();
 		}
+
+		/// <summary>
+		/// Converts the screen position to world position (can be used for example for
+		/// getting correct mouse position).
+		/// </summary>
+		/// <returns>The screen to world.</returns>
+		/// <param name="location">Location.</param>
+		public Vector2 ConvertScreenToWorld(Vector2 location)
+		{
+			return InverseTransform.TransformPoint (location);
+		}
+
+		/// <summary>
+		/// Converts the world position to screen position (can be used for drawing).
+		/// </summary>
+		/// <returns>The world to screen.</returns>
+		/// <param name="location">Location.</param>
+		public Vector2 ConvertWorldToScreen(Vector2 location)
+		{
+			return Transform.TransformPoint (location);
+		}
 	}
 }

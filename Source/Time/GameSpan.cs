@@ -18,7 +18,7 @@ namespace Spooker.Time
 	/// Contains game time span.
 	/// </summary>
 	////////////////////////////////////////////////////////////
-	public class GameSpan : IEquatable<GameSpan>
+	public struct GameSpan : IEquatable<GameSpan>
 	{
 		#region Private Fields
 

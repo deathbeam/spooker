@@ -53,7 +53,7 @@ namespace Spooker.Network
 		/// <summary>
 		/// The packet manager.
 		/// </summary>
-		public PacketManager PacketManager;
+		public PacketManager Packets;
 
 		/// <summary>
 		/// Gets the connections.
@@ -94,7 +94,7 @@ namespace Spooker.Network
 				_peer = new NetClient(config);
 			}
 
-			PacketManager = new PacketManager ();
+			Packets = new PacketManager ();
 
 			_peer.Start();
 			_outgoingMessage = _peer.CreateMessage();
@@ -194,8 +194,8 @@ namespace Spooker.Network
 					}
 					break;
 				case NetIncomingMessageType.Data:
-					var packet = PacketManager.GetPacket (incomingMessage.ReadInt32 ());
-					packet.HandleData (incomingMessage);
+					var id = incomingMessage.ReadInt32 ();
+					Packets[id].HandleData (incomingMessage);
 					break;
 				}
 			}

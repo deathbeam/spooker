@@ -11,7 +11,7 @@
 namespace Spooker.Graphics.Particles
 {
 	/// <summary>
-	/// particles are the little bits that will make up an effect. each effect will
+	/// Particles are the little bits that will make up an effect. each effect will
 	/// be comprised of many of these particles. They have basic physical properties,
 	/// such as position, velocity, acceleration, and rotation. They'll be drawn as
 	/// sprites, all layered on top of one another, and will be very pretty.
@@ -33,17 +33,17 @@ namespace Spooker.Graphics.Particles
         /// <summary>How long it has been since initialize was called</summary>
 	    public float TimeSinceStart;
 
-        /// <summary>the scale of this particle</summary>
+		/// <summary>The scale of this particle</summary>
 		public float Scale;
 
-	    /// <summary>its rotation, in radians</summary>
+		/// <summary>Its rotation, in radians</summary>
 	    public float Rotation;
 
-        /// <summary>how fast does it rotate?</summary>
+		/// <summary>How fast does it rotate?</summary>
 	    public float RotationSpeed;
 
         /// <summary>
-		/// is this particle still alive? once TimeSinceStart becomes greater than
+		/// Is this particle still alive? Once TimeSinceStart becomes greater than
 		/// Lifetime, the particle should no longer be drawn or updated.
         /// </summary>
 		public bool Active
@@ -52,7 +52,7 @@ namespace Spooker.Graphics.Particles
 		}
 
         /// <summary>
-		/// initialize is called by ParticleSystem to set up the particle, and prepares
+		/// Initialize is called by ParticleSystem to set up the particle, and prepares
 		/// the particle for use.
         /// </summary>
 		public void Initialize(Vector2 position, Vector2 velocity, Vector2 acceleration,
@@ -78,7 +78,7 @@ namespace Spooker.Graphics.Particles
         /// Update is called by the ParticleSystem on every frame. This is where the
         /// particle's position and that kind of thing get updated.
         /// </summary>
-        /// <param name="dt"></param>
+		/// <param name="dt">Delta time</param>
 		public void Update(float dt)
 		{
 			Velocity += Acceleration * dt;

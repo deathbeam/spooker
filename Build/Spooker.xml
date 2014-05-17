@@ -368,6 +368,9 @@
             </summary>
             <param name="game">Game.</param>
         </member>
+        <member name="P:Spooker.Core.GameComponent.Content">
+            <summary>Handles user input from keyboard and mouse.</summary>
+        </member>
         <member name="P:Spooker.Core.GameComponent.GraphicsDevice">
             <summary>Core rendering device what controls everything drawn to screen.</summary>
         </member>
@@ -435,7 +438,8 @@
         </member>
         <member name="M:Spooker.GameStates.State.Leave">
             <summary>
-            Called when a state is removed from game (popped from stack).
+            Tells the screen to go away. Unlike StateFactory.Remove, which
+            instantly kills the screen, this method also unloads all objects.
             </summary>
         </member>
         <member name="M:Spooker.GameStates.State.LoadContent(Spooker.Content.ContentManager)">
@@ -770,6 +774,21 @@
             </summary>
             <param name="gameTime">Provides snapshot of timing values.</param>
         </member>
+        <member name="M:Spooker.Graphics.Camera.ConvertScreenToWorld(Spooker.Vector2)">
+            <summary>
+            Converts the screen position to world position (can be used for example for
+            getting correct mouse position).
+            </summary>
+            <returns>The screen to world.</returns>
+            <param name="location">Location.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Camera.ConvertWorldToScreen(Spooker.Vector2)">
+            <summary>
+            Converts the world position to screen position (can be used for drawing).
+            </summary>
+            <returns>The world to screen.</returns>
+            <param name="location">Location.</param>
+        </member>
         <member name="P:Spooker.Graphics.Camera.Zoom">
             <summary>
             Gets or sets the zoom of this camera.
@@ -798,7 +817,7 @@
             Network agent.
             </summary>
         </member>
-        <member name="F:Spooker.Network.NetworkAgent.PacketManager">
+        <member name="F:Spooker.Network.NetworkAgent.Packets">
             <summary>
             The packet manager.
             </summary>
@@ -926,7 +945,7 @@
             Packet manager.
             </summary>
         </member>
-        <member name="M:Spooker.Network.PacketManager.AddPacket(System.Int32,Spooker.Network.Packet)">
+        <member name="M:Spooker.Network.PacketManager.Add(System.Int32,Spooker.Network.Packet)">
             <summary>
             Adds the packet.
             </summary>
@@ -934,12 +953,17 @@
             <param name="id">Identifier.</param>
             <param name="packet">Packet.</param>
         </member>
-        <member name="M:Spooker.Network.PacketManager.GetPacket(System.Int32)">
+        <member name="M:Spooker.Network.PacketManager.Remove(System.Int32)">
             <summary>
-            Gets the packet.
+            Remove packet with the specified id.
             </summary>
-            <returns>The packet.</returns>
             <param name="id">Identifier.</param>
+        </member>
+        <member name="P:Spooker.Network.PacketManager.Item(System.Int32)">
+            <summary>
+            Gets the <see cref="T:Spooker.Network.Packet"/> with the specified key.
+            </summary>
+            <param name="key">Key.</param>
         </member>
         <member name="T:Spooker.Graphics.SpriteBatch">
             <summary>
@@ -1557,7 +1581,7 @@
         </member>
         <member name="T:Spooker.Graphics.Particles.Particle">
             <summary>
-            particles are the little bits that will make up an effect. each effect will
+            Particles are the little bits that will make up an effect. each effect will
             be comprised of many of these particles. They have basic physical properties,
             such as position, velocity, acceleration, and rotation. They'll be drawn as
             sprites, all layered on top of one another, and will be very pretty.
@@ -1579,17 +1603,17 @@
             <summary>How long it has been since initialize was called</summary>
         </member>
         <member name="F:Spooker.Graphics.Particles.Particle.Scale">
-            <summary>the scale of this particle</summary>
+            <summary>The scale of this particle</summary>
         </member>
         <member name="F:Spooker.Graphics.Particles.Particle.Rotation">
-            <summary>its rotation, in radians</summary>
+            <summary>Its rotation, in radians</summary>
         </member>
         <member name="F:Spooker.Graphics.Particles.Particle.RotationSpeed">
-            <summary>how fast does it rotate?</summary>
+            <summary>How fast does it rotate?</summary>
         </member>
         <member name="M:Spooker.Graphics.Particles.Particle.Initialize(Spooker.Vector2,Spooker.Vector2,Spooker.Vector2,System.Single,System.Single,System.Single)">
             <summary>
-            initialize is called by ParticleSystem to set up the particle, and prepares
+            Initialize is called by ParticleSystem to set up the particle, and prepares
             the particle for use.
             </summary>
         </member>
@@ -1598,11 +1622,11 @@
             Update is called by the ParticleSystem on every frame. This is where the
             particle's position and that kind of thing get updated.
             </summary>
-            <param name="dt"></param>
+            <param name="dt">Delta time</param>
         </member>
         <member name="P:Spooker.Graphics.Particles.Particle.Active">
             <summary>
-            is this particle still alive? once TimeSinceStart becomes greater than
+            Is this particle still alive? Once TimeSinceStart becomes greater than
             Lifetime, the particle should no longer be drawn or updated.
             </summary>
         </member>
@@ -1631,14 +1655,20 @@
         </member>
         <member name="M:Spooker.Graphics.Particles.ParticleEmitter.#ctor(Spooker.Graphics.Particles.ParticleSystem,System.Single,Spooker.Vector2)">
             <summary>
-            Constructs a new particle emitter object.
+            Initializes a new instance of the <see cref="T:Spooker.Graphics.Particles.ParticleEmitter"/> class.
             </summary>
+            <param name="particleSystem">Particle system.</param>
+            <param name="particlesPerSecond">Particles per second.</param>
+            <param name="initialPosition">Initial position.</param>
         </member>
         <member name="M:Spooker.Graphics.Particles.ParticleEmitter.Update(Spooker.Time.GameTime,Spooker.Vector2,Spooker.Graphics.Camera)">
             <summary>
             Updates the emitter, creating the appropriate number of particles
             in the appropriate positions.
             </summary>
+            <param name="gameTime">Game time.</param>
+            <param name="newPosition">New position.</param>
+            <param name="camera">Camera.</param>
         </member>
         <member name="P:Spooker.Graphics.Particles.ParticleEmitter.Position">
             <summary>
@@ -1812,6 +1842,11 @@
             to simulate gravity, up for effects like smoke, or any other direction.   
             </summary>     
         </member>
+        <member name="F:Spooker.Graphics.Particles.ParticleSettings.Color">
+            <summary>
+            When you are lazy to recolor particle texture, use this :)
+            </summary>     
+        </member>
         <member name="F:Spooker.Graphics.Particles.ParticleSettings.BlendMode">
             <summary>
             Alpha blending settings. Our default gives us a BlendState equivalent to
@@ -1857,12 +1892,6 @@
             system expects to use. The system will grow as needed, however setting
             this value to be as close as possible will reduce allocations.</param>
         </member>
-        <member name="M:Spooker.Graphics.Particles.ParticleSystem.PickRandomDirection">
-            <summary>
-            PickRandomDirection is used by AddParticle to decide which direction
-            particles will move. 
-            </summary>
-        </member>
         <member name="M:Spooker.Graphics.Particles.ParticleSystem.AddParticles(Spooker.Vector2,Spooker.Vector2)">
             <summary>
             AddParticles's job is to add an effect somewhere on the screen. If there 
@@ -1890,9 +1919,9 @@
         </member>
         <member name="M:Spooker.Graphics.Particles.ParticleSystem.Update(Spooker.Time.GameTime)">
             <summary>
-            overriden from DrawableGameComponent, Update will update all of the active
-            particles.
+            Allows the game component to update itself.
             </summary>
+            <param name="gameTime">Provides snapshot of timing values.</param>
         </member>
         <member name="M:Spooker.Graphics.Particles.ParticleSystem.Draw(Spooker.Graphics.SpriteBatch,Spooker.Graphics.SpriteEffects)">
             <summary>
@@ -2098,7 +2127,12 @@
         </member>
         <member name="M:Spooker.GameStates.StateFactory.PopState">
             <summary>
-            Pops the state off the state stack.
+            Pops the last state off the state stack.
+            </summary>
+        </member>
+        <member name="M:Spooker.GameStates.StateFactory.PopState(Spooker.GameStates.State)">
+            <summary>
+            Pops the specified state off the state stack.
             </summary>
         </member>
         <member name="M:Spooker.GameStates.StateFactory.IsActive(Spooker.GameStates.State)">
@@ -2380,10 +2414,11 @@
             </summary>
             <param name="e">Key event arguments.</param>
         </member>
-        <member name="M:Spooker.GameStates.StateGUI.Enter">
+        <member name="M:Spooker.GameStates.StateGUI.LoadContent(Spooker.Content.ContentManager)">
             <summary>
-            Called when a state is added to game (pushed to stack).
+            Component uses this for loading itself
             </summary>
+            <param name="content">Content.</param>
         </member>
         <member name="M:Spooker.GameStates.StateGUI.LoadGUI(Gwen.Control.Canvas)">
             <summary>

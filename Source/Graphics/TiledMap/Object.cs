@@ -29,7 +29,8 @@ namespace Spooker.Graphics.TiledMap
 		public Vector2 Position;
 		public Vector2 Size;
 		public Body Shape;
-		public PropertyDict Properties;
+		public List<Point> Points = new List<Point> ();
+		public Dictionary<string, string> Properties = new Dictionary<string, string> ();
 
 		/// <summary>
 		/// Component uses this for drawing itself
@@ -41,8 +42,7 @@ namespace Spooker.Graphics.TiledMap
 			if (!(Shape.UserData is Sprite))
 				return;
 
-			var sprite = Shape.UserData as Sprite;
-			spriteBatch.Draw(sprite, effects);
+			spriteBatch.Draw((Sprite)Shape.UserData, effects);
 		}
 
 		/// <summary>
@@ -58,7 +58,6 @@ namespace Spooker.Graphics.TiledMap
 			sprite.Position = new Vector2 (
 				ConvertUnits.ToDisplayUnits (Shape.Position.X),
 				ConvertUnits.ToDisplayUnits (Shape.Position.Y));
-			Shape.UserData = sprite;
 		}
 	}
 }

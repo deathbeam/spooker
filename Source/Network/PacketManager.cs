@@ -20,28 +20,38 @@ namespace Spooker.Network
 		private readonly Dictionary<int,Packet> _packets = new Dictionary<int, Packet>();
 
 		/// <summary>
+		/// Gets the <see cref="Spooker.Network.Packet"/> with the specified key.
+		/// </summary>
+		/// <param name="key">Key.</param>
+		public Packet this[int key]
+		{
+			get
+			{
+				Packet packet;
+				_packets.TryGetValue (key, out packet);
+				return packet;
+			}
+		}
+
+		/// <summary>
 		/// Adds the packet.
 		/// </summary>
 		/// <returns>The packet.</returns>
 		/// <param name="id">Identifier.</param>
 		/// <param name="packet">Packet.</param>
-		public int AddPacket(int id, Packet packet)
+		public int Add(int id, Packet packet)
 		{
 			_packets.Add (id, packet);
 			return id;
 		}
 
-
 		/// <summary>
-		/// Gets the packet.
+		/// Remove packet with the specified id.
 		/// </summary>
-		/// <returns>The packet.</returns>
 		/// <param name="id">Identifier.</param>
-		public Packet GetPacket(int id)
+		public void Remove(int id)
 		{
-			Packet packet;
-			_packets.TryGetValue (id, out packet);
-			return packet;
+			_packets.Remove (id);
 		}
 	}
 }

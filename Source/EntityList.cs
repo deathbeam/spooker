@@ -90,15 +90,8 @@ namespace Spooker
 		/// <param name="effects">Effects.</param>
 		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
         {
-			// Begins spriteBatch to avoid errors with drawables without
-			// already started spriteBatch
-			if (_drawables.Count > 0)
-			{
-				spriteBatch.Begin ();
-				foreach (var drawable in _drawables)
-					drawable.Draw (spriteBatch, effects);
-				spriteBatch.End ();
-			}
+			foreach (var drawable in _drawables)
+				drawable.Draw (spriteBatch, effects);
         }
 
 		/// <summary>

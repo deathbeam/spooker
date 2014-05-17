@@ -23,7 +23,9 @@ namespace Spooker.Graphics.Particles
 		#region Private fields
 
 		// the graphic this particle system will use.
-		private readonly Sprite _sprite;
+		private readonly Texture _texture;
+		private readonly Rectangle _sourceRect;
+		private readonly Vector2 _origin;
 
 		// the array of particles used by this system. these are reused, so that calling
 		// AddParticles will only cause allocations if we're trying to create more particles
@@ -37,9 +39,6 @@ namespace Spooker.Graphics.Particles
 
 		// The settings used for this particle system
 		private readonly ParticleSettings _settings;
-
-		// the BlendState used when rendering the particles.
-		private readonly SpriteBlendMode _blendState;
 
 		#endregion
 
@@ -87,26 +86,9 @@ namespace Spooker.Graphics.Particles
 			}
 
 			// load the graphic....
-			_sprite = new Sprite (new Texture(_settings.TextureFilename));
-
-			// create the blend state using the values from our settings
-			_blendState = _settings.BlendMode;
-		}
-
-		/// <summary>
-		/// PickRandomDirection is used by AddParticle to decide which direction
-		/// particles will move. 
-		/// </summary>
-		private Vector2 PickRandomDirection()
-		{
-			var angle = MathHelper.Random(
-				_settings.MinDirectionAngle,
-				_settings.MaxDirectionAngle);
-
-			// our settings angles are in degrees, so we must convert to radians
-			angle = (float)MathHelper.ToRadians(angle);
-
-			return new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+			_texture = new Texture(_settings.TextureFilename);
+			_sourceRect = new Rectangle (0, 0, (int)_texture.Size.X, (int)_texture.Size.Y);
+			_origin = _texture.Size / 2;
 		}
 
 		/// <summary>
@@ -141,7 +123,7 @@ namespace Spooker.Graphics.Particles
 				}
 
 				// grab a particle from the freeParticles queue, and Initialize it.
-				Particle p = _freeParticles.Dequeue();
+				var p = _freeParticles.Dequeue();
 				InitializeParticle(p, where, velocity);
 			}
 		}
@@ -164,7 +146,10 @@ namespace Spooker.Graphics.Particles
 			velocity *= _settings.EmitterVelocitySensitivity;
 
 			// Adjust the velocity based on our random values
-			Vector2 direction = PickRandomDirection();
+			// our settings angles are in degrees, so we must convert to radians
+			var angle = (float)MathHelper.ToRadians (MathHelper.Random (_settings.MinDirectionAngle, _settings.MaxDirectionAngle));
+			var direction = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+
 			var speed = (float)MathHelper.Random(_settings.MinInitialSpeed, _settings.MaxInitialSpeed);
 			velocity += direction * speed;
 
@@ -177,7 +162,7 @@ namespace Spooker.Graphics.Particles
 			rotationSpeed = (float)MathHelper.ToRadians(rotationSpeed);
 
 			// figure out our acceleration base on our AccelerationMode
-			Vector2 acceleration = Vector2.Zero;
+			var acceleration = Vector2.Zero;
 			switch (_settings.AccelerationMode)
 			{
 			case AccelerationMode.Scalar:
@@ -206,19 +191,13 @@ namespace Spooker.Graphics.Particles
 
 			// then initialize it with those random values. initialize will save those,
 			// and make sure it is marked as active.
-			p.Initialize(
-				where, 
-				velocity, 
-				acceleration, 
-				lifetime, 
-				scale, 
-				rotationSpeed);
+			p.Initialize(where, velocity, acceleration, lifetime, scale, rotationSpeed);
 		}
 
 		/// <summary>
-		/// overriden from DrawableGameComponent, Update will update all of the active
-		/// particles.
+		/// Allows the game component to update itself.
 		/// </summary>
+		/// <param name="gameTime">Provides snapshot of timing values.</param>
 		public void Update(GameTime gameTime)
 		{
 			// calculate dt, the change in the since the last frame. the particle
@@ -228,7 +207,6 @@ namespace Spooker.Graphics.Particles
 			// go through all of the particles...
 			foreach (Particle p in _particles)
 			{
-
 				if (p.Active)
 				{
 					// ... and if they're active, update them.
@@ -236,10 +214,7 @@ namespace Spooker.Graphics.Particles
 					p.Update(dt);
 					// if that update finishes them, put them onto the free particles
 					// queue.
-					if (!p.Active)
-					{
-						_freeParticles.Enqueue(p);
-					}
+					if (!p.Active) _freeParticles.Enqueue(p);
 				}   
 			}
 		}
@@ -251,7 +226,7 @@ namespace Spooker.Graphics.Particles
 		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
 		{
 			// tell sprite batch to begin
-			spriteBatch.Begin (_blendState);
+			spriteBatch.Begin (_settings.BlendMode);
 
 			foreach (Particle p in _particles)
 			{
@@ -264,7 +239,7 @@ namespace Spooker.Graphics.Particles
 				// way through, and 1.0 means it's just about to be finished.
 				// this value will be used to calculate alpha and scale, to avoid 
 				// having particles suddenly appear or disappear.
-				float normalizedLifetime = p.TimeSinceStart / p.Lifetime;
+				var normalizedLifetime = p.TimeSinceStart / p.Lifetime;
 
 				// we want particles to fade in and fade out, so we'll calculate alpha
 				// to be (normalizedLifetime) * (1-normalizedLifetime). this way, when
@@ -275,19 +250,17 @@ namespace Spooker.Graphics.Particles
 				// .25
 				// since we want the maximum alpha to be 1, not .25, we'll scale the 
 				// entire equation by 4.
-				float alpha = 4 * normalizedLifetime * (1 - normalizedLifetime);
-				var color = new Color (1, 1, 1, alpha);
+				var alpha = 4f * normalizedLifetime * (1f - normalizedLifetime);
+
+				// change color alpha based on lifetime
+				var color = _settings.Color;
+				color.A = alpha;
 
 				// make particles grow as they age. they'll start at 75% of their size,
 				// and increase to 100% once they're finished.
-				float scale = p.Scale * (.75f + .25f * normalizedLifetime);
+				var scale = new Vector2 (p.Scale * (.75f + .25f * normalizedLifetime));
 
-				_sprite.Position = p.Position;
-				_sprite.Color = color;
-				_sprite.Scale = new Vector2 (scale);
-				_sprite.Rotation = p.Rotation;
-
-				spriteBatch.Draw(_sprite, effects);
+				spriteBatch.Draw(_texture, p.Position, _sourceRect, color, scale, _origin, p.Rotation, effects);
 			}
 
 			// tell sprite batch to end, using the spriteBlendMode specified in
