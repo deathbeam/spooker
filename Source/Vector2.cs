@@ -212,7 +212,7 @@ namespace Spooker
 
         public static Vector2 Normalize(Vector2 value)
 		{
-			float val = 1.0f / (float)Math.Sqrt((value.X * value.X) + (value.Y * value.Y));
+			var val = 1f / (float)Math.Sqrt((value.X * value.X) + (value.Y * value.Y));
             value.X *= val;
             value.Y *= val;
             return value;
@@ -239,10 +239,7 @@ namespace Spooker
 
 		public override bool Equals(object obj)
 		{
-			if (obj is Vector2)
-				return Equals(this);
-
-			return false;
+			return (obj is Vector2) && Equals((Vector2)obj);
 		}
 
 		public bool Equals(Vector2 other)
@@ -252,7 +249,7 @@ namespace Spooker
 
 		public override int GetHashCode()
 		{
-			return X.GetHashCode() + Y.GetHashCode();
+			return X.GetHashCode() ^ Y.GetHashCode();
 		}
 
 		public double Length()
@@ -272,14 +269,14 @@ namespace Spooker
 
 		public void Normalize(float value)
 		{
-			float val = 1.0f / (float)Math.Sqrt((X * X) + (Y * Y));
+			float val = 1f / (float)Math.Sqrt((X * X) + (Y * Y));
 			X *= val * value;
 			Y *= val * value;
 		}
 
 		public override string ToString()
 		{
-			CultureInfo currentCulture = CultureInfo.CurrentCulture;
+			var currentCulture = CultureInfo.CurrentCulture;
 			return string.Format(currentCulture, "{{X:{0} Y:{1}}}", new object[] { 
 				X.ToString(currentCulture), Y.ToString(currentCulture) });
 		}
@@ -364,7 +361,7 @@ namespace Spooker
 
         public static Vector2 operator /(Vector2 value1, float divider)
 		{
-            float factor = 1 / divider;
+			var factor = 1f / divider;
             value1.X *= factor;
             value1.Y *= factor;
             return value1;

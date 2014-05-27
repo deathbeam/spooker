@@ -1022,6 +1022,12 @@
             sprites.
             </summary>
         </member>
+        <member name="M:Spooker.Graphics.SpriteBatch.Draw(Spooker.Graphics.IDrawable)">
+            <summary>
+            Draw the specified drawable
+            </summary>
+            <param name="drawable">Drawable.</param>
+        </member>
         <member name="M:Spooker.Graphics.SpriteBatch.Draw(Spooker.Graphics.IDrawable,Spooker.Graphics.SpriteEffects)">
             <summary>
             Draw the specified drawable using specified effects.
@@ -1661,50 +1667,27 @@
             <param name="particlesPerSecond">Particles per second.</param>
             <param name="initialPosition">Initial position.</param>
         </member>
-        <member name="M:Spooker.Graphics.Particles.ParticleEmitter.Update(Spooker.Time.GameTime,Spooker.Vector2,Spooker.Graphics.Camera)">
+        <member name="M:Spooker.Graphics.Particles.ParticleEmitter.Update(Spooker.Time.GameTime,Spooker.Vector2)">
             <summary>
             Updates the emitter, creating the appropriate number of particles
             in the appropriate positions.
             </summary>
             <param name="gameTime">Game time.</param>
             <param name="newPosition">New position.</param>
-            <param name="camera">Camera.</param>
+        </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleEmitter.Update(Spooker.Time.GameTime,Spooker.Vector2,Spooker.Matrix)">
+            <summary>
+            Updates the emitter, creating the appropriate number of particles
+            in the appropriate positions.
+            </summary>
+            <param name="gameTime">Game time.</param>
+            <param name="newPosition">New position.</param>
+            <param name="transform">Transform.</param>
         </member>
         <member name="P:Spooker.Graphics.Particles.ParticleEmitter.Position">
             <summary>
             Gets the location of the emitter. To change locations, pass a new value
             in to Update.
-            </summary>
-        </member>
-        <member name="T:Spooker.Graphics.Particles.AccelerationMode">
-            <summary>
-            Used to specify the method of acceleration for a particle system.
-            </summary>
-        </member>
-        <member name="F:Spooker.Graphics.Particles.AccelerationMode.None">
-            <summary>
-            The particle system does not use acceleration.
-            </summary>
-        </member>
-        <member name="F:Spooker.Graphics.Particles.AccelerationMode.Scalar">
-            <summary>
-            The particle system computes the acceleration by using the
-            MinAccelerationScale and MaxAccelerationScale values to compute a random
-            scalar value which is then multiplied by the direction of the particles.
-            </summary>
-        </member>
-        <member name="F:Spooker.Graphics.Particles.AccelerationMode.EndVelocity">
-            <summary>
-            The particle system computes the acceleration by using the EndVelocity
-            value and solving the equation vt = v0 + (a0 * t) for a0. See
-            ParticleSystem.cs for more details.
-            </summary>
-        </member>
-        <member name="F:Spooker.Graphics.Particles.AccelerationMode.Vector">
-            <summary>
-            The particle system computes the acceleration by using the
-            MinAccelerationVector and MaxAccelerationVector values to compute a random
-            vector value which is used as the acceleration of the particles.
             </summary>
         </member>
         <member name="T:Spooker.Graphics.Particles.ParticleSettings">
@@ -1917,6 +1900,12 @@
             </param>
             <param name="velocity">The base velocity that the particle should have</param>
         </member>
+        <member name="M:Spooker.Graphics.Particles.ParticleSystem.LoadContent(Spooker.Content.ContentManager)">
+            <summary>
+            Component uses this for loading itself
+            </summary>
+            <param name="content">Content.</param>
+        </member>
         <member name="M:Spooker.Graphics.Particles.ParticleSystem.Update(Spooker.Time.GameTime)">
             <summary>
             Allows the game component to update itself.
@@ -1925,9 +1914,10 @@
         </member>
         <member name="M:Spooker.Graphics.Particles.ParticleSystem.Draw(Spooker.Graphics.SpriteBatch,Spooker.Graphics.SpriteEffects)">
             <summary>
-            overriden from DrawableGameComponent, Draw will use ParticleSampleGame's 
-            sprite batch to render all of the active particles.
+            Component uses this for drawing itself
             </summary>
+            <param name="spriteBatch">Sprite batch.</param>
+            <param name="effects">Effects.</param>
         </member>
         <member name="P:Spooker.Graphics.Particles.ParticleSystem.FreeParticleCount">
             <summary>
@@ -2560,114 +2550,95 @@
             Action node.
             </summary>
         </member>
-        <member name="M:Spooker.Input.ActionNode.IsPressed(Spooker.Input.GameInput)">
+        <member name="F:Spooker.Input.ActionNode.Parent">
+            <summary>
+            The parent.
+            </summary>
+        </member>
+        <member name="M:Spooker.Input.ActionNode.#ctor(Spooker.Input.GameInput)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Spooker.Input.ActionNode"/> class.
+            </summary>
+            <param name="parent">Parent.</param>
+        </member>
+        <member name="P:Spooker.Input.ActionNode.IsPressed">
             <summary>
             Determines whether this instance is pressed.
             </summary>
-            <returns><c>true</c> if this instance is pressed; otherwise, <c>false</c>.</returns>
-            <param name="input">Input.</param>
         </member>
-        <member name="M:Spooker.Input.ActionNode.IsReleased(Spooker.Input.GameInput)">
+        <member name="P:Spooker.Input.ActionNode.IsReleased">
             <summary>
             Determines whether this instance is released.
             </summary>
-            <returns><c>true</c> if this instance is released; otherwise, <c>false</c>.</returns>
-            <param name="input">Input.</param>
         </member>
-        <member name="M:Spooker.Input.ActionNode.IsDown(Spooker.Input.GameInput)">
+        <member name="P:Spooker.Input.ActionNode.IsDown">
             <summary>
             Determines whether this instance is down.
             </summary>
-            <returns><c>true</c> if this instance is down; otherwise, <c>false</c>.</returns>
-            <param name="input">Input.</param>
         </member>
-        <member name="M:Spooker.Input.ActionNode.IsUp(Spooker.Input.GameInput)">
+        <member name="P:Spooker.Input.ActionNode.IsUp">
             <summary>
             Determines whether this instance is up.
             </summary>
-            <returns><c>true</c> if this instance is up; otherwise, <c>false</c>.</returns>
-            <param name="input">Input.</param>
         </member>
         <member name="T:Spooker.Input.KeyNode">
             <summary>
             Key node.
             </summary>
         </member>
-        <member name="M:Spooker.Input.KeyNode.#ctor(SFML.Window.Keyboard.Key)">
+        <member name="M:Spooker.Input.KeyNode.#ctor(Spooker.Input.GameInput,SFML.Window.Keyboard.Key)">
             <summary>
             Initializes a new instance of the <see cref="T:Spooker.Input.KeyNode"/> class.
             </summary>
+            <param name="parent">Parent.</param>
             <param name="key">Key.</param>
         </member>
-        <member name="M:Spooker.Input.KeyNode.IsPressed(Spooker.Input.GameInput)">
+        <member name="P:Spooker.Input.KeyNode.IsPressed">
             <summary>
             Determines whether this instance is pressed.
             </summary>
-            <returns>true</returns>
-            <c>false</c>
-            <param name="input">Input.</param>
         </member>
-        <member name="M:Spooker.Input.KeyNode.IsReleased(Spooker.Input.GameInput)">
+        <member name="P:Spooker.Input.KeyNode.IsReleased">
             <summary>
             Determines whether this instance is released.
             </summary>
-            <returns>true</returns>
-            <c>false</c>
-            <param name="input">Input.</param>
         </member>
-        <member name="M:Spooker.Input.KeyNode.IsDown(Spooker.Input.GameInput)">
+        <member name="P:Spooker.Input.KeyNode.IsDown">
             <summary>
             Determines whether this instance is down.
             </summary>
-            <returns>true</returns>
-            <c>false</c>
-            <param name="input">Input.</param>
         </member>
-        <member name="M:Spooker.Input.KeyNode.IsUp(Spooker.Input.GameInput)">
+        <member name="P:Spooker.Input.KeyNode.IsUp">
             <summary>
             Determines whether this instance is up.
             </summary>
-            <returns>true</returns>
-            <c>false</c>
-            <param name="input">Input.</param>
         </member>
-        <member name="M:Spooker.Input.MouseNode.#ctor(SFML.Window.Mouse.Button)">
+        <member name="M:Spooker.Input.MouseNode.#ctor(Spooker.Input.GameInput,SFML.Window.Mouse.Button)">
             <summary>
             Initializes a new instance of the <see cref="T:Spooker.Input.MouseNode"/> class.
             </summary>
+            <param name="parent">Parent.</param>
             <param name="button">Button.</param>
         </member>
-        <member name="M:Spooker.Input.MouseNode.IsPressed(Spooker.Input.GameInput)">
+        <member name="P:Spooker.Input.MouseNode.IsPressed">
             <summary>
             Determines whether this instance is pressed.
             </summary>
-            <returns>true</returns>
-            <c>false</c>
-            <param name="input">Input.</param>
         </member>
-        <member name="M:Spooker.Input.MouseNode.IsReleased(Spooker.Input.GameInput)">
+        <member name="P:Spooker.Input.MouseNode.IsReleased">
             <summary>
             Determines whether this instance is released.
             </summary>
-            <returns>true</returns>
-            <c>false</c>
-            <param name="input">Input.</param>
         </member>
-        <member name="M:Spooker.Input.MouseNode.IsDown(Spooker.Input.GameInput)">
+        <member name="P:Spooker.Input.MouseNode.IsDown">
             <summary>
             Determines whether this instance is down.
             </summary>
-            <returns>true</returns>
-            <c>false</c>
-            <param name="input">Input.</param>
         </member>
-        <member name="M:Spooker.Input.MouseNode.IsUp(Spooker.Input.GameInput)">
+        <member name="P:Spooker.Input.MouseNode.IsUp">
             <summary>
             Determines whether this instance is up.
             </summary>
-            <returns>true</returns>
-            <c>false</c>
-            <param name="input">Input.</param>
         </member>
         <member name="T:Spooker.Graphics.SpriteBlendMode">
             <summary>
@@ -2677,6 +2648,37 @@
         <member name="T:Spooker.Graphics.SpriteSortMode">
             <summary>
             Sorting options to use when rendering.
+            </summary>
+        </member>
+        <member name="T:Spooker.Graphics.Particles.AccelerationMode">
+            <summary>
+            Used to specify the method of acceleration for a particle system.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.AccelerationMode.None">
+            <summary>
+            The particle system does not use acceleration.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.AccelerationMode.Scalar">
+            <summary>
+            The particle system computes the acceleration by using the
+            MinAccelerationScale and MaxAccelerationScale values to compute a random
+            scalar value which is then multiplied by the direction of the particles.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.AccelerationMode.EndVelocity">
+            <summary>
+            The particle system computes the acceleration by using the EndVelocity
+            value and solving the equation vt = v0 + (a0 * t) for a0. See
+            ParticleSystem.cs for more details.
+            </summary>
+        </member>
+        <member name="F:Spooker.Graphics.Particles.AccelerationMode.Vector">
+            <summary>
+            The particle system computes the acceleration by using the
+            MinAccelerationVector and MaxAccelerationVector values to compute a random
+            vector value which is used as the acceleration of the particles.
             </summary>
         </member>
     </members>

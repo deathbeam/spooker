@@ -106,7 +106,7 @@ namespace Spooker.Graphics.TiledMap
 		/// </summary>
 		/// <param name="spriteBatch">Sprite batch.</param>
 		/// <param name="effects">Effects.</param>
-		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
+		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects)
 		{
 			foreach (var layer in Layers)
 				layer.Draw(spriteBatch, effects);
@@ -118,7 +118,7 @@ namespace Spooker.Graphics.TiledMap
 		/// <param name="spriteBatch">Sprite batch.</param>
 		/// <param name="name">Name.</param>
 		/// <param name="effects">Effects.</param>
-		public void Draw(string name, SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
+		public void Draw(string name, SpriteBatch spriteBatch, SpriteEffects effects)
 		{
 			Layers.Find(l=> l.Name == name).Draw (spriteBatch, effects);
 		}
@@ -129,7 +129,7 @@ namespace Spooker.Graphics.TiledMap
 		/// <param name="spriteBatch">Sprite batch.</param>
 		/// <param name="index">Index.</param>
 		/// <param name="effects">Effects.</param>
-		public void Draw(int index, SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
+		public void Draw(int index, SpriteBatch spriteBatch, SpriteEffects effects)
 		{
 			Layers[index].Draw (spriteBatch, effects);
 		}

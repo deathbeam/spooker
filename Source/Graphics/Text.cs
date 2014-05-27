@@ -129,7 +129,7 @@ namespace Spooker.Graphics
 
 		#region Public methods
 
-		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
+		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects)
 		{
 			spriteBatch.Draw (
 				Font,

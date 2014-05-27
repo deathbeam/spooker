@@ -12,20 +12,21 @@ using System;
 using System.Collections.Generic;
 using Spooker.Time;
 using Spooker.Core;
+using Spooker.Content;
 
 namespace Spooker.Graphics.Particles
 {
 	/// <summary>
 	/// Particle system.
 	/// </summary>
-	public class ParticleSystem : GameComponent, IDrawable, IUpdateable
+	public class ParticleSystem : GameComponent, IDrawable, IUpdateable, ILoadable
 	{
 		#region Private fields
 
 		// the graphic this particle system will use.
-		private readonly Texture _texture;
-		private readonly Rectangle _sourceRect;
-		private readonly Vector2 _origin;
+		private Texture _texture;
+		private Rectangle _sourceRect;
+		private Vector2 _origin;
 
 		// the array of particles used by this system. these are reused, so that calling
 		// AddParticles will only cause allocations if we're trying to create more particles
@@ -84,11 +85,6 @@ namespace Spooker.Graphics.Particles
 				_particles.Add(new Particle());
 				_freeParticles.Enqueue(_particles[i]);
 			}
-
-			// load the graphic....
-			_texture = new Texture(_settings.TextureFilename);
-			_sourceRect = new Rectangle (0, 0, (int)_texture.Size.X, (int)_texture.Size.Y);
-			_origin = _texture.Size / 2;
 		}
 
 		/// <summary>
@@ -195,6 +191,17 @@ namespace Spooker.Graphics.Particles
 		}
 
 		/// <summary>
+		/// Component uses this for loading itself
+		/// </summary>
+		/// <param name="content">Content.</param>
+		public void LoadContent(ContentManager content)
+		{
+			_texture = new Texture(_settings.TextureFilename);
+			_sourceRect = new Rectangle (0, 0, (int)_texture.Size.X, (int)_texture.Size.Y);
+			_origin = _texture.Size / 2;
+		}
+
+		/// <summary>
 		/// Allows the game component to update itself.
 		/// </summary>
 		/// <param name="gameTime">Provides snapshot of timing values.</param>
@@ -220,10 +227,11 @@ namespace Spooker.Graphics.Particles
 		}
 
 		/// <summary>
-		/// overriden from DrawableGameComponent, Draw will use ParticleSampleGame's 
-		/// sprite batch to render all of the active particles.
+		/// Component uses this for drawing itself
 		/// </summary>
-		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None)
+		/// <param name="spriteBatch">Sprite batch.</param>
+		/// <param name="effects">Effects.</param>
+		public void Draw(SpriteBatch spriteBatch, SpriteEffects effects)
 		{
 			// tell sprite batch to begin
 			spriteBatch.Begin (_settings.BlendMode);

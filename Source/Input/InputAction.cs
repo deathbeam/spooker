@@ -51,7 +51,7 @@ namespace Spooker.Input
 		public void Add(Keyboard.Key key)
 		{
 			_triggers.Add (
-				new KeyNode (key));
+				new KeyNode (_parent, key));
 		}
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace Spooker.Input
 		public void Add(Mouse.Button button)
 		{
 			_triggers.Add (
-				new MouseNode (button));
+				new MouseNode (_parent, button));
 		}
 
 		/// <summary>
@@ -85,7 +85,7 @@ namespace Spooker.Input
 		/// <returns><c>true</c> if this instance is pressed; otherwise, <c>false</c>.</returns>
 		public bool IsPressed()
 		{
-		    return _triggers.Any(trigger => trigger.IsPressed(_parent));
+		    return _triggers.Any(trigger => trigger.IsPressed);
 		}
 
 		/// <summary>
@@ -94,7 +94,7 @@ namespace Spooker.Input
 		/// <returns><c>true</c> if this instance is released; otherwise, <c>false</c>.</returns>
 	    public bool IsReleased()
 	    {
-	        return _triggers.Any(trigger => trigger.IsReleased(_parent));
+	        return _triggers.Any(trigger => trigger.IsReleased);
 	    }
 
 		/// <summary>
@@ -103,7 +103,7 @@ namespace Spooker.Input
 		/// <returns><c>true</c> if this instance is down; otherwise, <c>false</c>.</returns>
 	    public bool IsDown()
 	    {
-	        return _triggers.Any(trigger => trigger.IsDown(_parent));
+	        return _triggers.Any(trigger => trigger.IsDown);
 	    }
 
 		/// <summary>
@@ -112,7 +112,7 @@ namespace Spooker.Input
 		/// <returns><c>true</c> if this instance is up; otherwise, <c>false</c>.</returns>
 	    public bool IsUp()
 	    {
-	        return _triggers.Any(trigger => trigger.IsUp(_parent));
+	        return _triggers.Any(trigger => trigger.IsUp);
 	    }
 	}
 }

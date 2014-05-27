@@ -169,23 +169,23 @@ namespace Spooker
 
 	    public bool Intersects(Rectangle rectangle)
 		{
-			if (Equals(rectangle))
-				return true;
-
 			return rectangle.Left < Right &&
-				Left < rectangle.Right &&
-				rectangle.Top < Bottom &&
-				Top < rectangle.Bottom;
+				   Left < rectangle.Right &&
+				   rectangle.Top < Bottom &&
+				   Top < rectangle.Bottom;
 		}
 
         public bool Equals(Rectangle other)
 		{
-            return this == other;
+			return (X == other.X) &&
+				   (Y == other.Y) &&
+				   (Width == other.Width) &&
+				   (Height == other.Height);
         }
 
         public override bool Equals(object obj)
 		{
-            return (obj is Rectangle) && this == ((Rectangle)obj);
+			return (obj is Rectangle) && Equals((Rectangle)obj);
         }
 
         public override string ToString()
@@ -195,7 +195,10 @@ namespace Spooker
 
         public override int GetHashCode()
 		{
-            return (X ^ Y ^ Width ^ Height);
+			return unchecked((int)((uint)Left ^
+				(((uint)Top << 13) | ((uint)Top >> 19)) ^
+				(((uint)Width << 26) | ((uint)Width >>  6)) ^
+				(((uint)Height <<  7) | ((uint)Height >> 25))));
         }
 
         #endregion Public Methods
@@ -205,12 +208,12 @@ namespace Spooker
 
 		public static bool operator ==(Rectangle a, Rectangle b)
 		{
-			return ((a.X == b.X) && (a.Y == b.Y) && (a.Width == b.Width) && (a.Height == b.Height));
+			return a.Equals (b);
 		}
 
 		public static bool operator !=(Rectangle a, Rectangle b)
 		{
-			return !(a == b);
+			return !a.Equals (b);
 		}
 
 		#endregion Operators

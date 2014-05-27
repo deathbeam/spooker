@@ -175,13 +175,22 @@ namespace Spooker.Graphics
 		}
 
 		/// <summary>
+		/// Draw the specified drawable
+		/// </summary>
+		/// <param name="drawable">Drawable.</param>
+		public void Draw(IDrawable drawable)
+		{
+			Draw(drawable, SpriteEffects.None);
+		}
+
+		/// <summary>
 		/// Draw the specified drawable using specified effects.
 		/// </summary>
 		/// <param name="drawable">Drawable.</param>
 		/// <param name="effects">Effects.</param>
-		public void Draw(IDrawable drawable, SpriteEffects effects = SpriteEffects.None)
+		public void Draw(IDrawable drawable, SpriteEffects effects)
 		{
-			drawable.Draw (this);
+			drawable.Draw (this, effects);
 		}
 
 		/// <summary>
@@ -202,7 +211,12 @@ namespace Spooker.Graphics
 			if (effects != SpriteEffects.None)
 				scale *= ScaleEffectMultiplier.Get (effects);
 
-			WriteQuad (texture.ToSfml (), position.ToSfml (), sourceRect.ToSfml (), color.ToSfml (), scale.ToSfml (), origin.ToSfml (), rotation);
+			var batcher = this;
+
+			if (_batchers.Count > 0)
+				batcher = _batchers [_batchers.Count - 1];
+
+			batcher.WriteQuad (texture.ToSfml (), position.ToSfml (), sourceRect.ToSfml (), color.ToSfml (), scale.ToSfml (), origin.ToSfml (), rotation);
 		}
 
 		/// <summary>
@@ -225,17 +239,12 @@ namespace Spooker.Graphics
 			if (effects != SpriteEffects.None)
 				scale *= ScaleEffectMultiplier.Get (effects);
 
-			_str.Font = font.ToSfml ();
-			_str.DisplayedString = text;
-			_str.Position = position.ToSfml();
-			_str.Color = color.ToSfml();
-			_str.Rotation = rotation;
-			_str.Origin = origin.ToSfml();
-			_str.Scale = scale.ToSfml();
-			_str.Style = (SFML.Graphics.Text.Styles)style;
-			_str.CharacterSize = (uint)characterSize;
+			var batcher = this;
 
-			_graphicsDevice.Draw(_str, _states);
+			if (_batchers.Count > 0)
+				batcher = _batchers [_batchers.Count - 1];
+
+			batcher.WriteText (font.ToSfml (), text, (uint)characterSize, position.ToSfml (), color.ToSfml (), scale.ToSfml (), origin.ToSfml (), rotation, (SFML.Graphics.Text.Styles)style);
 		}
 
 		/// <summary>
@@ -349,6 +358,21 @@ namespace Spooker.Graphics
 				ptr->TexCoords.Y = rec.Top + rec.Height;
 				ptr->Color = color;
 			}
+		}
+
+		private void WriteText(SFML.Graphics.Font font, string text, uint characterSize, Vector2f position, SFML.Graphics.Color color, Vector2f scale, Vector2f origin, float rotation, SFML.Graphics.Text.Styles style)
+		{
+			_str.Font = font;
+			_str.DisplayedString = text;
+			_str.Position = position;
+			_str.Color = color;
+			_str.Rotation = rotation;
+			_str.Origin = origin;
+			_str.Scale = scale;
+			_str.Style = style;
+			_str.CharacterSize = characterSize;
+
+			_graphicsDevice.Draw(_str, _states);
 		}
 
 		#endregion

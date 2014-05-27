@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>12.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{CFA1A620-238E-4917-9831-B19B7F2C23B4}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -139,6 +139,7 @@
     <Compile Include="ITargetable.cs" />
     <Compile Include="Graphics\SpriteBlendMode.cs" />
     <Compile Include="Graphics\SpriteSortMode.cs" />
+    <Compile Include="Graphics\Particles\AccelerationMode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

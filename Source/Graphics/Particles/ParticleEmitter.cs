@@ -67,6 +67,17 @@ namespace Spooker.Graphics.Particles
 			_position = initialPosition;
 		}
 
+		/// <summary>
+		/// Updates the emitter, creating the appropriate number of particles
+		/// in the appropriate positions.
+		/// </summary>
+		/// <param name="gameTime">Game time.</param>
+		/// <param name="newPosition">New position.</param>
+		public void Update(GameTime gameTime, Vector2 newPosition)
+		{
+			Update (gameTime, newPosition, Matrix.Identity);
+		}
+
 
 		/// <summary>
 		/// Updates the emitter, creating the appropriate number of particles
@@ -74,19 +85,19 @@ namespace Spooker.Graphics.Particles
 		/// </summary>
 		/// <param name="gameTime">Game time.</param>
 		/// <param name="newPosition">New position.</param>
-		/// <param name="camera">Camera.</param>
-		public void Update(GameTime gameTime, Vector2 newPosition, Camera camera)
+		/// <param name="transform">Transform.</param>
+		public void Update(GameTime gameTime, Vector2 newPosition, Matrix transform)
 		{
 			// Work out how much time has passed since the previous update.
 			var elapsedTime = (float)gameTime.ElapsedGameTime.Seconds;
 
 			if (elapsedTime > 0)
 			{
-				var pos = camera.Transform.TransformPoint(_position);
-				var newPos = camera.Transform.TransformPoint(newPosition);
+				var pos = transform.TransformPoint(_position);
+				var newPos = transform.TransformPoint(newPosition);
 
 				// Work out how fast we are moving.
-				Vector2 velocity = (newPos - pos) / elapsedTime;
+				var velocity = (newPos - pos) / elapsedTime;
 
 				// If we had any time left over that we didn't use during the
 				// previous update, add that to the current elapsed time.

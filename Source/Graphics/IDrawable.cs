@@ -21,6 +21,6 @@ namespace Spooker.Graphics
 		/// </summary>
 		/// <param name="spriteBatch">Sprite batch.</param>
 		/// <param name="effects">Effects.</param>
-		void Draw(SpriteBatch spriteBatch, SpriteEffects effects = SpriteEffects.None);
+		void Draw(SpriteBatch spriteBatch, SpriteEffects effects);
 	}
 }
